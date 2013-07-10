@@ -1,0 +1,773 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f8d75aae-cf72-469c-a094-39ffe3de16cf" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/tr8n_php_clientsdk.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Utils/ArrayUtils.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Decorators/Base.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/Rules/BaseTest.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/Tokens/BaseTest.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/ConfigTest.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/DataToken.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/HiddenToken.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Utils/Inflector.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/Utils/InflectorTest.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/LanguageTest.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/LoggerTest.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/MethodToken.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/Rules/NumericRuleTest.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/TransformToken.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/ValueRule.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/fixtures/rules/ru/numeric.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/tr8n/tokens/Base.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/tr8n/tokens/DataToken.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/tr8n/tokens/TransformToken.php" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Application.php" afterPath="$PROJECT_DIR$/library/Tr8n/Application.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Base.php" afterPath="$PROJECT_DIR$/library/Tr8n/Base.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Cache.php" afterPath="$PROJECT_DIR$/library/Tr8n/Cache.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Component.php" afterPath="$PROJECT_DIR$/library/Tr8n/Component.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Config.php" afterPath="$PROJECT_DIR$/library/Tr8n/Config.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Language.php" afterPath="$PROJECT_DIR$/library/Tr8n/Language.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Logger.php" afterPath="$PROJECT_DIR$/library/Tr8n/Logger.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Source.php" afterPath="$PROJECT_DIR$/library/Tr8n/Source.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Tr8n.php" afterPath="$PROJECT_DIR$/library/Tr8n.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Tr8nException.php" afterPath="$PROJECT_DIR$/library/Tr8n/Tr8nException.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Translation.php" afterPath="$PROJECT_DIR$/library/Tr8n/Translation.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/TranslationKey.php" afterPath="$PROJECT_DIR$/library/Tr8n/TranslationKey.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/cache/Base.php" afterPath="$PROJECT_DIR$/library/Tr8n/Cache/Base.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/cache/MemcacheAdapter.php" afterPath="$PROJECT_DIR$/library/Tr8n/Cache/MemcacheAdapter.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/rules/Base.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/Base.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/rules/DateRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/DateRule.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/rules/GenderListRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/GenderListRule.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/rules/GenderRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/GenderRule.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/rules/ListRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/ListRule.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/rules/NumericRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/NumericRule.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/tokens/DecorationToken.php" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/DecorationToken.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
+    </list>
+    <ignored path="tr8n_php_clientsdk.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <file path="/Dummy.txt" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373399406704" ignored="false" />
+    <file path="/test.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373397194223" ignored="false" />
+    <file path="/a.dummy" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373410542089" ignored="false" />
+    <file path="/Base.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373415999783" ignored="false" />
+    <file path="/BaseTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373414898111" ignored="false" />
+    <file path="/LanguageTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373417033316" ignored="false" />
+    <file path="/Language.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373418205227" ignored="false" />
+    <file path="/Config.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373402677648" ignored="false" />
+    <file path="/Logger.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373402716203" ignored="false" />
+    <file path="/ConfigTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373401592249" ignored="false" />
+    <file path="/Singleton.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373400932661" ignored="false" />
+    <file path="/Application.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373419654573" ignored="false" />
+    <file path="/LoggerTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373402817361" ignored="false" />
+    <file path="/NumericRuleTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373410306712" ignored="false" />
+    <file path="/NumericRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373416311671" ignored="false" />
+    <file path="/Inflector.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373403665933" ignored="false" />
+    <file path="/InflectorTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373404122667" ignored="false" />
+    <file path="/Array.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373410547343" ignored="false" />
+    <file path="/DataToken.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373411014152" ignored="false" />
+    <file path="/Tr8n.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373412433763" ignored="false" />
+    <file path="/GenderRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373411794918" ignored="false" />
+    <file path="/MemcacheAdapter.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373411908654" ignored="false" />
+    <file path="/ValueRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373416710467" ignored="false" />
+    <file path="/ArrayUtils.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373416252030" ignored="false" />
+    <file path="/TranslationKey.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373418086988" ignored="false" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="tr8n_php_clientsdk" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="Language.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/Language.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="17" column="0" selection-start="423" selection-end="485" vertical-scroll-proportion="-10.625">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Application.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/Application.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="156" column="1" selection-start="5758" selection-end="5758" vertical-scroll-proportion="2.1159875">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TranslationKey.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/TranslationKey.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="4" column="10" selection-start="56" selection-end="56" vertical-scroll-proportion="-2.5">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LanguageTest.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/Tr8n/LanguageTest.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="28" column="0" selection-start="918" selection-end="918" vertical-scroll-proportion="-17.5">
+              <folding>
+                <element signature="e#6#163#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitLogSettings">
+    <option name="myDateState">
+      <MyDateState />
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/test/Tr8n/Rules/BaseTest.php" />
+        <option value="$PROJECT_DIR$/test/Tr8n/Rules/NumericRuleTest.php" />
+        <option value="$PROJECT_DIR$/test/Tr8n/Utils/InflectorTest.php" />
+        <option value="$PROJECT_DIR$/test/Tr8n/ConfigTest.php" />
+        <option value="$PROJECT_DIR$/test/Tr8n/LoggerTest.php" />
+        <option value="$PROJECT_DIR$/test/Tr8n/Tokens/BaseTest.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Tokens/DecorationToken.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Rules/Base.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Utils/ArrayUtils.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Rules/NumericRule.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Rules/ValueRule.php" />
+        <option value="$PROJECT_DIR$/test/Tr8n/LanguageTest.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/TranslationKey.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Language.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Application.php" />
+      </list>
+    </option>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds">
+    <option name="y" value="22" />
+    <option name="width" value="1920" />
+    <option name="height" value="1129" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents ProjectPane="true" />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tr8n" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tr8n" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Utils" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tr8n" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tokens" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tr8n" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Rules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fixtures" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fixtures" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ru" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fixtures" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="languages" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tr8n" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tr8n" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Utils" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tr8n" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tokens" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tr8n" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Rules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tr8n" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Decorators" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tr8n_php_clientsdk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tr8n" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Cache" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../php/ZendFramework-2.2.1" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/library" />
+      <recent name="$PROJECT_DIR$/lib" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <list size="0" />
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f8d75aae-cf72-469c-a094-39ffe3de16cf" name="Default" comment="" />
+      <created>1373397137593</created>
+      <updated>1373397137593</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="22" width="1920" height="1129" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903865" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2470651" sideWeight="0.6709613" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+    </layout>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="CHECK_NEW_TODO" value="true" />
+    <option name="myTodoPanelSettings">
+      <value>
+        <are-packages-shown value="false" />
+        <are-modules-shown value="false" />
+        <flatten-packages value="false" />
+        <is-autoscroll-to-source value="false" />
+      </value>
+    </option>
+    <option name="PERFORM_UPDATE_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_COMMIT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_CHECKOUT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_ROLLBACK_IN_BACKGROUND" value="false" />
+    <option name="CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND" value="false" />
+    <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
+    <option name="SHOW_ONLY_CHANGED_IN_SELECTION_DIFF" value="true" />
+    <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
+    <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
+    <option name="SHORT_DIFF_HORIZONTALLY" value="true" />
+    <option name="SHORT_DIFF_EXTRA_LINES" value="2" />
+    <option name="SOFT_WRAPS_IN_SHORT_DIFF" value="true" />
+    <option name="INCLUDE_TEXT_INTO_PATCH" value="false" />
+    <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
+    <option name="SHOW_FILE_HISTORY_DETAILS" value="true" />
+    <option name="SHOW_VCS_ERROR_NOTIFICATIONS" value="true" />
+    <option name="SHOW_DIRTY_RECURSIVELY" value="false" />
+    <option name="LIMIT_HISTORY" value="true" />
+    <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
+    <option name="UPDATE_FILTER_SCOPE_NAME" />
+    <option name="USE_COMMIT_MESSAGE_MARGIN" value="false" />
+    <option name="COMMIT_MESSAGE_MARGIN_SIZE" value="72" />
+    <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
+    <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
+    <option name="LAST_COMMIT_MESSAGE" />
+    <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
+    <option name="FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION" value="0.8" />
+    <option name="FILE_HISTORY_DIALOG_SPLITTER_PROPORTION" value="0.5" />
+    <option name="ACTIVE_VCS_NAME" />
+    <option name="UPDATE_GROUP_BY_PACKAGES" value="false" />
+    <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
+    <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
+    <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
+    <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/test/Tr8n/Rules/NumericRuleTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="58" selection-start="849" selection-end="849" vertical-scroll-proportion="-13.125">
+          <folding>
+            <element signature="e#6#163#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="28" selection-start="1080" selection-end="1080" vertical-scroll-proportion="-19.875">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/Tr8n/Tokens/BaseTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="64" column="37" selection-start="3107" selection-end="3107" vertical-scroll-proportion="-36.75">
+          <folding>
+            <element signature="e#6#163#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/DecorationToken.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="62" selection-start="294" selection-end="294" vertical-scroll-proportion="-7.5">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/pcre.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="232" column="9" selection-start="7868" selection-end="7868" vertical-scroll-proportion="2.1912227">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/ValueRule.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="80" column="1" selection-start="2808" selection-end="2808" vertical-scroll-proportion="0.9059561">
+          <folding>
+            <element signature="e#7#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Cache/MemcacheAdapter.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="23" selection-start="727" selection-end="727" vertical-scroll-proportion="0.39184952">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/ListRule.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="45" column="20" selection-start="0" selection-end="2176" vertical-scroll-proportion="0.37617555">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/Base.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="100" column="0" selection-start="3296" selection-end="3296" vertical-scroll-proportion="0.82758623">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/Base.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="81" column="38" selection-start="2950" selection-end="2950" vertical-scroll-proportion="0.5015674">
+          <folding>
+            <element signature="e#1155#1178#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/NumericRule.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="115" column="98" selection-start="3933" selection-end="3933" vertical-scroll-proportion="0.8213166">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Utils/ArrayUtils.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="8" selection-start="136" selection-end="136" vertical-scroll-proportion="0.12539186">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/Tr8n/LanguageTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="0" selection-start="918" selection-end="918" vertical-scroll-proportion="-17.5">
+          <folding>
+            <element signature="e#6#163#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/TranslationKey.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="10" selection-start="56" selection-end="56" vertical-scroll-proportion="-2.5">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Language.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="0" selection-start="423" selection-end="485" vertical-scroll-proportion="-10.625">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Application.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="156" column="1" selection-start="5758" selection-end="5758" vertical-scroll-proportion="2.1159875">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+

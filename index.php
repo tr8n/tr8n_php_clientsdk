@@ -1,4 +1,4 @@
-<?php require('tr8n/Tr8n.php'); ?>
+<?php require('library/Tr8n/Tr8n.php'); ?>
 
 <? echo tr("Hello World", "Greeting"); ?>
 
