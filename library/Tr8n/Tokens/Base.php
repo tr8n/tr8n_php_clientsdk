@@ -32,11 +32,11 @@ abstract class Base {
     protected $label, $name, $full_name, $declared_name, $sanitized_name, $pipeless_name;
     protected $case_key;
 
-    public static function registerTokens($label, $category = "data") {
+    public static function registerTokens($label, $category = "data", $options = array()) {
         $tokens = array();
         foreach(\Tr8n\Config::instance()->tokenClasses($category) as $class) {
-            $token = new $class($label, null);
-            $matches = $token->parse($label);
+            $token = new $class($label, null); // TODO: can this be made into a static function?
+            $matches = $token->parse($label, $options);
             array_push($tokens, $matches);
         }
         return \Tr8n\Utils\ArrayUtils::flatten($tokens);
@@ -49,7 +49,7 @@ abstract class Base {
 
     public abstract function expression();
 
-    public function parse($label) {
+    public function parse($label, $options = array()) {
         $matches = array();
         preg_match_all($this->expression(), $label, $matches);
         $matches = array_unique($matches[0]);
@@ -155,7 +155,21 @@ abstract class Base {
      *     tr("Hello {user}", array("user" => array("object" => array("gender"=>"male", "name"=>"Michael), "attribute"=>"name")));
      *
      */
-    public function tokenValue($token_data, $language, $options) {
+    public function tokenValue($token_values, $language, $options) {
+        if (array_key_exists($this->name(), $token_values)) {
+            $token_data = $token_values[$this->name()];
+        } else {
+            $token_data = $this->application->defaultTokens($this->name(), 'data');
+        }
+
+        if ($token_data == null) {
+            throw new Tr8nException("Missing value for token: " . $this->name());
+        }
+
+        if (is_string($token_data)) {
+            return $this->sanitize($token_data, $language, $options);
+        }
+
         if (is_array($token_data)) {
             if (\Tr8n\Utils\ArrayUtils::isHash($token_data)) {
                 if (!array_key_exists('object', $token_data))
@@ -238,11 +252,9 @@ abstract class Base {
         return $token_value;
     }
 
-    public function substitute($label, $token_data, $language, $options = array()) {
-        $token_value = $this->tokenValue($token_data, $language, $options);
+    public function substitute($label, $token_values, $language, $options = array()) {
+        $token_value = $this->tokenValue($token_values, $language, $options);
         return str_replace($this->fullName(), $token_value, $label);
     }
-
-
 }
 

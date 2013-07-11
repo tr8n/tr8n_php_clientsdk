@@ -70,19 +70,20 @@ class BaseTest extends \BaseTest {
 
         $label = "You have {count} message";
         $tokens = Base::registerTokens($label, "data");
-        $this->assertEquals("You have 1 message", $tokens[0]->substitute($label, 1, $russian));
+        $this->assertEquals("You have 1 message", $tokens[0]->substitute($label, array("count" => 1), $russian));
 
         $label = "Hello {user}";
         $user = new \User("Michael");
         $tokens = Base::registerTokens($label, "data");
-        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, $user, $russian));
-        $this->assertEquals("Hello Peter", $tokens[0]->substitute($label, array($user, "Peter"), $russian));
-        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array($user, "@name"), $russian));
-        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array($user, "@@fullName"), $russian));
+        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array("user" => $user), $russian));
+        $this->assertEquals("Hello Peter", $tokens[0]->substitute($label, array("user" => array($user, "Peter")), $russian));
+        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array("user" => array($user, "@name")), $russian));
+        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array("user" => array($user, "@@fullName")), $russian));
 
-        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array("object" => $user, "attribute"=>"name"), $russian));
-        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array("object" => $user, "method"=>"fullName"), $russian));
+        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array("user" => array("object" => $user, "attribute"=>"name")), $russian));
+        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array("user" => array("object" => $user, "method"=>"fullName")), $russian));
 
-        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array("object" => array("name" => "Michael", "gender" => "male"), "attribute"=>"name"), $russian));
+        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array("user" => array("object" => array("name" => "Michael", "gender" => "male"), "attribute"=>"name")), $russian));
     }
+
 }

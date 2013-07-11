@@ -127,7 +127,7 @@ class TranslationKey extends Base {
             foreach(Config::instance()->tokenTypes() as $token_type) {
                 $tokens = \Tr8n\Tokens\Base::registerTokens($this->label, $token_type);
                 foreach($tokens as $token) {
-                    $this->tokens[$token->name] = $token;
+                    $this->tokens[$token->name()] = $token;
                 }
             }
         }
@@ -136,30 +136,26 @@ class TranslationKey extends Base {
     }
 
     public function isTokenAllowed($token) {
-       return array_key_exists($token->name, $this->tokens());
-    }
-
-    public function tokenData($token_values, $token_name, $token_type) {
-        if (array_key_exists($token_name, $token_values)) {
-            return $token_values[$token_name];
-        }
-
-        $token_data = $this->application->defaultTokens($token_name, $token_type);
-        if ($token_data == null) {
-            throw new Tr8nException("Missing value for token: " . $token_name);
-        }
-        return $token_data;
+       return array_key_exists($token->name(), $this->tokens());
     }
 
     public function substituteTokens($label, $token_values, $language, $options = array()) {
-        foreach(Config::instance()->tokenTypes() as $token_type) {
-            $tokens = \Tr8n\Tokens\Base::registerTokens($label, $token_type);
+        $tokens = \Tr8n\Tokens\Base::registerTokens($label, 'data');
+        foreach($tokens as $token) {
+            if (!$this->isTokenAllowed($token)) continue;
+            $label = $token->substitute($label, $token_values, $language, $options);
+        }
+
+        // decoration tokens can be nested, so process tokens in a loop until no more tokens are left
+        $tokens = \Tr8n\Tokens\Base::registerTokens($label, 'decoration', array("exclude_nested" => true));
+        while (count($tokens) > 0) {
             foreach($tokens as $token) {
                 if (!$this->isTokenAllowed($token)) continue;
-                $token_data = tokenData($token_values, $token->name, $token_type);
-                $label = $token->substitute($label, $token_data, $language, $options);
+                $label = $token->substitute($label, $token_values, $language, $options);
             }
+            $tokens = \Tr8n\Tokens\Base::registerTokens($label, 'decoration', array("exclude_nested" => true));
         }
+
         return $label;
     }
 
