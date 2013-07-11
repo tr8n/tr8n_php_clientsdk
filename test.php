@@ -1,11 +1,11 @@
 <?php
 
 
-$s = "You have {user} messages from {count}.";
-$pattern = '/(\{[^_:][\w]*(:[\w]+)?(::[\w]+)?\})/';
-$tokens = array();
-
-preg_match_all($pattern, $s, $matches);
-print_r($matches[0]);
+function test($a, $b) {
+    return $b($a);
+}
 
 
+echo(test("Hello", function($hello){
+   return $hello . " World";
+}));

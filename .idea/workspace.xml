@@ -2,69 +2,37 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f8d75aae-cf72-469c-a094-39ffe3de16cf" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/tr8n_php_clientsdk.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Utils/ArrayUtils.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Decorators/Base.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/Rules/BaseTest.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/Tokens/BaseTest.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/ConfigTest.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/DataToken.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/HiddenToken.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Utils/Inflector.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/Utils/InflectorTest.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/LanguageTest.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/LoggerTest.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/MethodToken.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/Rules/NumericRuleTest.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/TransformToken.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/ValueRule.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/fixtures/rules/ru/numeric.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/tr8n/tokens/Base.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/tr8n/tokens/DataToken.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/tr8n/tokens/TransformToken.php" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Application.php" afterPath="$PROJECT_DIR$/library/Tr8n/Application.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Base.php" afterPath="$PROJECT_DIR$/library/Tr8n/Base.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Cache.php" afterPath="$PROJECT_DIR$/library/Tr8n/Cache.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Component.php" afterPath="$PROJECT_DIR$/library/Tr8n/Component.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Config.php" afterPath="$PROJECT_DIR$/library/Tr8n/Config.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Language.php" afterPath="$PROJECT_DIR$/library/Tr8n/Language.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Logger.php" afterPath="$PROJECT_DIR$/library/Tr8n/Logger.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Source.php" afterPath="$PROJECT_DIR$/library/Tr8n/Source.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Tr8n.php" afterPath="$PROJECT_DIR$/library/Tr8n.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Tr8nException.php" afterPath="$PROJECT_DIR$/library/Tr8n/Tr8nException.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/Translation.php" afterPath="$PROJECT_DIR$/library/Tr8n/Translation.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/TranslationKey.php" afterPath="$PROJECT_DIR$/library/Tr8n/TranslationKey.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/cache/Base.php" afterPath="$PROJECT_DIR$/library/Tr8n/Cache/Base.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/cache/MemcacheAdapter.php" afterPath="$PROJECT_DIR$/library/Tr8n/Cache/MemcacheAdapter.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/rules/Base.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/Base.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/rules/DateRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/DateRule.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/rules/GenderListRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/GenderListRule.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/rules/GenderRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/GenderRule.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/rules/ListRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/ListRule.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/rules/NumericRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/NumericRule.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/tr8n/tokens/DecorationToken.php" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/DecorationToken.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Cache/FileAdapter.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Decorators/HtmlDecorator.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Cache/MemoryAdapter.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Decorators/PlainDecorator.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Application.php" afterPath="$PROJECT_DIR$/library/Tr8n/Application.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Utils/ArrayUtils.php" afterPath="$PROJECT_DIR$/library/Tr8n/Utils/ArrayUtils.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Decorators/Base.php" afterPath="$PROJECT_DIR$/library/Tr8n/Decorators/Base.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Component.php" afterPath="$PROJECT_DIR$/library/Tr8n/Component.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Config.php" afterPath="$PROJECT_DIR$/library/Tr8n/Config.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Language.php" afterPath="$PROJECT_DIR$/library/Tr8n/Language.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Source.php" afterPath="$PROJECT_DIR$/library/Tr8n/Source.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Translation.php" afterPath="$PROJECT_DIR$/library/Tr8n/Translation.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/TranslationKey.php" afterPath="$PROJECT_DIR$/library/Tr8n/TranslationKey.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.php" afterPath="$PROJECT_DIR$/test.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="tr8n_php_clientsdk.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373399406704" ignored="false" />
-    <file path="/test.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373397194223" ignored="false" />
-    <file path="/a.dummy" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373410542089" ignored="false" />
-    <file path="/Base.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373415999783" ignored="false" />
+    <file path="/Dummy.txt" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373493723884" ignored="false" />
+    <file path="/test.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373506223529" ignored="false" />
+    <file path="/a.dummy" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373493981563" ignored="false" />
+    <file path="/Base.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373509433936" ignored="false" />
     <file path="/BaseTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373414898111" ignored="false" />
     <file path="/LanguageTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373417033316" ignored="false" />
     <file path="/Language.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373418205227" ignored="false" />
-    <file path="/Config.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373402677648" ignored="false" />
+    <file path="/Config.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373504241905" ignored="false" />
     <file path="/Logger.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373402716203" ignored="false" />
     <file path="/ConfigTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373401592249" ignored="false" />
     <file path="/Singleton.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373400932661" ignored="false" />
-    <file path="/Application.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373419654573" ignored="false" />
+    <file path="/Application.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373485068211" ignored="false" />
     <file path="/LoggerTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373402817361" ignored="false" />
     <file path="/NumericRuleTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373410306712" ignored="false" />
     <file path="/NumericRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373416311671" ignored="false" />
@@ -76,8 +44,11 @@
     <file path="/GenderRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373411794918" ignored="false" />
     <file path="/MemcacheAdapter.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373411908654" ignored="false" />
     <file path="/ValueRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373416710467" ignored="false" />
-    <file path="/ArrayUtils.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373416252030" ignored="false" />
-    <file path="/TranslationKey.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373418086988" ignored="false" />
+    <file path="/ArrayUtils.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373502582966" ignored="false" />
+    <file path="/TranslationKey.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373502834842" ignored="false" />
+    <file path="/Translation.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373504539000" ignored="false" />
+    <file path="/HtmlDecorator.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373501954374" ignored="false" />
+    <file path="/PlainDecorator.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373494028956" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,37 +71,89 @@
       <file leaf-file-name="Language.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/library/Tr8n/Language.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="0" selection-start="423" selection-end="485" vertical-scroll-proportion="-10.625">
+            <state line="31" column="20" selection-start="1088" selection-end="1088" vertical-scroll-proportion="-19.375">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Application.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Translation.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/Translation.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="27" column="54" selection-start="784" selection-end="784" vertical-scroll-proportion="-16.875">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Tr8n.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Base.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/Cache/Base.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Config.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/Config.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="140" column="0" selection-start="4610" selection-end="4610" vertical-scroll-proportion="-35.5">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="22" selection-start="114" selection-end="114" vertical-scroll-proportion="-5.625">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Base.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/Decorators/Base.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="13" column="0" selection-start="284" selection-end="284" vertical-scroll-proportion="-8.125">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Base.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/Base.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="216" column="0" selection-start="8124" selection-end="8124" vertical-scroll-proportion="3.0564263">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NumericRule.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/NumericRule.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="85" column="62" selection-start="2986" selection-end="3032" vertical-scroll-proportion="-25.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Application.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/library/Tr8n/Application.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="156" column="1" selection-start="5758" selection-end="5758" vertical-scroll-proportion="2.1159875">
+            <state line="107" column="55" selection-start="4254" selection-end="4254" vertical-scroll-proportion="-25.25">
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TranslationKey.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/library/Tr8n/TranslationKey.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="10" selection-start="56" selection-end="56" vertical-scroll-proportion="-2.5">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LanguageTest.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/Tr8n/LanguageTest.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="0" selection-start="918" selection-end="918" vertical-scroll-proportion="-17.5">
-              <folding>
-                <element signature="e#6#163#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -153,22 +176,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/test/Tr8n/Rules/BaseTest.php" />
-        <option value="$PROJECT_DIR$/test/Tr8n/Rules/NumericRuleTest.php" />
-        <option value="$PROJECT_DIR$/test/Tr8n/Utils/InflectorTest.php" />
-        <option value="$PROJECT_DIR$/test/Tr8n/ConfigTest.php" />
-        <option value="$PROJECT_DIR$/test/Tr8n/LoggerTest.php" />
-        <option value="$PROJECT_DIR$/test/Tr8n/Tokens/BaseTest.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/Tokens/DecorationToken.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/Rules/Base.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/Utils/ArrayUtils.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/Rules/NumericRule.php" />
         <option value="$PROJECT_DIR$/library/Tr8n/Rules/ValueRule.php" />
         <option value="$PROJECT_DIR$/test/Tr8n/LanguageTest.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/TranslationKey.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Component.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Source.php" />
         <option value="$PROJECT_DIR$/library/Tr8n/Language.php" />
         <option value="$PROJECT_DIR$/library/Tr8n/Application.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Base.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Decorators/PlainDecorator.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Decorators/HtmlDecorator.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Decorators/Base.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Utils/ArrayUtils.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/TranslationKey.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Config.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Translation.php" />
+        <option value="$PROJECT_DIR$/test.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" />
       </list>
     </option>
   </component>
@@ -204,7 +227,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -531,11 +553,13 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../php/ZendFramework-2.2.1" />
+    <property name="FullScreen" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -568,10 +592,9 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903865" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2470651" sideWeight="0.6709613" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2497332" sideWeight="0.6709613" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -580,9 +603,10 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903865" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -646,124 +670,114 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/test/Tr8n/Rules/NumericRuleTest.php">
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Logger.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="58" selection-start="849" selection-end="849" vertical-scroll-proportion="-13.125">
-          <folding>
-            <element signature="e#6#163#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="28" selection-start="1080" selection-end="1080" vertical-scroll-proportion="-19.875">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/Tr8n/Tokens/BaseTest.php">
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Cache.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="64" column="37" selection-start="3107" selection-end="3107" vertical-scroll-proportion="-36.75">
-          <folding>
-            <element signature="e#6#163#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/DecorationToken.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="62" selection-start="294" selection-end="294" vertical-scroll-proportion="-7.5">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/pcre.php">
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Decorators/PlainDecorator.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="232" column="9" selection-start="7868" selection-end="7868" vertical-scroll-proportion="2.1912227">
+        <state line="9" column="0" selection-start="72" selection-end="179" vertical-scroll-proportion="-5.625">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/ValueRule.php">
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Decorators/HtmlDecorator.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="1" selection-start="2808" selection-end="2808" vertical-scroll-proportion="0.9059561">
-          <folding>
-            <element signature="e#7#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Cache/MemcacheAdapter.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="23" selection-start="727" selection-end="727" vertical-scroll-proportion="0.39184952">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/ListRule.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="20" selection-start="0" selection-end="2176" vertical-scroll-proportion="0.37617555">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/Base.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="100" column="0" selection-start="3296" selection-end="3296" vertical-scroll-proportion="0.82758623">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/Base.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="38" selection-start="2950" selection-end="2950" vertical-scroll-proportion="0.5015674">
-          <folding>
-            <element signature="e#1155#1178#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/NumericRule.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="115" column="98" selection-start="3933" selection-end="3933" vertical-scroll-proportion="0.8213166">
+        <state line="34" column="18" selection-start="1296" selection-end="1296" vertical-scroll-proportion="-21.25">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/library/Tr8n/Utils/ArrayUtils.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="8" selection-start="136" selection-end="136" vertical-scroll-proportion="0.12539186">
+        <state line="19" column="5" selection-start="521" selection-end="521" vertical-scroll-proportion="-11.875">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/Tr8n/LanguageTest.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="0" selection-start="918" selection-end="918" vertical-scroll-proportion="-17.5">
-          <folding>
-            <element signature="e#6#163#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/library/Tr8n/TranslationKey.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="10" selection-start="56" selection-end="56" vertical-scroll-proportion="-2.5">
+        <state line="95" column="41" selection-start="3727" selection-end="3727" vertical-scroll-proportion="-15.5">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/library/Tr8n/Language.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="0" selection-start="423" selection-end="485" vertical-scroll-proportion="-10.625">
+        <state line="31" column="20" selection-start="1088" selection-end="1088" vertical-scroll-proportion="-19.375">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Cache/Base.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Decorators/Base.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="0" selection-start="284" selection-end="284" vertical-scroll-proportion="-8.125">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/library/Tr8n/Application.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="156" column="1" selection-start="5758" selection-end="5758" vertical-scroll-proportion="2.1159875">
+        <state line="107" column="55" selection-start="4254" selection-end="4254" vertical-scroll-proportion="-25.25">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="140" column="0" selection-start="4610" selection-end="4610" vertical-scroll-proportion="-35.5">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Translation.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="54" selection-start="784" selection-end="784" vertical-scroll-proportion="-16.875">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="22" selection-start="114" selection-end="114" vertical-scroll-proportion="-5.625">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/NumericRule.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="85" column="62" selection-start="2986" selection-end="3032" vertical-scroll-proportion="-25.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/Base.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="216" column="0" selection-start="8124" selection-end="8124" vertical-scroll-proportion="3.0564263">
           <folding />
         </state>
       </provider>

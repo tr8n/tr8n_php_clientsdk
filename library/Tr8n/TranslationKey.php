@@ -1,46 +1,157 @@
 <?php
 namespace tr8n;
 
-class TranslationKey {
-    public $application, $language, $translations;
-	public $id, $key, $label, $description;
-	
-	public function __construct($label, $description = "", $options = array()) {
-		$this->key = $this->generateKey($label, $description);
-		$this->label = $label;
-		$this->description = $description;
+class TranslationKey extends Base {
+    protected $application, $language, $translations;
+    protected $id, $key, $label, $description, $locale, $level, $locked;
+    protected $tokens;
+
+	public function __construct($attributes=array()) {
+        parent::__construct($attributes);
+
+		$this->key = $this->generateKey($this->label, $this->description);
+        if (!$this->locale) $this->locale = Config::instance()->default_locale;
+
+        $this->translations = array();
+        if (array_key_exists('translations', $attributes)) {
+            foreach($attributes["translations"] as $locale => $translations) {
+                $language = $this->application->language($locale);
+                if (!$this->translations[$locale]) $this->translations[$locale] = array();
+                foreach($translations as $translation_hash) {
+                    $t = new Translation(array_merge($translation_hash, array("translation_key"=>$this, "locale"=>$language->locale, "language"=>$language)));
+                    array_push($this->translations[$locale], $t);
+                }
+            }
+
+        }
 	}
 	
 	private function generateKey($label, $description) {
 		return md5($label . ";;;" . $description);
 	}
 
+    public function key() {
+        return $this->key;
+    }
+
     public function language() {
-        $this->language = $this->language || ($this->locale ? $this->application->language(locale) : $this->application->default_language());
-        return $this->language;
-    }
-
-    public function has_translations_for_language($language) {
-        if ($this->translations == null) return false;
-        return ($this->translations[$language->locale] && $this->translations[$language->locale].length > 0);
+        if ($this->language) return $this->language;
+        return ($this->locale ? $this->application->language($this->locale) : $this->application->default_language());
     }
 
 
-    function fetch_translations_for_language($language, $options = array()) {
-        if ($this->id && $this->has_translations_for_language($language))
+    function fetchTranslationsForLanguage($language, $options = array()) {
+        if ($this->id && $this->hasTranslationsForLanguage($language))
             return $this;
 
-//        if ($options['dry'] || \Tr8n::config()->block_options['dry'])
-//            return $this->application->cache_translation_key($this);
+        if (array_key_exists("dry", $options) && $options["dry"]) {
+            return $this->application->cacheTranslationKey($this);
+        }
 
-//        var $tkey = $this->application.post("translation_key/translations", $this->to_api_hash.merge(:locale => language.locale), {:class => Tr8n::TranslationKey, :attributes => {:application => application, :language => language}})
-//        $this->application->cache_translation_key($tkey);
+        $tkey = $this->application->post("translation_key/translations",
+                                array("key"=>$this->key, "label"=>$this->label, "description"=>$this->description, "locale" => $this->language()->locale),
+                                array("class"=>'\Tr8n\TranslationKey', "attributes"=>array("application"=>$this->application, "language"=>$this->language())));
+
+        return $this->application->cacheTranslationKey($tkey);
     }
 
+    /*
+     * Re-assigns the ownership of the application and translation key
+     */
+    public function setApplication($application) {
+        $this->application = $application;
+        foreach($this->translations as $locale=>$translations) {
+            foreach($translations as $translation) {
+                $translation->setTranslationKey($this);
+            }
+        }
+    }
 
-	public function translate($tokens = array(), $options = array()) {
-		return $this->label;
+    /*
+     * Set translations for a specific language
+     */
+    public function setTranslations($language, $translations) {
+        foreach($translations as $translation) {
+            $translation->setTranslationKey($this);
+        }
+
+        $this->translations[$language->locale] = $translations;
+    }
+
+    ###############################################################
+    ## Translations Rules Evaluation
+    ###############################################################
+    public function translations($language) {
+        if ($this->translations === null) return array();
+        if (!array_key_exists($language->locale(), $this->translations)) return array();
+        return $this->translations[$language->locale()];
+    }
+
+    public function hasTranslationsForLanguage($language) {
+        return count($this->translations($language->locale())) > 0;
+    }
+
+    protected function findFirstValidTranslation($language, $token_values) {
+        foreach($this->translations($language) as $translation) {
+            if ($translation->isValidTranslation($token_values)) {
+                return $translation;
+            }
+        }
+
+        return null;
+    }
+
+    public function translate($language, $token_values = array(), $options = array()) {
+		if (Config::instance()->isDisabled()) {
+            return $this->substituteTokens($this->language, $this->label, $token_values, $options);
+        }
+
+        $translation = $this->findFirstValidTranslation($language, $token_values);
+        $decorator = \Tr8n\Docorators\Base::decorator();
+
+        if ($translation) {
+            $processed_label = $this->substituteTokens($this->language, $translation->label, $token_values, $options);
+            return $decorator->decorate($this, $language, $processed_label, array_merge($options, array("translated" => true)));
+        }
+
+        $processed_label =  $this->substituteTokens($this->application->defaultLanguage(), $this->label, $token_values, $options);
+        return $decorator->decorate($this, $language, $processed_label, array_merge($options, array("translated" => false)));
 	}
+
+    ###############################################################
+    ## Token Substitution
+    ###############################################################
+    public function tokens() {
+        if (!$this->tokens) {
+            $this->tokens = array();
+            foreach(Config::instance()->tokenTypes() as $token_type) {
+                $tokens = \Tr8n\Tokens\Base::registerTokens($this->label, $token_type);
+                foreach($tokens as $token) {
+                    $this->tokens[$token->name] = $token;
+                }
+            }
+        }
+
+        return $this->tokens;
+    }
+
+    public function isTokenAllowed($token) {
+       return array_key_exists($token->name, $this->tokens());
+    }
+
+    public function substituteTokens($language, $label, $token_values, $options) {
+
+        foreach(Config::instance()->tokenTypes() as $token_type) {
+            $tokens = \Tr8n\Tokens\Base::registerTokens($label, $token_type);
+            foreach($tokens as $token) {
+                if (!$this->isTokenAllowed($token)) continue;
+                $label = $token->substitute($this, $language, $label, $token_values, $options);
+            }
+        }
+
+        return $label;
+    }
+
 }
 
 ?>

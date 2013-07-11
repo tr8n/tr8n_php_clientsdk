@@ -27,8 +27,8 @@ namespace tr8n;
 
 class Application extends Base {
 
-    public $host, $key, $secret, $name, $description, $definition, $version, $updated_at;
-    public $languages, $sources, $components;
+    protected $host, $key, $secret, $name, $description, $definition, $version, $updated_at;
+    protected $languages, $sources, $components;
 
     # cache methods
     private $languages_by_locale, $sources_by_key, $components_by_key, $translation_keys;
@@ -52,26 +52,29 @@ class Application extends Base {
         return $app;
     }
 
-    function __construct($attributes) {
+    function __construct($attributes=array()) {
         parent::__construct($attributes);
 
         if (!array_key_exists('definition', $attributes)) {
             $this->definition = array();
         }
+
+        $this->languages = array();
         if (array_key_exists('languages', $attributes)) {
-            $this->languages = array();
             foreach($attributes['languages'] as $l) {
                 array_push($this->languages, new Language(array_merge($l, array("application" => $this))));
             }
         }
+
+        $this->sources = array();
         if (array_key_exists('sources', $attributes)) {
-            $this->sources = array();
             foreach($attributes['sources'] as $l) {
                 array_push($this->sources, new Source(array_merge($l, array("application" => $this))));
             }
         }
+
+        $this->components = array();
         if (array_key_exists('components', $attributes)) {
-            $this->components = array();
             foreach($attributes['components'] as $l) {
                 array_push($this->components, new Component(array_merge($l, array("application" => $this))));
             }
@@ -109,9 +112,11 @@ class Application extends Base {
 
 
     public function source($key) {
+
     }
 
     public function component($key) {
+
     }
 
     public function translationKey($key) {

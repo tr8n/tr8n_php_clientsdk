@@ -50,7 +50,7 @@ class Config {
     }
 
     public function decoratorClass() {
-        return '\Tr8n\Decorators\Default';
+        return '\Tr8n\Decorators\HtmlDecorator';
     }
 
     public function rulesEngine() {
@@ -125,6 +125,19 @@ class Config {
         if ($type == null) return $this->token_classes;
         return $this->token_classes[$type];
     }
+
+    /*
+     * The token types here must be in the priority of evaluation.
+     *
+     * Data tokens must always be substituted before decoration tokens, so that the following example would work:
+     *
+     * [link: {user}] has [bold: {count||message}]
+     *
+     */
+    public function tokenTypes() {
+        return array("data", "decoration");
+    }
+
 }
 
 ?>

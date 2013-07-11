@@ -11,11 +11,11 @@ class Language extends Base {
 	public $locale, $name, $english_name, $native_name, $right_to_left, $enabled;
     public $google_key, $facebook_key, $myheritage_key, $context_rules, $language_cases;
 
-    function __construct($attributes) {
+    function __construct($attributes=array()) {
         parent::__construct($attributes);
 
+        $this->context_rules = array();
         if (array_key_exists('context_rules', $attributes)) {
-            $this->context_rules = array();
             foreach($attributes['context_rules'] as $rule_class => $hash) {
                 if (!array_key_exists($rule_class, $this->context_rules))
                     $this->context_rules[$rule_class] = array();
@@ -75,13 +75,13 @@ class Language extends Base {
         if ($source_key) {
             $source = $this->application->sourceByKey($source_key);
             $source_translation_keys = $source->fetchTranslationsForLanguage($this, $options);
-            $cached_key = $source_translation_keys[$temp_key->key];
+            $cached_key = $source_translation_keys[$temp_key->key()];
             if ($cached_key === null) {
                 $this->application->registerMissingKey($temp_key, $source);
                 $cached_key = $temp_key;
             }
         } else {
-            $cached_key = $this->application->traslationKeyByKey($temp_key->key);
+            $cached_key = $this->application->traslationKeyByKey($temp_key->key());
             if ($cached_key === null) {
                 $cached_key = $temp_key->fetchTranslationsForLanguage($this, $options);
             }

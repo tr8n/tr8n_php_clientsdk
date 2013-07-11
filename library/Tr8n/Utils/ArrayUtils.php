@@ -15,4 +15,7 @@ class ArrayUtils {
         return array_map('trim', explode($delimiter, $value));
     }
 
+    public static function isHash($arr) {
+        return array_keys($arr) !== range(0, count($arr) - 1);
+    }
 }
