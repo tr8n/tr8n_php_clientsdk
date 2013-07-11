@@ -65,4 +65,24 @@ class BaseTest extends \BaseTest {
         $this->assertEquals('[link: ]', $tokens[0]->sanitizedName());
     }
 
+    public function testSubstitution() {
+        $russian = new \Tr8n\Language(self::loadJSON('languages/ru.json'));
+
+        $label = "You have {count} message";
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals("You have 1 message", $tokens[0]->substitute($label, 1, $russian));
+
+        $label = "Hello {user}";
+        $user = new \User("Michael");
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, $user, $russian));
+        $this->assertEquals("Hello Peter", $tokens[0]->substitute($label, array($user, "Peter"), $russian));
+        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array($user, "@name"), $russian));
+        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array($user, "@@fullName"), $russian));
+
+        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array("object" => $user, "attribute"=>"name"), $russian));
+        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array("object" => $user, "method"=>"fullName"), $russian));
+
+        $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array("object" => array("name" => "Michael", "gender" => "male"), "attribute"=>"name"), $russian));
+    }
 }

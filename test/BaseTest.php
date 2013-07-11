@@ -19,3 +19,17 @@ class BaseTest extends PHPUnit_Framework_TestCase {
     }
 
 }
+
+class User {
+    public $name, $gender;
+    function __construct($name, $gender = "male") {
+        $this->name = $name;
+        $this->gender = $gender;
+    }
+    function __toString() {
+        return $this->name;
+    }
+    function fullName() {
+        return $this->name;
+    }
+}

@@ -179,6 +179,14 @@ abstract class Base {
                     return $this->sanitize($token_object->$attribute, $language, array_merge($options, array("sanitize" => true)));
                 }
 
+                if (array_key_exists('method', $token_data)) {
+                    $method = $token_data['method'];
+                    if (is_array($token_object)) {
+                        throw new Tr8nException("Invalid method properties for hash of token: " . $this->fullName());
+                    }
+                    return $this->sanitize($token_object->$method(), $language, array_merge($options, array("sanitize" => true)));
+                }
+
                 throw new Tr8nException("value and attribute properties are missing in the hash for token: " . $this->fullName());
             }
 
@@ -196,8 +204,15 @@ abstract class Base {
             $token_method = $token_data[1];
 
             if (is_string($token_method)) {
+                # method
                 if (preg_match('/^@@/', $token_method)) {
-                    $attribute = substr($token_method, -2);
+                    $attribute = substr($token_method, 2);
+                    $token_value = $token_object->$attribute();
+                    return $this->sanitize($token_value, $language, array_merge($options, array("sanitize" => true)));
+                }
+                # attribute
+                if (preg_match('/^@/', $token_method)) {
+                    $attribute = substr($token_method, 1);
                     $token_value = $token_object->$attribute;
                     return $this->sanitize($token_value, $language, array_merge($options, array("sanitize" => true)));
                 }
@@ -223,16 +238,7 @@ abstract class Base {
         return $token_value;
     }
 
-    public function substitute($translation_key, $language, $label, $token_values, $options) {
-        if (array_key_exists($this->name(), $token_values)) {
-            $token_data = $token_values[$this->name()];
-        } else {
-            $token_data = $translation_key->application->defaultTokens($this->name(), 'data');
-            if ($token_data == null) {
-                throw new Tr8nException("Missing value for token: " . $this->fullName());
-            }
-        }
-
+    public function substitute($label, $token_data, $language, $options = array()) {
         $token_value = $this->tokenValue($token_data, $language, $options);
         return str_replace($this->fullName(), $token_value, $label);
     }

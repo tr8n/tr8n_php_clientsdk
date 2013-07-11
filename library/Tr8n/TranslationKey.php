@@ -103,18 +103,18 @@ class TranslationKey extends Base {
 
     public function translate($language, $token_values = array(), $options = array()) {
 		if (Config::instance()->isDisabled()) {
-            return $this->substituteTokens($this->language, $this->label, $token_values, $options);
+            return $this->substituteTokens($this->label, $token_values, $this->language, $options);
         }
 
         $translation = $this->findFirstValidTranslation($language, $token_values);
         $decorator = \Tr8n\Docorators\Base::decorator();
 
         if ($translation) {
-            $processed_label = $this->substituteTokens($this->language, $translation->label, $token_values, $options);
+            $processed_label = $this->substituteTokens($translation->label, $token_values, $this->language, $options);
             return $decorator->decorate($this, $language, $processed_label, array_merge($options, array("translated" => true)));
         }
 
-        $processed_label =  $this->substituteTokens($this->application->defaultLanguage(), $this->label, $token_values, $options);
+        $processed_label =  $this->substituteTokens($this->label, $token_values, $this->application->defaultLanguage(), $options);
         return $decorator->decorate($this, $language, $processed_label, array_merge($options, array("translated" => false)));
 	}
 
@@ -139,16 +139,27 @@ class TranslationKey extends Base {
        return array_key_exists($token->name, $this->tokens());
     }
 
-    public function substituteTokens($language, $label, $token_values, $options) {
+    public function tokenData($token_values, $token_name, $token_type) {
+        if (array_key_exists($token_name, $token_values)) {
+            return $token_values[$token_name];
+        }
 
+        $token_data = $this->application->defaultTokens($token_name, $token_type);
+        if ($token_data == null) {
+            throw new Tr8nException("Missing value for token: " . $token_name);
+        }
+        return $token_data;
+    }
+
+    public function substituteTokens($label, $token_values, $language, $options = array()) {
         foreach(Config::instance()->tokenTypes() as $token_type) {
             $tokens = \Tr8n\Tokens\Base::registerTokens($label, $token_type);
             foreach($tokens as $token) {
                 if (!$this->isTokenAllowed($token)) continue;
-                $label = $token->substitute($this, $language, $label, $token_values, $options);
+                $token_data = tokenData($token_values, $token->name, $token_type);
+                $label = $token->substitute($label, $token_data, $language, $options);
             }
         }
-
         return $label;
     }
 
