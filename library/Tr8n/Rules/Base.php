@@ -53,6 +53,8 @@ abstract class Base extends \Tr8n\Base {
     }
 
     public function tokenValue($token) {
+        if ($token == null) return null;
+
         $method = $this->methodName();
         if (is_array($token)) {
             if (array_key_exists("object", $token)) {
@@ -68,13 +70,13 @@ abstract class Base extends \Tr8n\Base {
                 throw new Tr8nException("Object does not support a method of extracting a value");
             }
         }
-        if (!$token || !method_exists($token, $method)) return null;
+        if (method_exists($token, $method)) return $token->$method();
         return $token->$method;
     }
 
     public function transform($token, $object, $params, $language) {
-        if ($params.length == 0) {
-            throw new Tr8nException("Invalid form for token $token");
+        if ($params == null || count($params) == 0) {
+            throw new Tr8nException("Invalid form for token " . $token);
         }
 
         $options = array();
@@ -84,24 +86,23 @@ abstract class Base extends \Tr8n\Base {
                 $options[trim($parts[0])] = trim($parts[1]);
             }
         } else {
-            $options = self::defaultTransformOptions($params, $token);
+            $options = $this->defaultTransformOptions($params, $token);
         }
 
         $matched_key = null;
         foreach(array_keys($options) as $key) {
             if ($key == "other") continue;
-            $rule = $language->contextRuleByTypeAndKey(self::key(), $key);
+            $rule = $language->contextRule($this->key(), $key);
             if (!$rule) {
                 throw new Tr8nException("Invalid rule name $key for transform token $token");
             }
-
             if ($rule->evaluate($object)) {
                 $matched_key = $key;
                 break;
             }
         }
 
-        if (!$matched_key) {
+        if ($matched_key == null) {
             if ($options["other"]) {
                 return $options["other"];
             }

@@ -58,18 +58,12 @@
       "one": {
         "part1": "is",
         "value1": "1",
-        "multipart": "false",
-        "operator": "and",
-        "part2": "is",
-        "value2": ""
+        "multipart": "false"
       },
       "many": {
         "part1": "is_not",
         "value1": "1",
-        "multipart": "false",
-        "operator": "and",
-        "part2": "is",
-        "value2": ""
+        "multipart": "false"
       }
     }
   },

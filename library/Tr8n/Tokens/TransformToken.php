@@ -111,6 +111,7 @@ class TransformToken extends Base {
 
         $language_rule = $this->transformableLanguageRuleClasses();
         $language_rule = $language_rule[0];
+        $language_rule = new $language_rule();
 
         $token_value = array();
         if ($this->isAllowedInTranslation()) {
@@ -121,7 +122,7 @@ class TransformToken extends Base {
         $transform_value = $language_rule->transform($this, self::tokenObject($token_values, $this->name()), $this->pipedParameters(), $language);
         array_push($token_value, $transform_value);
 
-        return str_replace($this->fullName(), implode(" ", $token_value), $label);
+        return str_replace($this->fullName(), implode("", $token_value), $label);
     }
 
 }

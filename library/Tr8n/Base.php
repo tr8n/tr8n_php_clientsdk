@@ -37,8 +37,6 @@ class Base {
     );
 
     function __construct($attributes=array()) {
-        Logger::instance()->info("Constructing ".get_class($this)."...");
-
         foreach($attributes as $key => $value) {
             $this->$key = $value;
         }

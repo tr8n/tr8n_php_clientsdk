@@ -66,7 +66,7 @@ class Language extends Base {
 
     public function isDefault() {
         if ($this->application == null) return false;
-        return ($this->application->defaultLocale() === $this->locale);
+        return (Config::instance()->default_locale == $this->locale);
     }
 
     public function direction() {
@@ -78,40 +78,46 @@ class Language extends Base {
         return $this->right_to_left ? "right" : "left";
     }
 
-	public function translate($label, $description = "", $tokens = array(), $options = array()) {
-
-        if (Config::instance()->isDisabled()) {
-            return TranslationKey::substitute_tokens($this, $label, $tokens, $options);
-        }
-
+	public function translate($label, $description = "", $token_values = array(), $options = array()) {
         # create a temporary key
+
+        $locale = array_key_exists("locale", $options) ? $options["locale"] : Config::instance()->blockOption("locale");
+        if ($locale == null) Config::instance()->default_locale;
+
+        $level = array_key_exists("level", $options) ? $options["level"] : Config::instance()->blockOption("level");
+        if ($level == null) Config::instance()->default_level;
+
         $temp_key = new TranslationKey(array(
             "application"   => $this->application,
             "label"         => $label,
             "description"   => $description,
-            "locale"        => array_key_exists("locale", $options) ? $options["locale"] : Config::instance()->default_locale,
-            "level"         => array_key_exists("level", $options) ? $options["level"] : 0,
+            "locale"        => $locale,
+            "level"         => $level,
             "translations"  => array()
          ));
 
-        $source_key = $options["source"] || Config::instance()->current_source;
+        if (Config::instance()->isDisabled() || $this->isDefault()) {
+            return $temp_key->substituteTokens($label, $token_values, $this, $options);
+        }
+
+        $source_key = array_key_exists('source', $options) ? $options["source"] : Config::instance()->current_source;
         $cached_key = null;
         if ($source_key) {
             $source = $this->application->sourceByKey($source_key);
             $source_translation_keys = $source->fetchTranslationsForLanguage($this, $options);
             $cached_key = $source_translation_keys[$temp_key->key()];
-            if ($cached_key === null) {
+            if ($cached_key == null) {
                 $this->application->registerMissingKey($temp_key, $source);
                 $cached_key = $temp_key;
             }
         } else {
-            $cached_key = $this->application->traslationKeyByKey($temp_key->key());
-            if ($cached_key === null) {
-                $cached_key = $temp_key->fetchTranslationsForLanguage($this, $options);
+            $cached_key = $this->application->translationKey($temp_key->key);
+            if ($cached_key == null) {
+                $cached_key = $temp_key->fetchTranslations($this, $options);
             }
         }
 
-        return $cached_key->translate($this, array_merge($tokens, array("viewing_user" => Config::instance()->current_user)), $options);
+        return $cached_key->translate($this, array_merge($token_values, array("viewing_user" => Config::instance()->current_user)), $options);
 	}
 
 }

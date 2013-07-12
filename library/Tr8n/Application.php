@@ -27,11 +27,11 @@ namespace tr8n;
 
 class Application extends Base {
 
-    protected $host, $key, $secret, $name, $description, $definition, $version, $updated_at;
-    protected $languages, $sources, $components;
+    public $host, $key, $secret, $name, $description, $definition, $version, $updated_at;
+    public $languages, $sources, $components;
 
-    # cache methods
-    private $languages_by_locale, $sources_by_key, $components_by_key, $translation_keys;
+    # TODO: move those attributes out - must be cached
+    public $languages_by_locale, $sources_by_key, $components_by_key, $translation_keys;
 
     public static function init($host, $key, $secret, $options = array()) {
         if (is_null($options['definition'])) $options['definition'] = true;
@@ -80,16 +80,19 @@ class Application extends Base {
             }
         }
 
-        $this->languages_by_locale = array();
-        $this->sources_by_key = array();
-        $this->components_by_key = array();
-        $this->translation_keys = array();
+        $this->languages_by_locale  = null;
+        $this->sources_by_key       = null;
+        $this->components_by_key    = null;
+        $this->translation_keys     = array();
     }
 
-    public function language($locale = null) {
-        $locale = $locale || Config::instance()->default_locale;
+    /*
+     * TODO: cache this method
+    */
+    public function language($locale = null, $fetch = false) {
+        $locale = ($locale == null ? Config::instance()->default_locale : $locale);
 
-        if (!$this->languages_by_locale) {
+        if (count($this->languages_by_locale) == null) {
             $this->languages_by_locale = array();
             foreach($this->languages as $lang) {
                 $this->languages_by_locale[$lang->locale] = $lang;
@@ -100,8 +103,21 @@ class Application extends Base {
             return $this->languages_by_locale[$locale];
         }
 
+        if ($fetch == false) return null;
+
         $this->languages_by_locale[$locale] = $this->get("language", array("locale" => $locale), array("class" => '\Tr8n\Language', "attributes" => array("application" => $this)));
         return $this->languages_by_locale[$locale];
+    }
+
+    public function addLanguage($language) {
+        $lang = $this->language($language->locale, false);
+        if ($lang != null) return $lang;
+
+        $language->application = $this;
+        array_push($this->languages, $language);
+        $this->languages_by_locale[$language->locale] = $language;
+
+        return $language;
     }
 
     public function defaultToken($key, $type = "data") {
@@ -119,23 +135,28 @@ class Application extends Base {
 
     }
 
+    /*
+     * TODO: cache this method
+     */
     public function translationKey($key) {
         if (!array_key_exists($key, $this->translation_keys))
             return null;
         return $this->translation_keys[$key];
     }
 
-    public function cacheTranslationKey($tkey) {
-        $cached_key = $this->translationKey($tkey->key);
+    public function cacheTranslationKey($translation_key) {
+        $cached_key = $this->translationKey($translation_key->key);
         if ($cached_key) {
             # move translations from tkey to the cached key
-            foreach($tkey->translations as $locale => $translations) {
+            foreach($translation_key->translations as $locale => $translations) {
                 $cached_key->setLanguageTranslations($this->language($locale), $translations);
             }
             return $cached_key;
         }
-        $this->translation_keys[$tkey->key] = $tkey->setApplication($this);
-        return $tkey;
+
+        $translation_key->setApplication($this);
+        $this->translation_keys[$translation_key->key] = $translation_key;
+        return $translation_key;
     }
 
     /*

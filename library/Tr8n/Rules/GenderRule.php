@@ -32,9 +32,9 @@ class GenderRule extends Base {
         return "gender";
     }
 
-    public static function genderObjectValueFor($type) {
-        $config = \Tr8n\Config::instance();
-        return $config["gender"]["method_values"][$type];
+    public function genderObjectValue($type) {
+        $rules = \Tr8n\Config::instance()->rulesEngine();
+        return $rules["gender"]["method_values"][$type];
     }
 
     # FORM: [male, female(, unknown)]
@@ -71,11 +71,11 @@ class GenderRule extends Base {
         if (!$token_value) return false;
 
         if ($this->operator == "is") {
-            return ($token_value == $this->genderObjectValueFor($this->value));
+            return ($token_value == $this->genderObjectValue($this->value));
         }
 
         if ($this->operator == "is_not") {
-            return ($token_value != $this->genderObjectValueFor($this->value));
+            return ($token_value != $this->genderObjectValue($this->value));
         }
 
         return false;

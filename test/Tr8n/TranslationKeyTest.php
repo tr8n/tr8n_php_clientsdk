@@ -46,7 +46,7 @@ class TranslationKeyTest extends \BaseTest {
     public function testTranslation() {
         $russian = new \Tr8n\Language(self::loadJSON('languages/ru.json'));
         $tkey = new TranslationKey(array("label" => "Hello World"));
-//        $tkey->translate($russian);
+        echo $tkey->translate($russian);
     }
 
 

@@ -18,6 +18,14 @@ class BaseTest extends PHPUnit_Framework_TestCase {
         return json_decode($string,true);
     }
 
+    protected static function cacheTranslations($app, $label, $description, $translations) {
+        $app->cacheTranslationKey(new \Tr8n\TranslationKey(array(
+            "application" => $app,
+            "label" => $label,
+            "description" => $description,
+            "translations" => $translations
+        )));
+    }
 }
 
 class User {

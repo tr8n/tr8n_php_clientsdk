@@ -30,10 +30,11 @@ require_once "Application.php";
 
 class Config {
 
-    public $application, $default_locale;
+    public $application, $default_locale, $default_level;
     public $current_user, $current_language, $current_translator, $current_source, $current_component;
     public $current_translation_keys;
 
+    private $block_options;
     private $rules_engine, $token_classes;
 
     public static function instance() {
@@ -42,6 +43,28 @@ class Config {
             $inst = new Config();
         }
         return $inst;
+    }
+
+    function __construct() {
+        $this->default_locale = 'en-US';
+        $this->default_level = 0;
+        $this->block_options = array();
+    }
+
+    public function beginBlockWithOptions($options = array()) {
+        array_push($this->block_options, $options);
+    }
+
+    public function blockOption($key) {
+        if (count($this->block_options) == 0) return null;
+        $current_options = $this->block_options[0];
+        if (!array_key_exists($key, $current_options)) return null;
+        return $current_options[$key];
+    }
+
+    public function finishBlockWithOptions() {
+        if (count($this->block_options) == 0) return null;
+        array_pop($this->block_options);
     }
 
     public function isEnabled() {

@@ -242,11 +242,11 @@ abstract class Base {
             $token_data = $this->application->defaultTokens($this->name(), 'data');
         }
 
-        if ($token_data == null) {
+        if ($token_data === null) {
             throw new Tr8nException("Missing value for token: " . $this->name());
         }
 
-        if (is_string($token_data)) {
+        if (is_string($token_data) || is_numeric($token_data) || is_double($token_data)) {
             return $this->sanitize($token_data, $language, $options);
         }
 

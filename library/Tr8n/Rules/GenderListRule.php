@@ -44,8 +44,9 @@ class GenderListRule extends Base {
         foreach($list as $object) {
             $object_gender = \tr8n\rules\GenderRule::tokenValue($object);
             if (!$object_gender) continue;
+            $rule = new \Tr8n\Rules\GenderRule();
             foreach(self::$GENDERS as $gender) {
-                if ($object_gender == \tr8n\rules\GenderRule::genderObjectValueFor($gender)) {
+                if ($object_gender == $rule->genderObjectValue($gender)) {
                     $results[$gender] = true;
                 }
             }
