@@ -114,3 +114,6 @@ echo  htmlentities ($substitution, ENT_QUOTES, 'UTF-8') . "<br><br>";
 
 echo $substitution;
 
+
+
+//tr("This story is about {user:gender::pre::about}");

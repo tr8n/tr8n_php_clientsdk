@@ -30,7 +30,8 @@ use tr8n\Tr8nException;
 abstract class Base {
 
     protected $label, $name, $full_name, $declared_name, $sanitized_name, $pipeless_name;
-    protected $case_key;
+    protected $case_keys, $caseless_name, $types, $associated_rule_types, $language_rule_classes;
+    protected $transformable_language_rule_classes;
 
     public static function registerTokens($label, $category = "data", $options = array()) {
         $tokens = array();
@@ -95,10 +96,89 @@ abstract class Base {
         return $this->pipeless_name;
     }
 
-    public function caseKey() {
-        if (strpos($this->declaredName(), '::') === FALSE) {
-            return null;
+    /*
+     * Language Cases Support
+     *
+     * Language cases can be chained by using ::ord::pre, etc...
+     *
+     */
+    public function caseKeys() {
+        if ($this->case_keys == null) {
+            $cases = array();
+            preg_match_all('/(::[\w]+)/', $this->declaredName(), $cases);
+            $cases = $cases[0];
+            $this->case_keys = array();
+            foreach($cases as $case) {
+                array_push($this->case_keys, str_replace('::', '', $case));
+            }
         }
+
+        return $this->case_keys;
+    }
+
+    public function hasCases() {
+        return (count($this->caseKeys()) > 0);
+    }
+
+    public function caselessName() {
+        if ($this->caseless_name == null) {
+            $parts = explode('::', $this->pipelessName());
+            $this->caseless_name = $parts[0];
+        }
+        return $this->caseless_name;
+    }
+    /*
+     * Context Rules Support
+     *
+     * Rules can also be chained :gender:value
+     */
+    public function types() {
+        if ($this->types == null) {
+            $types = array();
+            preg_match_all('/(:[\w]+)/', $this->caselessName(), $types);
+            $types = $types[0];
+            $this->types = array();
+            foreach($types as $type) {
+                array_push($this->types, str_replace(':', '', $type));
+            }
+        }
+        return $this->types;
+    }
+
+    public function hasTypes() {
+        return (count($this->types()) > 0);
+    }
+
+    public function associatedRuleTypes() {
+        if ($this->associated_rule_types == null) {
+            $this->associated_rule_types = ($this->hasTypes() ? $this->types() : \Tr8n\Config::instance()->ruleTypesByTokenName($this->name()));
+        }
+        return $this->associated_rule_types;
+    }
+
+    public function languageRuleClasses() {
+        if ($this->language_rule_classes == null) {
+            $this->language_rule_classes = array();
+            foreach($this->associatedRuleTypes() as $type) {
+                $class = \Tr8n\Config::instance()->ruleClassByType($type);
+                if ($class == null)
+                    throw new Tr8nException("Undefined rule type " . $this->type() . " for " . $this->fullName());
+                array_push($this->language_rule_classes, $class);
+            }
+        }
+        return $this->language_rule_classes;
+    }
+
+    public function transformableLanguageRuleClasses() {
+        if ($this->transformable_language_rule_classes == null) {
+            $this->transformable_language_rule_classes = array();
+            foreach($this->languageRuleClasses() as $class) {
+                if ($class::isTransformable()) {
+                    array_push($this->transformable_language_rule_classes, $class);
+                }
+            }
+        }
+        return $this->transformable_language_rule_classes;
     }
 
     /*

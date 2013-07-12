@@ -143,7 +143,8 @@ class TranslationKey extends Base {
         $tokens = \Tr8n\Tokens\Base::registerTokens($label, 'data');
         foreach($tokens as $token) {
             if (!$this->isTokenAllowed($token)) continue;
-            $label = $token->substitute($label, $token_values, $language, $options);
+            $lang = (get_class($token) == 'Tr8n\Tokens\TransformToken' ? $this->language() : $language);
+            $label = $token->substitute($label, $token_values, $lang, $options);
         }
 
         // decoration tokens can be nested, so process tokens in a loop until no more tokens are left

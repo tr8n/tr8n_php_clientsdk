@@ -34,11 +34,6 @@ class BaseTest extends \BaseTest {
         $this->assertEquals('Tr8n\Tokens\MethodToken', get_class($tokens[0]));
         $this->assertEquals('{user.name}', $tokens[0]->fullName());
 
-        $tokens = Base::registerTokens("This is {_his_her} message", "data");
-        $this->assertEquals(1, count($tokens));
-        $this->assertEquals('Tr8n\Tokens\HiddenToken', get_class($tokens[0]));
-        $this->assertEquals('{_his_her}', $tokens[0]->fullName());
-
         $tokens = Base::registerTokens("This is {user| his, her} message", "data");
         $this->assertEquals(1, count($tokens));
         $this->assertEquals('Tr8n\Tokens\TransformToken', get_class($tokens[0]));
@@ -86,4 +81,92 @@ class BaseTest extends \BaseTest {
         $this->assertEquals("Hello Michael", $tokens[0]->substitute($label, array("user" => array("object" => array("name" => "Michael", "gender" => "male"), "attribute"=>"name")), $russian));
     }
 
+    public function testLanguageCaseKeys() {
+        $label = "This is your {count::ord} message";
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals(1, count($tokens));
+        $this->assertEquals('Tr8n\Tokens\DataToken', get_class($tokens[0]));
+        $this->assertEquals(array('ord'), $tokens[0]->caseKeys());
+        $this->assertEquals('count::ord', $tokens[0]->pipelessName());
+        $this->assertEquals('count', $tokens[0]->caselessName());
+        $this->assertEquals('count', $tokens[0]->name());
+        $this->assertEquals(true, $tokens[0]->hasCases());
+
+        $label = "This is your {count::ord::pre} message";
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals(1, count($tokens));
+        $this->assertEquals('Tr8n\Tokens\DataToken', get_class($tokens[0]));
+        $this->assertEquals(array('ord', 'pre'), $tokens[0]->caseKeys());
+        $this->assertEquals('count::ord::pre', $tokens[0]->pipelessName());
+        $this->assertEquals('count', $tokens[0]->caselessName());
+        $this->assertEquals('count', $tokens[0]->name());
+        $this->assertEquals(true, $tokens[0]->hasCases());
+    }
+
+    public function testTypes() {
+        $label = "This is your {count:number} message";
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals(1, count($tokens));
+        $this->assertEquals('Tr8n\Tokens\DataToken', get_class($tokens[0]));
+        $this->assertEquals('count', $tokens[0]->name());
+        $this->assertEquals(array('number'), $tokens[0]->types());
+
+        $label = "This is your {count:number:value} message";
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals(1, count($tokens));
+        $this->assertEquals('Tr8n\Tokens\DataToken', get_class($tokens[0]));
+        $this->assertEquals('count', $tokens[0]->name());
+        $this->assertEquals(array('number', 'value'), $tokens[0]->types());
+
+        $label = "This is your {count:number::ord} message";
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals(1, count($tokens));
+        $this->assertEquals('Tr8n\Tokens\DataToken', get_class($tokens[0]));
+        $this->assertEquals(array('ord'), $tokens[0]->caseKeys());
+        $this->assertEquals('count:number::ord', $tokens[0]->pipelessName());
+        $this->assertEquals('count:number', $tokens[0]->caselessName());
+        $this->assertEquals('count', $tokens[0]->name());
+        $this->assertEquals(true, $tokens[0]->hasCases());
+        $this->assertEquals(array('number'), $tokens[0]->types());
+
+        $label = "This is your {count:number::ord::pre} message";
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals(1, count($tokens));
+        $this->assertEquals('Tr8n\Tokens\DataToken', get_class($tokens[0]));
+        $this->assertEquals(array('ord', 'pre'), $tokens[0]->caseKeys());
+        $this->assertEquals('count:number::ord::pre', $tokens[0]->pipelessName());
+        $this->assertEquals('count:number', $tokens[0]->caselessName());
+        $this->assertEquals('count', $tokens[0]->name());
+        $this->assertEquals(true, $tokens[0]->hasCases());
+        $this->assertEquals(array('number'), $tokens[0]->types());
+    }
+
+    public function testLanguageRuleClasses() {
+        $label = "This is your {count:number} message";
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals(array('\Tr8n\Rules\NumericRule'), $tokens[0]->languageRuleClasses());
+
+        $label = "This is {user:gender}";
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals(array('\Tr8n\Rules\GenderRule'), $tokens[0]->languageRuleClasses());
+
+        $label = "This is {user:gender:value}";
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals(array('\Tr8n\Rules\GenderRule', '\Tr8n\Rules\ValueRule'), $tokens[0]->languageRuleClasses());
+    }
+
+    public function testTransformableLanguageRuleClasses() {
+        $label = "This is your {count:number} message";
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals(array('\Tr8n\Rules\NumericRule'), $tokens[0]->transformableLanguageRuleClasses());
+
+        $label = "This is {user:gender}";
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals(array('\Tr8n\Rules\GenderRule'), $tokens[0]->transformableLanguageRuleClasses());
+
+        $label = "This is {user:gender:value}";
+        $tokens = Base::registerTokens($label, "data");
+        $this->assertEquals(array('\Tr8n\Rules\GenderRule', '\Tr8n\Rules\ValueRule'), $tokens[0]->languageRuleClasses());
+        $this->assertEquals(array('\Tr8n\Rules\GenderRule'), $tokens[0]->transformableLanguageRuleClasses());
+    }
 }

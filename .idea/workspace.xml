@@ -2,23 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f8d75aae-cf72-469c-a094-39ffe3de16cf" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/Tokens/DecorationTokenTest.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/TranslationKeyTest.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/Tr8n/Tokens/MethodTokenTest.php" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/library/Tr8n/Tokens/HiddenToken.php" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/Tr8n/Tokens/BaseTest.php" afterPath="$PROJECT_DIR$/test/Tr8n/Tokens/BaseTest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Config.php" afterPath="$PROJECT_DIR$/library/Tr8n/Config.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Tokens/DataToken.php" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/DataToken.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Tokens/DecorationToken.php" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/DecorationToken.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Tokens/MethodToken.php" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/MethodToken.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Tokens/TransformToken.php" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/TransformToken.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/TranslationKey.php" afterPath="$PROJECT_DIR$/library/Tr8n/TranslationKey.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.php" afterPath="$PROJECT_DIR$/test.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log/tr8n.log" afterPath="$PROJECT_DIR$/log/tr8n.log" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="tr8n_php_clientsdk.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373493723884" ignored="false" />
-    <file path="/test.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373578460233" ignored="false" />
+    <file path="/test.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373591655285" ignored="false" />
     <file path="/a.dummy" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373493981563" ignored="false" />
-    <file path="/Base.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373584454664" ignored="false" />
-    <file path="/BaseTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373511180872" ignored="false" />
+    <file path="/Base.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373593845472" ignored="false" />
+    <file path="/BaseTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373593794618" ignored="false" />
     <file path="/LanguageTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373417033316" ignored="false" />
     <file path="/Language.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373418205227" ignored="false" />
     <file path="/Config.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373504241905" ignored="false" />
@@ -38,7 +41,7 @@
     <file path="/MemcacheAdapter.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373411908654" ignored="false" />
     <file path="/ValueRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373416710467" ignored="false" />
     <file path="/ArrayUtils.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373502582966" ignored="false" />
-    <file path="/TranslationKey.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373584389746" ignored="false" />
+    <file path="/TranslationKey.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373594783687" ignored="false" />
     <file path="/Translation.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373504539000" ignored="false" />
     <file path="/HtmlDecorator.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373501954374" ignored="false" />
     <file path="/PlainDecorator.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373494028956" ignored="false" />
@@ -46,6 +49,9 @@
     <file path="/DecorationToken.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373583056404" ignored="false" />
     <file path="/dummy.txt" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373580093820" ignored="false" />
     <file path="/TranslationKeyTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373584666244" ignored="false" />
+    <file path="/MethodToken.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373588736456" ignored="false" />
+    <file path="/MethodTokenTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373588631932" ignored="false" />
+    <file path="/TransformToken.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373594618568" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,42 +71,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="DecorationTokenTest.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/Tr8n/Tokens/DecorationTokenTest.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="69" column="91" selection-start="3126" selection-end="3126" vertical-scroll-proportion="-33.25">
-              <folding>
-                <element signature="e#6#163#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="BaseTest.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/Tr8n/Tokens/BaseTest.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="72" column="81" selection-start="3447" selection-end="3447" vertical-scroll-proportion="-25.125">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TranslationKeyTest.php" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test/Tr8n/TranslationKeyTest.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="45" selection-start="913" selection-end="913" vertical-scroll-proportion="0.45016077">
-              <folding>
-                <element signature="e#6#163#0" expanded="true" />
-                <marker date="1373584697000" expanded="true" signature="1407:1887" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LanguageTest.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/Tr8n/LanguageTest.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="28" selection-start="794" selection-end="814" vertical-scroll-proportion="-11.25">
+            <state line="169" column="58" selection-start="9077" selection-end="9077" vertical-scroll-proportion="-32.708332">
               <folding />
             </state>
           </provider>
@@ -109,17 +83,30 @@
       <file leaf-file-name="DecorationToken.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/DecorationToken.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="155" column="2" selection-start="5116" selection-end="5116" vertical-scroll-proportion="-35.125">
+            <state line="114" column="0" selection-start="3445" selection-end="3647" vertical-scroll-proportion="-27.5">
+              <folding>
+                <element signature="e#6#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DataToken.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/DataToken.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="50" column="52" selection-start="1765" selection-end="1765" vertical-scroll-proportion="-18.125">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Application.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/library/Tr8n/Application.php">
+      <file leaf-file-name="MethodToken.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/MethodToken.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="106" column="32" selection-start="4162" selection-end="4174" vertical-scroll-proportion="-13.666667">
-              <folding />
+            <state line="43" column="62" selection-start="1564" selection-end="1564" vertical-scroll-proportion="-12.0">
+              <folding>
+                <element signature="e#7#10#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -127,7 +114,47 @@
       <file leaf-file-name="TranslationKey.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/library/Tr8n/TranslationKey.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="148" column="43" selection-start="5890" selection-end="5890" vertical-scroll-proportion="-25.75">
+            <state line="146" column="56" selection-start="5912" selection-end="5912" vertical-scroll-proportion="-25.5">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MethodTokenTest.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/Tr8n/Tokens/MethodTokenTest.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="19" column="0" selection-start="375" selection-end="502" vertical-scroll-proportion="-11.875">
+              <folding>
+                <element signature="e#6#163#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TransformToken.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/TransformToken.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="118" column="9" selection-start="4507" selection-end="4507" vertical-scroll-proportion="0.7749196">
+              <folding>
+                <element signature="e#6#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NumericRule.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/NumericRule.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Base.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/Base.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="108" column="9" selection-start="3865" selection-end="3865" vertical-scroll-proportion="-31.375">
               <folding />
             </state>
           </provider>
@@ -136,25 +163,7 @@
       <file leaf-file-name="Base.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/Base.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="254" column="37" selection-start="9769" selection-end="9775" vertical-scroll-proportion="-31.375">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="80" column="41" selection-start="2192" selection-end="2192" vertical-scroll-proportion="-12.625">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Base.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/library/Tr8n/Base.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="47" selection-start="1421" selection-end="1464" vertical-scroll-proportion="-10.625">
+            <state line="335" column="77" selection-start="12678" selection-end="12732" vertical-scroll-proportion="-32.0">
               <folding />
             </state>
           </provider>
@@ -181,22 +190,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/library/Tr8n/Application.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/Base.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/Decorators/PlainDecorator.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/Decorators/HtmlDecorator.php" />
         <option value="$PROJECT_DIR$/library/Tr8n/Decorators/Base.php" />
         <option value="$PROJECT_DIR$/library/Tr8n/Utils/ArrayUtils.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/Config.php" />
         <option value="$PROJECT_DIR$/library/Tr8n/Translation.php" />
         <option value="$PROJECT_DIR$/test/BaseTest.php" />
-        <option value="$PROJECT_DIR$/test.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/TranslationKey.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/Tokens/DecorationToken.php" />
-        <option value="$PROJECT_DIR$/test/Tr8n/Tokens/BaseTest.php" />
         <option value="$PROJECT_DIR$/test/Tr8n/Tokens/DecorationTokenTest.php" />
         <option value="$PROJECT_DIR$/test/Tr8n/TranslationKeyTest.php" />
+        <option value="$PROJECT_DIR$/test/Tr8n/Tokens/MethodTokenTest.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Config.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Tokens/DecorationToken.php" />
+        <option value="$PROJECT_DIR$/test.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Tokens/DataToken.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Tokens/MethodToken.php" />
+        <option value="$PROJECT_DIR$/test/Tr8n/Tokens/BaseTest.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/Tokens/TransformToken.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/TranslationKey.php" />
       </list>
     </option>
   </component>
@@ -632,62 +641,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/NumericRule.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="62" selection-start="2986" selection-end="3032" vertical-scroll-proportion="0.62695926">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/Tr8n/Utils/InflectorTest.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/Tr8n/Rules/BaseTest.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/HiddenToken.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="2" selection-start="145" selection-end="145" vertical-scroll-proportion="-7.5">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/DateRule.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/Base.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Base.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="47" selection-start="1421" selection-end="1464" vertical-scroll-proportion="-10.625">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="41" selection-start="2192" selection-end="2192" vertical-scroll-proportion="-12.625">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/library/Tr8n/Application.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="106" column="32" selection-start="4162" selection-end="4174" vertical-scroll-proportion="-13.666667">
@@ -702,49 +655,113 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/TranslationKey.php">
+    <entry file="file://$PROJECT_DIR$/test/Tr8n/TranslationKeyTest.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="148" column="43" selection-start="5890" selection-end="5890" vertical-scroll-proportion="-25.75">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/Base.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="254" column="37" selection-start="9769" selection-end="9775" vertical-scroll-proportion="-31.375">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/DecorationToken.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="155" column="2" selection-start="5116" selection-end="5116" vertical-scroll-proportion="-35.125">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/Tr8n/Tokens/BaseTest.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="81" selection-start="3447" selection-end="3447" vertical-scroll-proportion="-25.125">
-          <folding />
+        <state line="47" column="35" selection-start="1946" selection-end="1946" vertical-scroll-proportion="-29.375">
+          <folding>
+            <element signature="e#6#163#0" expanded="true" />
+            <marker date="1373584697000" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/Tr8n/Tokens/DecorationTokenTest.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="91" selection-start="3126" selection-end="3126" vertical-scroll-proportion="-33.25">
+        <state line="50" column="39" selection-start="0" selection-end="3188" vertical-scroll-proportion="-21.375">
           <folding>
             <element signature="e#6#163#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/Tr8n/TranslationKeyTest.php">
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Config.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="45" selection-start="913" selection-end="913" vertical-scroll-proportion="0.45016077">
+        <state line="120" column="58" selection-start="3966" selection-end="3966" vertical-scroll-proportion="-75.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="118" column="38" selection-start="3192" selection-end="3192" vertical-scroll-proportion="-35.125">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/DataToken.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="52" selection-start="1765" selection-end="1765" vertical-scroll-proportion="-18.125">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/DecorationToken.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="114" column="0" selection-start="3445" selection-end="3647" vertical-scroll-proportion="-27.5">
+          <folding>
+            <element signature="e#6#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/MethodToken.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="62" selection-start="1564" selection-end="1564" vertical-scroll-proportion="-12.0">
+          <folding>
+            <element signature="e#7#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/Tr8n/Tokens/MethodTokenTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="0" selection-start="375" selection-end="502" vertical-scroll-proportion="-11.875">
           <folding>
             <element signature="e#6#163#0" expanded="true" />
-            <marker date="1373584697000" expanded="true" signature="1407:1887" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/Tr8n/Tokens/BaseTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="169" column="58" selection-start="9077" selection-end="9077" vertical-scroll-proportion="-32.708332">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/Base.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="335" column="77" selection-start="12678" selection-end="12732" vertical-scroll-proportion="-32.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/NumericRule.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/Base.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="108" column="9" selection-start="3865" selection-end="3865" vertical-scroll-proportion="-31.375">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/TranslationKey.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="146" column="56" selection-start="5912" selection-end="5912" vertical-scroll-proportion="-25.5">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/Tokens/TransformToken.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="118" column="9" selection-start="4507" selection-end="4507" vertical-scroll-proportion="0.7749196">
+          <folding>
+            <element signature="e#6#9#0" expanded="true" />
           </folding>
         </state>
       </provider>

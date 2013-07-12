@@ -118,7 +118,7 @@ class Config {
     public function tokenClasses($type = null) {
         if ($this->token_classes == null) {
             $this->token_classes = array(
-                "data" => array('\Tr8n\Tokens\DataToken', '\Tr8n\Tokens\HiddenToken', '\Tr8n\Tokens\MethodToken', '\Tr8n\Tokens\TransformToken'),
+                "data" => array('\Tr8n\Tokens\DataToken', '\Tr8n\Tokens\MethodToken', '\Tr8n\Tokens\TransformToken'),
                 "decoration" => array('\Tr8n\Tokens\DecorationToken')
             );
         }
