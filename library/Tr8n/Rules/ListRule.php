@@ -63,5 +63,3 @@ class ListRule extends Base {
         return false;
     }
 }
-
-?>

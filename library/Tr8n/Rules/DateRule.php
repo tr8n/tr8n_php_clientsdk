@@ -67,5 +67,3 @@ class DateRule extends Base {
         return false;
     }
 }
-
-?>

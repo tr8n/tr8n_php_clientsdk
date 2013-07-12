@@ -79,5 +79,3 @@ class ValueRule extends Base {
         return false;
     }
 }
-
-?>

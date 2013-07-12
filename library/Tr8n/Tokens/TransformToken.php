@@ -125,6 +125,3 @@ class TransformToken extends Base {
     }
 
 }
-
-
-?>

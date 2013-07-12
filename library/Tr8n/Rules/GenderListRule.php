@@ -150,5 +150,3 @@ class GenderListRule extends Base {
         return false;
     }
 }
-
-?>

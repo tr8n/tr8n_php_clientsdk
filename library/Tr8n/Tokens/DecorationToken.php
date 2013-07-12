@@ -189,5 +189,3 @@ class DecorationToken extends Base {
         return $token_value;
     }
 }
-
-?>

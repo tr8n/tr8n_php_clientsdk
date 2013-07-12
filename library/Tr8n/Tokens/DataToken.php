@@ -52,5 +52,3 @@ class DataToken extends Base {
     }
 
 }
-
-?>

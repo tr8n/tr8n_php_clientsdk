@@ -82,5 +82,3 @@ class GenderRule extends Base {
     }
 
 }
-
-?>

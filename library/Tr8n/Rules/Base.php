@@ -111,5 +111,3 @@ abstract class Base extends \Tr8n\Base {
         return $options[$matched_key];
     }
 }
-
-?>

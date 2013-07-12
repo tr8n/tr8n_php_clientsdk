@@ -23,11 +23,9 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-namespace tr8n;
+namespace Tr8n;
 
 class Cache {
 	function __construct() {
 	}
 }
-
-?>

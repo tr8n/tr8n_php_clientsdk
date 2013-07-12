@@ -119,5 +119,3 @@ class NumericRule extends Base {
     }
 
 }
-
-?>
