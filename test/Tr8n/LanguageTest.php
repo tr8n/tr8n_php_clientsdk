@@ -502,7 +502,7 @@ class LanguageTest extends \BaseTest {
         Config::instance()->finishBlockWithOptions();
     }
 
-    public function testLanguageCases() {
+    public function testDefaultLanguageCases() {
         $app = new \Tr8n\Application(self::loadJSON('application.json'));
         $english = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
 
@@ -526,6 +526,31 @@ class LanguageTest extends \BaseTest {
             $english->translate('This is your {count::ordinal} warning', '', array('count' => 1))
         );
 
+        $michael = new \User("Michael", "male");
+        $this->assertEquals("This is Michael's message",
+            $english->translate('This is {user::pos} message', '', array('user' => $michael))
+        );
     }
 
+    public function testTranslatedLanguageCases() {
+        $app = new \Tr8n\Application(self::loadJSON('application.json'));
+        $english = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
+        $russian = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/ru.json')));
+
+        $michael = new \User("Михаил", "male");
+        $anna = new \User("Анна", "female");
+
+        self::cacheTranslations($app, '{actor} sent {target} a present.', '', array("ru" => array(
+            array("label" => "{actor||прислал,прислала} подарок {target::dat}."),
+        )));
+
+        $this->assertEquals('Анна прислала подарок Михаилу.',
+            $russian->translate('{actor} sent {target} a present.', '', array('actor' => $anna, 'target' => $michael))
+        );
+
+        $this->assertEquals('Михаил прислал подарок Анне.',
+            $russian->translate('{actor} sent {target} a present.', '', array('target' => $anna, 'actor' => $michael))
+        );
+
+    }
 }

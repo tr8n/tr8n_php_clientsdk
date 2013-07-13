@@ -96,11 +96,11 @@ class LanguageCaseRule extends Base {
             case "replace":
                 switch ($this->part1) {
                     case "starts_with":
-                        return preg_replace('/\b('.$regex.')/', $this->operation_value, $value);
+                        return preg_replace('/^('.$regex.')/', $this->operation_value, $value);
                     case "is":
                         return $this->operation_value;
                     case "ends_in":
-                        return preg_replace('/('.$regex.')\b/', $this->operation_value, $value);
+                        return preg_replace('/('.$regex.')$/', $this->operation_value, $value);
                 }
             case "prepand":
                 return "".$this->operation_value.$value;

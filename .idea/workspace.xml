@@ -2,19 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f8d75aae-cf72-469c-a094-39ffe3de16cf" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/LanguageCase.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/LanguageCaseRule.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/Tr8n/Utils/StringUtils.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Rules/Base.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/Base.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" afterPath="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Config.php" afterPath="$PROJECT_DIR$/library/Tr8n/Config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Rules/GenderListRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/GenderListRule.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Rules/GenderRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/GenderRule.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Language.php" afterPath="$PROJECT_DIR$/library/Tr8n/Language.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/LanguageCase.php" afterPath="$PROJECT_DIR$/library/Tr8n/LanguageCase.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/LanguageCaseRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/LanguageCaseRule.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/Tr8n/LanguageTest.php" afterPath="$PROJECT_DIR$/test/Tr8n/LanguageTest.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Rules/ValueRule.php" afterPath="$PROJECT_DIR$/library/Tr8n/Rules/ValueRule.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/fixtures/languages/en-US.json" afterPath="$PROJECT_DIR$/test/fixtures/languages/en-US.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="tr8n_php_clientsdk.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -23,7 +13,7 @@
     <file path="/a.dummy" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373493981563" ignored="false" />
     <file path="/Base.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373679316108" ignored="false" />
     <file path="/BaseTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373663050326" ignored="false" />
-    <file path="/LanguageTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373669539609" ignored="false" />
+    <file path="/LanguageTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373680614288" ignored="false" />
     <file path="/Language.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373671009028" ignored="false" />
     <file path="/Config.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373679707277" ignored="false" />
     <file path="/Logger.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373402716203" ignored="false" />
@@ -60,7 +50,7 @@
     <file path="/ApplicationTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373659970201" ignored="false" />
     <file path="/GenderListRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373674045218" ignored="false" />
     <file path="/LanguageCase.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373673388820" ignored="false" />
-    <file path="/LanguageCaseRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373679977684" ignored="false" />
+    <file path="/LanguageCaseRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373681245702" ignored="false" />
     <file path="/StringUtils.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373678473801" ignored="false" />
     <file path="/en-US.json" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373680032974" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -82,21 +72,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Language.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/library/Tr8n/Language.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="75" column="38" selection-start="2880" selection-end="2880" vertical-scroll-proportion="-20.625">
-              <folding>
-                <element signature="e#7#10#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="LanguageCaseRule.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/library/Tr8n/LanguageCaseRule.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="65" column="27" selection-start="2366" selection-end="2366" vertical-scroll-proportion="-22.416666">
+            <state line="102" column="0" selection-start="3737" selection-end="3737" vertical-scroll-proportion="-29.25">
               <folding>
                 <element signature="e#7#10#0" expanded="true" />
                 <element signature="e#1149#1176#0" expanded="true" />
@@ -128,10 +107,19 @@
       <file leaf-file-name="LanguageTest.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test/Tr8n/LanguageTest.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="514" column="10" selection-start="20264" selection-end="20264" vertical-scroll-proportion="0.78056425">
+            <state line="540" column="44" selection-start="21395" selection-end="21395" vertical-scroll-proportion="0.6708464">
               <folding>
                 <element signature="e#6#163#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ru.json" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/fixtures/languages/ru.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="174" column="27" selection-start="4266" selection-end="4266" vertical-scroll-proportion="-20.625">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -166,7 +154,7 @@
       <file leaf-file-name="LanguageCase.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/library/Tr8n/LanguageCase.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="81" column="0" selection-start="3224" selection-end="3224" vertical-scroll-proportion="-23.0">
+            <state line="57" column="55" selection-start="2245" selection-end="2245" vertical-scroll-proportion="-12.375">
               <folding>
                 <element signature="e#7#10#0" expanded="true" />
               </folding>
@@ -216,10 +204,10 @@
         <option value="$PROJECT_DIR$/library/Tr8n/Language.php" />
         <option value="$PROJECT_DIR$/library/Tr8n/Tokens/Base.php" />
         <option value="$PROJECT_DIR$/library/Tr8n/Config.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/LanguageCase.php" />
-        <option value="$PROJECT_DIR$/library/Tr8n/LanguageCaseRule.php" />
         <option value="$PROJECT_DIR$/test/fixtures/languages/en-US.json" />
+        <option value="$PROJECT_DIR$/library/Tr8n/LanguageCase.php" />
         <option value="$PROJECT_DIR$/test/Tr8n/LanguageTest.php" />
+        <option value="$PROJECT_DIR$/library/Tr8n/LanguageCaseRule.php" />
       </list>
     </option>
   </component>
@@ -613,13 +601,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/GenderListRule.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="88" selection-start="1784" selection-end="1834" vertical-scroll-proportion="-16.25">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/NumericRule.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="53" column="0" selection-start="1617" selection-end="2091" vertical-scroll-proportion="-20.0">
@@ -705,15 +686,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n/LanguageCase.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="0" selection-start="3224" selection-end="3224" vertical-scroll-proportion="-23.0">
-          <folding>
-            <element signature="e#7#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/fixtures/languages/en-US.json">
       <provider selected="true" editor-type-id="text-editor">
         <state line="172" column="27" selection-start="4187" selection-end="4191" vertical-scroll-proportion="-24.25">
@@ -721,9 +693,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n/LanguageCase.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="55" selection-start="2245" selection-end="2245" vertical-scroll-proportion="-12.375">
+          <folding>
+            <element signature="e#7#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/fixtures/languages/ru.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="174" column="27" selection-start="4266" selection-end="4266" vertical-scroll-proportion="-20.625">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/library/Tr8n/LanguageCaseRule.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="65" column="27" selection-start="2366" selection-end="2366" vertical-scroll-proportion="-22.416666">
+        <state line="102" column="0" selection-start="3737" selection-end="3737" vertical-scroll-proportion="-29.25">
           <folding>
             <element signature="e#7#10#0" expanded="true" />
             <element signature="e#1149#1176#0" expanded="true" />
@@ -733,7 +721,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/Tr8n/LanguageTest.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="514" column="10" selection-start="20264" selection-end="20264" vertical-scroll-proportion="0.78056425">
+        <state line="540" column="44" selection-start="21395" selection-end="21395" vertical-scroll-proportion="0.6708464">
           <folding>
             <element signature="e#6#163#0" expanded="true" />
           </folding>
