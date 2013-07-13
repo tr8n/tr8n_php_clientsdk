@@ -51,16 +51,32 @@ class Language extends Base {
             }
 
         }
+
+        $this->language_cases = array();
+        if (array_key_exists('language_cases', $attributes)) {
+            foreach($attributes['language_cases'] as $key => $case) {
+                $this->language_cases[$key] = new \Tr8n\LanguageCase(array_merge($case, array("language" => $this)));
+            }
+        }
     }
 
     public function contextRule($type, $key = null) {
-        if ($key === null)
-            return $this->context_rules[$type];
+        if (!array_key_exists($type, $this->context_rules))
+            return null;
 
-        return $this->context_rules[$type][$key];
+        $rule = $this->context_rules[$type];
+        if ($key == null) return $rule;
+
+        if (!array_key_exists($key, $rule))
+            return null;
+
+        return $rule[$key];
     }
 
     public function languageCase($key) {
+        if (!array_key_exists($key, $this->language_cases))
+            return null;
+
         return $this->language_cases[$key];
     }
 

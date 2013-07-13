@@ -143,6 +143,10 @@ class Config {
         return $this->rules_engine;
     }
 
+    public function supportedGenders() {
+        return array("male", "female", "unknown", "neutral");
+    }
+
     public function ruleClassByType($type) {
         $config = $this->rulesEngine();
         if ($config[$type] === null) return null;

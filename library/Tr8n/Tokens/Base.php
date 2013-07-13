@@ -247,7 +247,7 @@ abstract class Base {
         }
 
         if (is_string($token_data) || is_numeric($token_data) || is_double($token_data)) {
-            return $this->sanitize($token_data, $language, $options);
+            return $this->sanitize($token_data, $token_values, $language, $options);
         }
 
         if (is_array($token_data)) {
@@ -258,7 +258,7 @@ abstract class Base {
                 $token_object = $token_data['object'];
 
                 if (array_key_exists('value', $token_data)) {
-                    return $this->sanitize($token_data['value'], $language, array_merge($options, array("sanitize" => false)));
+                    return $this->sanitize($token_data['value'], $token_values, $language, array_merge($options, array("sanitize" => false)));
                 }
 
 
@@ -266,11 +266,11 @@ abstract class Base {
                     $attribute = $token_data['attribute'];
                     if (is_array($token_object)) {
                         if (array_key_exists($attribute, $token_object)) {
-                            return $this->sanitize($token_object[$attribute], $language, array_merge($options, array("sanitize" => true)));
+                            return $this->sanitize($token_object[$attribute], $token_values, $language, array_merge($options, array("sanitize" => true)));
                         }
                         throw new Tr8nException("Invalid attribute properties for object in the hash of token: " . $this->fullName());
                     }
-                    return $this->sanitize($token_object->$attribute, $language, array_merge($options, array("sanitize" => true)));
+                    return $this->sanitize($token_object->$attribute, $token_values, $language, array_merge($options, array("sanitize" => true)));
                 }
 
                 if (array_key_exists('method', $token_data)) {
@@ -278,7 +278,7 @@ abstract class Base {
                     if (is_array($token_object)) {
                         throw new Tr8nException("Invalid method properties for hash of token: " . $this->fullName());
                     }
-                    return $this->sanitize($token_object->$method(), $language, array_merge($options, array("sanitize" => true)));
+                    return $this->sanitize($token_object->$method(), $token_values, $language, array_merge($options, array("sanitize" => true)));
                 }
 
                 throw new Tr8nException("value and attribute properties are missing in the hash for token: " . $this->fullName());
@@ -293,7 +293,7 @@ abstract class Base {
 //            }
 
             if (count($token_data) == 1)
-                return $this->sanitize($token_object, $language, array_merge($options, array("sanitize" => true)));
+                return $this->sanitize($token_object, $token_values, $language, array_merge($options, array("sanitize" => true)));
 
             $token_method = $token_data[1];
 
@@ -302,39 +302,69 @@ abstract class Base {
                 if (preg_match('/^@@/', $token_method)) {
                     $attribute = substr($token_method, 2);
                     $token_value = $token_object->$attribute();
-                    return $this->sanitize($token_value, $language, array_merge($options, array("sanitize" => true)));
+                    return $this->sanitize($token_value, $token_values, $language, array_merge($options, array("sanitize" => true)));
                 }
                 # attribute
                 if (preg_match('/^@/', $token_method)) {
                     $attribute = substr($token_method, 1);
                     $token_value = $token_object->$attribute;
-                    return $this->sanitize($token_value, $language, array_merge($options, array("sanitize" => true)));
+                    return $this->sanitize($token_value, $token_values, $language, array_merge($options, array("sanitize" => true)));
                 }
-                return $this->sanitize($token_method, $language, array_merge($options, array("sanitize" => false)));
+                return $this->sanitize($token_method, $token_values, $language, array_merge($options, array("sanitize" => false)));
             }
 
             if (is_callable($token_method)) {
                 $token_value = $token_method($token_object);
-                return $this->sanitize($token_value, $language, array_merge($options, array("sanitize" => false)));
+                return $this->sanitize($token_value, $token_values, $language, array_merge($options, array("sanitize" => false)));
             }
 
             throw new Tr8nException("Unsupported token array method for token: " . $this->fullName());
         }
 
-        return $this->sanitize($token_data, $language, $options);
+        return $this->sanitize($token_data, $token_values, $language, $options);
     }
 
-    public function sanitize($token_object, $language, $options) {
-        $token_value = "".$token_object;
+    ##############################################################################
+    #
+    # case is identified with ::
+    #
+    # examples:
+    #
+    # tr("Hello {user::nom}", "", :user => current_user)
+    # tr("{actor} gave {target::dat} a present", "", :actor => user1, :target => user2)
+    # tr("This is {user::pos} toy", "", :user => current_user)
+    #
+    ##############################################################################
+    public function applyCase($case, $token_value, $token_values, $language, $options) {
+        $case = $language->languageCase($case);
+        if ($case == null) return $token_value;
+        return $case->apply(self::tokenObject($token_values, $this->name()), $token_value);
+    }
+
+    public function sanitize($token_object, $token_values, $language, $options) {
+        $token_value = "" . $token_object;
 
         // TODO: add language cases support and HTML escaping
+
+        if ($this->hasCases()) {
+            foreach($this->caseKeys() as $case) {
+                $token_value = $this->applyCase($case, $token_value, $token_values, $language, $options);
+            }
+        }
 
         return $token_value;
     }
 
+    /*
+     * Main substitution function
+     */
     public function substitute($label, $token_values, $language, $options = array()) {
         $token_value = $this->tokenValue($token_values, $language, $options);
         return str_replace($this->fullName(), $token_value, $label);
+    }
+
+    function __toString() {
+        return $this->fullName();
     }
 }
 

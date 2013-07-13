@@ -506,10 +506,25 @@ class LanguageTest extends \BaseTest {
         $app = new \Tr8n\Application(self::loadJSON('application.json'));
         $english = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
 
-        // Basic Tokens
-//        $this->assertEquals('This is your 1st warning',
-//            $english->translate('This is your {count::ord} warning', '', array('count' => 1))
-//        );
+        $this->assertEquals('This is your 1st warning',
+            $english->translate('This is your {count::ord} warning', '', array('count' => 1))
+        );
+
+        $this->assertEquals('This is your 2nd warning',
+            $english->translate('This is your {count::ord} warning', '', array('count' => 2))
+        );
+
+        $this->assertEquals('This is your 3rd warning',
+            $english->translate('This is your {count::ord} warning', '', array('count' => 3))
+        );
+
+        $this->assertEquals('This is your 4th warning',
+            $english->translate('This is your {count::ord} warning', '', array('count' => 4))
+        );
+
+        $this->assertEquals('This is your first warning',
+            $english->translate('This is your {count::ordinal} warning', '', array('count' => 1))
+        );
 
     }
 

@@ -47,33 +47,17 @@ class ValueRule extends Base {
 
         switch ($this->operator) {
             case "starts_with":
-                foreach($values as $value) {
-                    if (preg_match('/^'.$value.'/', token_value))
-                        return true;
-                }
-                return false;
+                return \Tr8n\Utils\StringUtils::startsWith($values, $token_value);
             case "does_not_start_with":
-                foreach($values as $value) {
-                    if (preg_match('/^'.$value.'/', token_value))
-                        return false;
-                }
-                return true;
+                return !\Tr8n\Utils\StringUtils::startsWith($values, $token_value);
             case "ends_in":
-                foreach($values as $value) {
-                    if (preg_match('/'.$value.'$/', token_value))
-                        return true;
-                }
-                return false;
+                return \Tr8n\Utils\StringUtils::endsWith($values, $token_value);
             case "does_not_end_in":
-                foreach($values as $value) {
-                    if (preg_match('/'.$value.'$/', token_value))
-                        return false;
-                }
-                return true;
+                return !\Tr8n\Utils\StringUtils::endsWith($values, $token_value);
             case "is":
-                return array_key_exists($token_value, $values);
+                return in_array($token_value, $values);
             case "is_not":
-                return !array_key_exists($token_value, $values);
+                return !in_array($token_value, $values);
         }
 
         return false;

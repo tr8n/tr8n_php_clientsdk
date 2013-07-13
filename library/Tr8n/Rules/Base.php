@@ -93,8 +93,8 @@ abstract class Base extends \Tr8n\Base {
         foreach(array_keys($options) as $key) {
             if ($key == "other") continue;
             $rule = $language->contextRule($this->key(), $key);
-            if (!$rule) {
-                throw new Tr8nException("Invalid rule name $key for transform token $token");
+            if ($rule==null) {
+                throw new Tr8nException("Invalid rule name '$key' for transform token '$token' in '$language->locale'");
             }
             if ($rule->evaluate($object)) {
                 $matched_key = $key;
