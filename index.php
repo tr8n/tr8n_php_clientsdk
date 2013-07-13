@@ -1,7 +1,5 @@
-<?php require('library/Tr8n/Tr8n.php'); ?>
+<?php require_once('library/Tr8n.php'); ?>
 
-<? echo tr("Hello World", "Greeting"); ?>
+<?php include('library/Tr8n/Includes/Scripts.php'); ?>
 
-<br><br>
-
-<? echo tr("You have {count||message} in your mailbox.", "", array("count" => 5)); ?>
+<? echo tr("Hello World"); ?>

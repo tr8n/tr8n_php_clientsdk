@@ -31,9 +31,12 @@ use \Tr8n\Rules\GenderRule;
 class LanguageCaseRule extends Base {
 
     public $language_case;
-    public $gender, $operator, $multipart, $part1, $value1, $part2, $value2, $operation, $operation_value;
+    public $fallback, $gender, $operator, $multipart, $part1, $value1, $part2, $value2, $operation, $operation_value;
 
     public function evaluate($object, $value) {
+        if ($this->isFallback())
+            return true;
+
         if (in_array($this->gender, Config::instance()->supportedGenders())) {
             $object_gender = GenderRule::genderObjectValue($this->gender);
             foreach(Config::instance()->supportedGenders() as $gender) {
@@ -56,6 +59,10 @@ class LanguageCaseRule extends Base {
             return true;
 
         return false;
+    }
+
+    private function isFallback() {
+        return ($this->fallback == 'true');
     }
 
     private function isMultipart() {
@@ -89,23 +96,24 @@ class LanguageCaseRule extends Base {
     }
 
     public function apply($value) {
-        $values = ArrayUtils::split($this->value1);
-        $regex = implode($values, '|');
-
         switch ($this->operation) {
             case "replace":
                 switch ($this->part1) {
                     case "starts_with":
+                        $values = ArrayUtils::split($this->value1);
+                        $regex = implode($values, '|');
                         return preg_replace('/^('.$regex.')/', $this->operation_value, $value);
                     case "is":
                         return $this->operation_value;
                     case "ends_in":
+                        $values = ArrayUtils::split($this->value1);
+                        $regex = implode($values, '|');
                         return preg_replace('/('.$regex.')$/', $this->operation_value, $value);
                 }
             case "prepand":
-                return "".$this->operation_value.$value;
+                return "" . $this->operation_value . $value;
             case "append":
-                return "".$value.$this->operation_value;
+                return "" . $value.$this->operation_value;
         }
 
         return $value;

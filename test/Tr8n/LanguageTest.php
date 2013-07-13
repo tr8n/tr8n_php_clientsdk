@@ -22,7 +22,7 @@ class LanguageTest extends \BaseTest {
         $this->assertEquals('Russian', $russian->english_name);
         $this->assertEquals('Русский', $russian->native_name);
         $this->assertEquals(array("date", "gender_list", "gender", "number", "value"), array_keys($russian->context_rules));
-        $this->assertEquals(array("nom", "gen", "dat", "acc", "ins", "pre", "pos"), array_keys($russian->language_cases));
+        $this->assertEquals(array("nom", "gen", "dat", "acc", "ins", "pre", "pos", "about"), array_keys($russian->language_cases));
     }
 
     public function testDefaultTranslationsWithNoTokens() {
@@ -526,6 +526,34 @@ class LanguageTest extends \BaseTest {
             $english->translate('This is your {count::ordinal} warning', '', array('count' => 1))
         );
 
+        $this->assertEquals('This is your second warning',
+            $english->translate('This is your {count::ordinal} warning', '', array('count' => 2))
+        );
+
+        $this->assertEquals('This is your third warning',
+            $english->translate('This is your {count::ordinal} warning', '', array('count' => 3))
+        );
+
+        $this->assertEquals('This is your 4 warning',
+            $english->translate('This is your {count::ordinal} warning', '', array('count' => 4))
+        );
+
+        $this->assertEquals('This is your 4th warning',
+            $english->translate('This is your {count::ordinal::ord} warning', '', array('count' => 4))
+        );
+
+        $this->assertEquals('This has already happened once before.',
+            $english->translate('This has already happened {count::times} before.', '', array('count' => 1))
+        );
+
+        $this->assertEquals('This has already happened twice before.',
+            $english->translate('This has already happened {count::times} before.', '', array('count' => 2))
+        );
+
+        $this->assertEquals('This has already happened 3 times before.',
+            $english->translate('This has already happened {count::times} before.', '', array('count' => 3))
+        );
+
         $michael = new \User("Michael", "male");
         $this->assertEquals("This is Michael's message",
             $english->translate('This is {user::pos} message', '', array('user' => $michael))
@@ -550,6 +578,18 @@ class LanguageTest extends \BaseTest {
 
         $this->assertEquals('Михаил прислал подарок Анне.',
             $russian->translate('{actor} sent {target} a present.', '', array('target' => $anna, 'actor' => $michael))
+        );
+
+        self::cacheTranslations($app, '{actor} is thinking about {target}.', '', array("ru" => array(
+            array("label" => "{actor} думает {target::pre::about}."),
+        )));
+
+        $this->assertEquals('Михаил думает об Анне.',
+            $russian->translate('{actor} is thinking about {target}.', '', array('target' => $anna, 'actor' => $michael))
+        );
+
+        $this->assertEquals('Анна думает о Михаиле.',
+            $russian->translate('{actor} is thinking about {target}.', '', array('actor' => $anna, 'target' => $michael))
         );
 
     }

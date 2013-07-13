@@ -60,18 +60,19 @@ class Base {
         if ($options['method'] == 'POST') {
             $opts[CURLOPT_URL] = $options['host'].Application::API_PATH.$path;
             $opts[CURLOPT_POSTFIELDS] = http_build_query($params, null, '&');
+            Logger::instance()->info("POST: " . $opts[CURLOPT_URL]);
+            Logger::instance()->info($opts[CURLOPT_POSTFIELDS]);
         } else {
             $opts[CURLOPT_URL] = $options['host'].Application::API_PATH.$path.'?'.http_build_query($params, null, '&');
+            Logger::instance()->info("GET: " . $opts[CURLOPT_URL]);
         }
 
-        Logger::instance()->info($opts[CURLOPT_URL]);
-        Logger::instance()->info($opts[CURLOPT_POSTFIELDS]);
 
         curl_setopt_array($ch, $opts);
 
         $result = curl_exec($ch);
 
-        Logger::instance()->info($result);
+//        Logger::instance()->info($result);
 
         curl_close($ch);
 
@@ -86,7 +87,7 @@ class Base {
 
     public static function processResponse($data, $options = array()) {
         if ($data["results"]) {
-            Logger::instance()->info("received ".$data["results"].length." result(s)");
+            Logger::instance()->info("received " . count($data["results"]) ." result(s)");
 
             if (!$options["class"]) return $data["results"];
 

@@ -47,8 +47,6 @@ class Application extends Base {
         );
 
 
-        Logger::instance()->info($app->languages);
-
         return $app;
     }
 

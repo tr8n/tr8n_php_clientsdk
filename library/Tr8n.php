@@ -1,5 +1,8 @@
 <?php
 
+# TODO: comment this out once it is set in php.ini
+date_default_timezone_set('America/Los_Angeles');
+
 $files = array(
     "Tr8n/Utils",
     "Tr8n/Base.php",
@@ -19,7 +22,6 @@ foreach($files as $dir) {
         foreach (scandir($path) as $filename) {
             $file = $path . "/" . $filename;
             if (is_file($file)) {
-    //            print($path."\n");
                 require_once $file;
             }
         }
@@ -28,36 +30,12 @@ foreach($files as $dir) {
     }
 }
 
-class Tr8n {
-    private static $locale = 'en-US';
-    private static $source = '/';
-
-    public static function application() {
-        static $application = null;
-//        $application = apc_fetch("tr8n_application");
-        if ($application === null) {
-            $application = tr8n\Application::init("http://localhost:3000", "29adc3257b6960703", "a5af33d9d691ce0a6");
-//            apc_store('tr8n_application', $application);
-        }
-        return $application;
-    }
-
-    public static function init_request() {
-
-    }
-
-    public static function reset_request() {
-
-    }
-
-    public static function translate($label, $description = "", $tokens = array(), $options = array()) {
-        $language = Tr8n::application()->language(Tr8n::$locale);
-		return $language->translate($label, $description, $tokens, $options);
-	}
-}
+\Tr8n\Config::instance()->initApplication("http://localhost:3000", "29adc3257b6960703", "a5af33d9d691ce0a6");
+\Tr8n\Config::instance()->initRequest(array('locale' => 'en-US'));
 
 function tr($label, $description = "", $tokens = array(), $options = array()) {
-	return Tr8n::translate($label, $description, $tokens, $options);
+    $language = \Tr8n\Config::instance()->current_language;
+	return $language->translate($label, $description, $tokens, $options);
 }
 
 function trl($label, $description = "", $tokens = array(), $options = array()) {

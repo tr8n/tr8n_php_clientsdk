@@ -46,9 +46,25 @@ class Config {
     }
 
     function __construct() {
+        $this->application = null;
         $this->default_locale = 'en-US';
         $this->default_level = 0;
         $this->block_options = array();
+    }
+
+    public function initApplication($host, $client_id, $client_secret) {
+        if ($this->application == null) {
+            // TODO: get application from cache
+            $this->application = \Tr8n\Application::init($host, $client_id, $client_secret);
+        }
+        return $this->application;
+    }
+
+    public function initRequest($options = array()) {
+        $locale = (array_key_exists('locale', $options) ? $options['locale'] : $this->default_locale);
+        $source = (array_key_exists('source', $options) ? $options['source'] : null);
+        $component = (array_key_exists('component', $options) ? $options['component'] : null);
+        $this->current_language = $this->application->language($locale);
     }
 
     public function beginBlockWithOptions($options = array()) {
@@ -80,7 +96,8 @@ class Config {
     }
 
     public function loggerFilePath() {
-        return __DIR__."/../../log/tr8n.log";
+        return "/Users/michael/Projects/Tr8n/tr8n_php_clientsdk/log/tr8n.log";
+//        return __DIR__."/../../log/tr8n.log";
     }
 
     public function loggerSeverity() {

@@ -35,7 +35,7 @@ class TranslationKey extends Base {
 
 		$this->key = $this->generateKey($this->label, $this->description);
         if ($this->locale == null) $this->locale = Config::instance()->default_locale;
-        $this->language = $this->application->language($this->locale);
+        if ($this->language == null) $this->language = $this->application->language($this->locale);
 
         $this->translations = array();
         if (array_key_exists('translations', $attributes)) {

@@ -246,7 +246,22 @@
       "description": "Думаю - О ком? О чём?",
       "application": "words",
       "rules": [
-        
+          {
+              "multipart": false,
+              "gender": "female",
+              "part1": "ends_in",
+              "value1": "а,я",
+              "operation": "replace",
+              "operation_value": "е"
+          },
+          {
+              "multipart": false,
+              "gender": "male",
+              "part1": "ends_in",
+              "value1": "л,м,р,н,с,в,д,б,т",
+              "operation": "append",
+              "operation_value": "е"
+          }
       ]
     },
     "pos": {
@@ -272,6 +287,27 @@
           "operation": "append",
           "operation_value": "a"
         }
+      ]
+    },
+    "about": {
+      "keyword": "about",
+      "latin_name": "About",
+      "native_name": "Предлог",
+      "description": "Думаю - О ком? О чём?",
+      "application": "phrase",
+      "rules": [
+          {
+              "multipart": false,
+              "part1": "starts_with",
+              "value1": "а,е,о,А,Е,О",
+              "operation": "prepand",
+              "operation_value": "об "
+          },
+          {
+              "fallback": true,
+              "operation": "prepand",
+              "operation_value": "о "
+          }
       ]
     }
   }
