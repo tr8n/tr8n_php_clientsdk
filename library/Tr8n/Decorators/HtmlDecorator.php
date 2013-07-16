@@ -32,11 +32,11 @@ class HtmlDecorator extends Base {
         if ($translation_key->locale == $language->locale) return $label;
 
         $config = \Tr8n\Config::instance();
-        if (!$config->current_translator) return $label;
-        if (!$config->current_translator->isInlineMode()) return $label;
+        if ($config->current_translator == null) return $label;
+        if (!$config->current_translator->isInlineModeEnabled()) return $label;
         if ($translation_key->isLocked() && !$config->current_translator->isManager()) return $label;
 
-        if ($translation_key->id() === null) {
+        if ($translation_key->id == null) {
             $html = "";
             return $html;
         }
@@ -55,7 +55,7 @@ class HtmlDecorator extends Base {
             array_push($classes, 'tr8n_not_translated');
         }
 
-        $html = "<tr8n class='" . implode(' ', $classes) . "' translation_key_id='" . $translation_key->id() . "'>";
+        $html = "<tr8n class='" . implode(' ', $classes) . "' translation_key_id='" . $translation_key->id . "'>";
         $html = $html . $label;
         $html = $html . "</tr8n>";
 

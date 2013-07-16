@@ -64,6 +64,7 @@ class Config {
         $locale = (array_key_exists('locale', $options) ? $options['locale'] : $this->default_locale);
         $source = (array_key_exists('source', $options) ? $options['source'] : null);
         $component = (array_key_exists('component', $options) ? $options['component'] : null);
+        $this->current_translator = (array_key_exists('translator', $options) ? $options['translator'] : null);
         $this->current_language = $this->application->language($locale);
     }
 
@@ -205,4 +206,39 @@ class Config {
         return array("data", "decoration");
     }
 
+    protected function base64UrlDecode($input) {
+        return base64_decode(strtr($input, '-_', '+/'));
+    }
+
+    protected function base64UrlEncode($input) {
+        $str = strtr(base64_encode($input), '+/', '-_');
+        $str = str_replace('=', '', $str);
+        return $str;
+    }
+
+    public function decodeAndVerifyParams($signed_request, $secret) {
+        $signed_request = urldecode($signed_request);
+//        echo($signed_request);
+
+        $parts = explode('.', $signed_request);
+        $sig = base64_decode($parts[0]);
+        $data = json_decode(base64_decode($parts[1]), true);
+
+//      data = JSON.parse(Base64.decode64(payload))
+//      # pp :secret, secret
+//
+//      if data['algorithm'].to_s.upcase != 'HMAC-SHA256'
+//        raise Tr8n::Exception.new("Bad signature algorithm: %s" % data['algorithm'])
+//      end
+//      expected_sig = OpenSSL::HMAC.digest('sha256', secret, payload)
+//      # pp :expected, expected_sig
+//      # pp :actual, sig
+//
+//      pp data
+//
+//      # if expected_sig != sig
+//      #   raise Tr8n::Exception.new("Bad signature")
+//      # end
+        return $data;
+    }
 }

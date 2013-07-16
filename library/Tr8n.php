@@ -30,8 +30,29 @@ foreach($files as $dir) {
     }
 }
 
-\Tr8n\Config::instance()->initApplication("http://localhost:3000", "29adc3257b6960703", "a5af33d9d691ce0a6");
-\Tr8n\Config::instance()->initRequest(array('locale' => 'en-US'));
+function tr8n_init_client_sdk() {
+    header('Content-type: text/html; charset=utf-8');
+
+    if (\Tr8n\Config::instance()->isDisabled()) {
+        return;
+    }
+
+    \Tr8n\Config::instance()->initApplication("http://localhost:3000", "29adc3257b6960703", "a5af33d9d691ce0a6");
+
+    $cookie_name = "tr8n_" . \Tr8n\Config::instance()->application->key;
+    $locale = \Tr8n\Config::instance()->default_locale;
+    $translator = null;
+
+    if (isset($_COOKIE[$cookie_name])) {
+        $cookie_params = \Tr8n\Config::instance()->decodeAndVerifyParams($_COOKIE[$cookie_name], \Tr8n\Config::instance()->application->secret);
+        $locale = $cookie_params['locale'];
+        if (isset($cookie_params["translator"])) {
+            $translator = new \Tr8n\Translator(array_merge($cookie_params["translator"], array('application' => \Tr8n\Config::instance()->application)));
+        }
+    }
+
+    \Tr8n\Config::instance()->initRequest(array('locale' => $locale, 'translator' => $translator));
+}
 
 function tr($label, $description = "", $tokens = array(), $options = array()) {
     $language = \Tr8n\Config::instance()->current_language;

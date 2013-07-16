@@ -42,31 +42,23 @@ class Base {
         }
     }
 
-    protected static function base64UrlDecode($input) {
-        return base64_decode(strtr($input, '-_', '+/'));
-    }
-
-    protected static function base64UrlEncode($input) {
-        $str = strtr(base64_encode($input), '+/', '-_');
-        $str = str_replace('=', '', $str);
-        return $str;
-    }
-
     public static function executeRequest($path, $params = array(), $options = array()) {
         $ch = curl_init();
 
         $opts = self::$CURL_OPTS;
 
+        if (!array_key_exists('method', $options)) {
+            $options['method'] = 'GET';
+        }
+
         if ($options['method'] == 'POST') {
             $opts[CURLOPT_URL] = $options['host'].Application::API_PATH.$path;
             $opts[CURLOPT_POSTFIELDS] = http_build_query($params, null, '&');
-            Logger::instance()->info("POST: " . $opts[CURLOPT_URL]);
-            Logger::instance()->info($opts[CURLOPT_POSTFIELDS]);
+            Logger::instance()->info("POST: " . $opts[CURLOPT_URL] . '?' . $opts[CURLOPT_POSTFIELDS]);
         } else {
             $opts[CURLOPT_URL] = $options['host'].Application::API_PATH.$path.'?'.http_build_query($params, null, '&');
             Logger::instance()->info("GET: " . $opts[CURLOPT_URL]);
         }
-
 
         curl_setopt_array($ch, $opts);
 
@@ -78,15 +70,15 @@ class Base {
 
         $data = json_decode($result, true);
 
-        if ($data['error']) {
-            throw (new Tr8nException("Error: ".$data['error']));
+        if (array_key_exists('error', $data)) {
+            throw (new Tr8nException("Error: " . $data['error']));
         }
 
         return self::processResponse($data, $options);
     }
 
     public static function processResponse($data, $options = array()) {
-        if ($data["results"]) {
+        if (array_key_exists('results', $data)) {
             Logger::instance()->info("received " . count($data["results"]) ." result(s)");
 
             if (!$options["class"]) return $data["results"];
@@ -103,13 +95,10 @@ class Base {
     }
 
     public static function createObject($data, $options) {
-        $obj = new $options["class"]($data);
-        if ($options["attributes"]) {
-            foreach($options["attributes"] as $key => $value) {
-                $obj->$key = $value;
-            }
+        if ($options != null && array_key_exists('attributes', $options)) {
+            $data = array_merge($data, $options['attributes']);
         }
-        return $obj;
+        return new $options["class"]($data);
     }
 
 }

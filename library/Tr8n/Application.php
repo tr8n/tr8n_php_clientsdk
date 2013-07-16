@@ -34,7 +34,8 @@ class Application extends Base {
     public $languages_by_locale, $sources_by_key, $components_by_key, $translation_keys;
 
     public static function init($host, $key, $secret, $options = array()) {
-        if (is_null($options['definition'])) $options['definition'] = true;
+        if (!array_key_exists('definition', $options) || $options['definition'] == null)
+            $options['definition'] = true;
 
         Logger::instance()->info("Initializing application...");
 
@@ -167,13 +168,14 @@ class Application extends Base {
     }
 
     public function post($path, $params = array(), $options = array()) {
-        $options["POST"] = true;
+        $options["method"] = 'POST';
         return $this->api($path, $params, $options);
     }
 
     public function api($path, $params = array(), $options = array()) {
-        $options["client_id"] = $this->client_id;
-        $options["t"] = microtime(true);
+        $options["host"] = $this->host;
+        $params["client_id"] = $this->key;
+        $params["t"] = microtime(true);
 
         return self::executeRequest($path, $params, $options);
     }

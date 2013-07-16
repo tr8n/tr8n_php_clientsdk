@@ -57,6 +57,10 @@ class TranslationKey extends Base {
 		return md5($label . ";;;" . $description);
 	}
 
+    public function isLocked() {
+        return ($this->locked == true);
+    }
+
     public function hasTranslations($language) {
         return count($this->translations($language->locale)) > 0;
     }
@@ -70,7 +74,7 @@ class TranslationKey extends Base {
         }
 
         $translation_key = $this->application->post("translation_key/translations",
-                                array("key"=>$this->key, "label"=>$this->label, "description"=>$this->description, "locale" => $this->language->locale),
+                                array("key"=>$this->key, "label"=>$this->label, "description"=>$this->description, "locale" => $language->locale),
                                 array("class"=>'\Tr8n\TranslationKey', "attributes"=>array("application"=>$this->application, "language"=>$this->language)));
 
         return $this->application->cacheTranslationKey($translation_key);

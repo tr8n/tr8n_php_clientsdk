@@ -81,7 +81,7 @@ class Language extends Base {
     }
 
     public function isDefault() {
-        if ($this->application == null) return false;
+        if ($this->application == null) return true;
         return (Config::instance()->default_locale == $this->locale);
     }
 
