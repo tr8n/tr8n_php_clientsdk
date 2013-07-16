@@ -84,7 +84,7 @@ class GenderListRule extends Base {
 
     public function evaluate($token) {
         $list_size = $this->tokenValue($token);
-        if (!$list_size) return false;
+        if ($list_size === null) return false;
 
         $genders = self::genders($token);
 

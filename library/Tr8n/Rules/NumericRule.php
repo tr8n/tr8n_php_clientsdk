@@ -108,7 +108,7 @@ class NumericRule extends Base {
 
     public function evaluate($token) {
         $value = $this->tokenValue($token);
-        if (!$value) return false;
+        if ($value === null) return false;
 
         $result1 = $this->evaluateRuleFragment($value, $this->part1, \Tr8n\Utils\ArrayUtils::split($this->value1));
         if (!$this->isMultipart()) return $result1;

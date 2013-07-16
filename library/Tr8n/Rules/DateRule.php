@@ -52,7 +52,7 @@ class DateRule extends Base {
 
     public function evaluate($token) {
         $token_value = $this->tokenValue($token);
-        if (!$token_value) return false;
+        if ($token_value === null) return false;
 
         $current_date = strtotime(date("Y-m-d"));
         switch ($this->value) {

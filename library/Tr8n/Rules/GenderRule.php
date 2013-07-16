@@ -68,7 +68,7 @@ class GenderRule extends Base {
 
     public function evaluate($token) {
         $token_value = $this->tokenValue($token);
-        if (!$token_value) return false;
+        if ($token_value === null) return false;
 
         if ($this->operator == "is") {
             return ($token_value == $this::genderObjectValue($this->value));

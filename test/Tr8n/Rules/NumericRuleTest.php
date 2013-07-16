@@ -55,15 +55,18 @@ class NumericRuleTest extends \BaseTest {
     public function testRuleEvaluation() {
         $rules = self::loadJSON("rules/ru/numeric.json");
         $rule = new NumericRule($rules["one"]);
+        $this->assertEquals(false, $rule->evaluate(0));
         $this->assertEquals(true, $rule->evaluate(1));
         $this->assertEquals(false, $rule->evaluate(2));
 
         $rule = new NumericRule($rules["few"]);
+        $this->assertEquals(false, $rule->evaluate(0));
         $this->assertEquals(false, $rule->evaluate(1));
         $this->assertEquals(true, $rule->evaluate(2));
         $this->assertEquals(false, $rule->evaluate(5));
 
         $rule = new NumericRule($rules["many"]);
+        $this->assertEquals(true, $rule->evaluate(0));
         $this->assertEquals(false, $rule->evaluate(1));
         $this->assertEquals(false, $rule->evaluate(2));
         $this->assertEquals(true, $rule->evaluate(5));
