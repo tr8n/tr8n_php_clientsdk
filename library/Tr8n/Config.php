@@ -65,7 +65,7 @@ class Config {
         $source = (array_key_exists('source', $options) ? $options['source'] : null);
         $component = (array_key_exists('component', $options) ? $options['component'] : null);
         $this->current_translator = (array_key_exists('translator', $options) ? $options['translator'] : null);
-        $this->current_language = $this->application->language($locale);
+        $this->current_language = $this->application->language($locale, true);
     }
 
     public function beginBlockWithOptions($options = array()) {
@@ -97,8 +97,8 @@ class Config {
     }
 
     public function loggerFilePath() {
-        return "/Users/michael/Projects/Tr8n/tr8n_php_clientsdk/log/tr8n.log";
-//        return __DIR__."/../../log/tr8n.log";
+//        return "/Users/michael/Projects/Tr8n/tr8n_php_clientsdk/log/tr8n.log";
+        return __DIR__."/../../log/tr8n.log";
     }
 
     public function loggerSeverity() {

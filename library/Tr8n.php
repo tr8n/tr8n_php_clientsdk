@@ -30,14 +30,10 @@ foreach($files as $dir) {
     }
 }
 
-function tr8n_init_client_sdk() {
+function tr8n_init_client_sdk($host, $key, $secret) {
     header('Content-type: text/html; charset=utf-8');
 
-    if (\Tr8n\Config::instance()->isDisabled()) {
-        return;
-    }
-
-    \Tr8n\Config::instance()->initApplication("http://localhost:3000", "29adc3257b6960703", "a5af33d9d691ce0a6");
+    \Tr8n\Config::instance()->initApplication($host, $key, $secret);
 
     $cookie_name = "tr8n_" . \Tr8n\Config::instance()->application->key;
     $locale = \Tr8n\Config::instance()->default_locale;
