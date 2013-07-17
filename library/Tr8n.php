@@ -49,6 +49,8 @@ function tr8n_init_client_sdk() {
         if (isset($cookie_params["translator"])) {
             $translator = new \Tr8n\Translator(array_merge($cookie_params["translator"], array('application' => \Tr8n\Config::instance()->application)));
         }
+    } else {
+        \Tr8n\Logger::instance()->info("Cookie file $cookie_name not found!");
     }
 
     \Tr8n\Config::instance()->initRequest(array('locale' => $locale, 'translator' => $translator));
