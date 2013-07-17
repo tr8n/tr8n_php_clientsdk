@@ -2,15 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f8d75aae-cf72-469c-a094-39ffe3de16cf" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Config.php" afterPath="$PROJECT_DIR$/library/Tr8n/Config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n/Includes/Scripts.php" afterPath="$PROJECT_DIR$/library/Tr8n/Includes/Scripts.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/Tr8n.php" afterPath="$PROJECT_DIR$/library/Tr8n.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="tr8n_php_clientsdk.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373989833187" ignored="false" />
+    <file path="/Dummy.txt" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1374095960375" ignored="false" />
     <file path="/test.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373591655285" ignored="false" />
     <file path="/a.dummy" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373493981563" ignored="false" />
     <file path="/Base.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373941396224" ignored="false" />
@@ -29,7 +27,7 @@
     <file path="/InflectorTest.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373404122667" ignored="false" />
     <file path="/Array.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373410547343" ignored="false" />
     <file path="/DataToken.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373411014152" ignored="false" />
-    <file path="/Tr8n.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1374076917317" ignored="false" />
+    <file path="/Tr8n.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1374085260187" ignored="false" />
     <file path="/GenderRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373943223660" ignored="false" />
     <file path="/MemcacheAdapter.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373411908654" ignored="false" />
     <file path="/ValueRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373677774435" ignored="false" />
@@ -56,7 +54,7 @@
     <file path="/StringUtils.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373678473801" ignored="false" />
     <file path="/en-US.json" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373691280432" ignored="false" />
     <file path="/ru.json" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373687064209" ignored="false" />
-    <file path="/index.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373990067012" ignored="false" />
+    <file path="/index.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1374087242736" ignored="false" />
     <file path="/Scripts.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1374077042283" ignored="false" />
     <file path="$PROJECT_DIR$/../../PHP/drupal-7.22/sites/all/modules/tr8n/tr8n.info" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373931942722" ignored="false" />
     <file path="/tr8n.info" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373931942722" ignored="false" />
@@ -65,9 +63,10 @@
     <file path="/Translator.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373942052608" ignored="false" />
     <file path="/DateRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373943204122" ignored="false" />
     <file path="/ListRule.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1373943232065" ignored="false" />
-    <file path="$PROJECT_DIR$/../../PHP/wordpress/wp-content/plugins/tr8n/tr8n.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1374077412310" ignored="false" />
+    <file path="$PROJECT_DIR$/../../PHP/wordpress/wp-content/plugins/tr8n/tr8n.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1374087388498" ignored="false" />
     <file path="/tr8n.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1374005124941" ignored="false" />
     <file path="$PROJECT_DIR$/../../PHP/wordpress/wp-content/plugins/tr8n/library/Tr8n.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1374004639776" ignored="false" />
+    <file path="$PROJECT_DIR$/../../PHP/wordpress/wp-content/plugins/tr8n/vendor/tr8n_php_clientsdk/library/Tr8n/Config.php" changelist="f8d75aae-cf72-469c-a094-39ffe3de16cf" time="1374077797879" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,10 +95,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Tr8n.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Tr8n.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/library/Tr8n.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="62" column="2" selection-start="1951" selection-end="1951" vertical-scroll-proportion="-36.125">
+            <state line="35" column="21" selection-start="802" selection-end="802" vertical-scroll-proportion="0.37434828">
               <folding />
             </state>
           </provider>
@@ -117,18 +116,16 @@
       <file leaf-file-name="Config.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/library/Tr8n/Config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="100" column="0" selection-start="3568" selection-end="3568" vertical-scroll-proportion="-26.875">
-              <folding>
-                <element signature="e#7#10#0" expanded="true" />
-              </folding>
+            <state line="100" column="0" selection-start="3568" selection-end="3568" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="index.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="196" vertical-scroll-proportion="0.0">
+            <state line="1" column="102" selection-start="43" selection-end="145" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -137,7 +134,7 @@
       <file leaf-file-name="Scripts.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/library/Tr8n/Includes/Scripts.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="10" selection-start="184" selection-end="184" vertical-scroll-proportion="-1.25">
+            <state line="2" column="10" selection-start="184" selection-end="184" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -210,8 +207,8 @@
         <option value="$PROJECT_DIR$/library/Tr8n/Rules/ListRule.php" />
         <option value="$PROJECT_DIR$/library/Tr8n/Rules/NumericRule.php" />
         <option value="$PROJECT_DIR$/library/Tr8n/Config.php" />
-        <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/library/Tr8n/Includes/Scripts.php" />
+        <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/library/Tr8n.php" />
       </list>
     </option>
@@ -281,46 +278,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tr8n_php_clientsdk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tr8n_php_clientsdk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="library" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Tr8n" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tr8n_php_clientsdk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tr8n_php_clientsdk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="library" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Tr8n" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -363,7 +320,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2524013" sideWeight="0.99801785" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1547492" sideWeight="0.99801785" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -464,16 +421,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/Base.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="20" selection-start="1815" selection-end="1815" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="54" column="20" selection-start="1815" selection-end="1815" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/DateRule.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="33" selection-start="2089" selection-end="2089" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="54" column="33" selection-start="2089" selection-end="2089" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/library/Tr8n/Rules/GenderListRule.php">
@@ -520,30 +473,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/library/Tr8n/Config.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="100" column="0" selection-start="3568" selection-end="3568" vertical-scroll-proportion="-26.875">
-          <folding>
-            <element signature="e#7#10#0" expanded="true" />
-          </folding>
+        <state line="100" column="0" selection-start="3568" selection-end="3568" vertical-scroll-proportion="0.0">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/library/Tr8n/Includes/Scripts.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="10" selection-start="184" selection-end="184" vertical-scroll-proportion="-1.25">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Tr8n.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="2" selection-start="1951" selection-end="1951" vertical-scroll-proportion="-36.125">
+        <state line="2" column="10" selection-start="184" selection-end="184" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="196" vertical-scroll-proportion="0.0">
+        <state line="1" column="102" selection-start="43" selection-end="145" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Tr8n.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="21" selection-start="802" selection-end="802" vertical-scroll-proportion="0.37434828">
           <folding />
         </state>
       </provider>

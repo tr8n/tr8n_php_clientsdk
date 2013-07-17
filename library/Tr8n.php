@@ -36,10 +36,14 @@ function tr8n_init_client_sdk($host, $key, $secret) {
     \Tr8n\Config::instance()->initApplication($host, $key, $secret);
 
     $cookie_name = "tr8n_" . \Tr8n\Config::instance()->application->key;
+    \Tr8n\Logger::instance()->info("Locating cookie file $cookie_name...");
+
     $locale = \Tr8n\Config::instance()->default_locale;
     $translator = null;
 
     if (isset($_COOKIE[$cookie_name])) {
+        \Tr8n\Logger::instance()->info("Cookie file $cookie_name found!");
+
         $cookie_params = \Tr8n\Config::instance()->decodeAndVerifyParams($_COOKIE[$cookie_name], \Tr8n\Config::instance()->application->secret);
         $locale = $cookie_params['locale'];
         if (isset($cookie_params["translator"])) {
