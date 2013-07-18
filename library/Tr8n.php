@@ -58,7 +58,20 @@ function tr8n_init_client_sdk($host, $key, $secret) {
 
 function tr($label, $description = "", $tokens = array(), $options = array()) {
     $language = \Tr8n\Config::instance()->current_language;
-	return $language->translate($label, $description, $tokens, $options);
+
+    if (isset($options['split'])) {
+        $sentences = \Tr8n\Utils\StringUtils::splitSentences($label);
+
+        foreach($sentences as $sentence) {
+            $label = str_replace($sentence, $language->translate($sentence, $description, $tokens, $options), $label);
+        }
+
+        return $label;
+    }
+
+    $stripped_label = str_replace(array("\r\n", "\n"), '', strip_tags(trim($label)));
+    $label = str_replace($stripped_label, $language->translate($stripped_label, $description, $tokens, $options), $label);
+	return $label;
 }
 
 function trl($label, $description = "", $tokens = array(), $options = array()) {

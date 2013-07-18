@@ -99,7 +99,7 @@ class NumericRule extends Base {
     }
 
     public function tokenValue($token) {
-        if (in_array(gettype($token), array("integer", "float", "double"))) {
+        if (in_array(gettype($token), array("string", "integer", "float", "double"))) {
             return $token;
         }
 
@@ -109,6 +109,7 @@ class NumericRule extends Base {
     public function evaluate($token) {
         $value = $this->tokenValue($token);
         if ($value === null) return false;
+        $value = "" . $value;
 
         $result1 = $this->evaluateRuleFragment($value, $this->part1, \Tr8n\Utils\ArrayUtils::split($this->value1));
         if (!$this->isMultipart()) return $result1;

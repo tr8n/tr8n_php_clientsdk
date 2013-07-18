@@ -95,8 +95,6 @@ class Language extends Base {
     }
 
 	public function translate($label, $description = "", $token_values = array(), $options = array()) {
-        # create a temporary key
-
         $locale = array_key_exists("locale", $options) ? $options["locale"] : Config::instance()->blockOption("locale");
         if ($locale == null) Config::instance()->default_locale;
 
@@ -133,7 +131,7 @@ class Language extends Base {
             }
         }
 
-        return $cached_key->translate($this, array_merge($token_values, array("viewing_user" => Config::instance()->current_user)), $options);
+        return $cached_key->translate($this, array_merge($token_values, array("viewing_user" => Config::instance()->current_user)), $options);;
 	}
 
 }

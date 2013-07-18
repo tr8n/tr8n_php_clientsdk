@@ -47,8 +47,14 @@ class StringUtils {
         return preg_match('/'.$match.'$/', $str);
     }
 
-    public static function splitSentences($text) {
-        return preg_split('/[.?!]/', $text);
+    public static function splitSentences($text, $opts = array()) {
+        $sentence_regex = '/[^.!?\s][^.!?]*(?:[.!?](?![\'"]?\s|$)[^.!?]*)*[.!?]?[\'"]?(?=\s|$)/';
+
+        $matches = array();
+        preg_match_all($sentence_regex, strip_tags($text), $matches);
+        $matches = array_unique($matches[0]);
+
+        return $matches;
     }
 
 }

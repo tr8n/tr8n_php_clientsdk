@@ -41,4 +41,14 @@ class ArrayUtils {
     public static function isHash($arr) {
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
+
+    public static function createAttribute(&$target, $parts, $value) {
+        foreach ($parts as $sub) {
+            if (! isset($target[$sub])) {
+                $target[$sub] = array();
+            }
+            $target = & $target[$sub];
+        }
+        $target = $value;
+    }
 }
