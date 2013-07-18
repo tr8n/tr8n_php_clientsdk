@@ -13,6 +13,7 @@ $files = array(
     "Tr8n/Rules",
     "Tr8n/Decorators/Base.php",
     "Tr8n/Decorators",
+    "Tr8n/Cache/Base.php",
     "Tr8n/Cache"
 );
 

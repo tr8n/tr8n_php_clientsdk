@@ -23,13 +23,8 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-namespace Tr8n\Cache;
+namespace Tr8n\Api;
 
 abstract class Base {
-
-    public abstract function fetch($key, $default = null);
-    public abstract function store($key, $value);
-    public abstract function delete($key);
-    public abstract function exists($key);
 
 }

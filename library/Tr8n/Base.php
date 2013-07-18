@@ -81,13 +81,13 @@ class Base {
         if (array_key_exists('results', $data)) {
             Logger::instance()->info("received " . count($data["results"]) ." result(s)");
 
-            if (!$options["class"]) return $data["results"];
+            if (!isset($options["class"])) return $data["results"];
 
             $objects = array();
             foreach($data["results"] as $json) {
                 array_push($objects, self::createObject($json, $options));
             }
-            return objects;
+            return $objects;
         }
 
         if (!$options["class"]) return $data;

@@ -32,6 +32,7 @@ class Application extends Base {
 
     # TODO: move those attributes out - must be cached
     public $languages_by_locale, $sources_by_key, $components_by_key, $translation_keys;
+    public $missing_keys_by_sources;
 
     public static function init($host, $key, $secret, $options = array()) {
         if (!array_key_exists('definition', $options) || $options['definition'] == null)
@@ -39,14 +40,18 @@ class Application extends Base {
 
         Logger::instance()->info("Initializing application...");
 
-        $app = Application::executeRequest("application", array('client_id' => $key, 'definition' => $options['definition']),
-                           array('host' => $host, 'client_secret' => $secret, 'class' => 'Tr8n\Application', 'attributes' => array(
-                                    'host' => $host,
-                                    'key' => $key,
-                                    'secret' => $secret)
-                           )
-        );
-
+//        \Tr8n\Cache::delete('tr8n_application');
+        $app = \Tr8n\Cache::fetch('tr8n_application');
+        if ($app == null) {
+            $app = Application::executeRequest("application", array('client_id' => $key, 'definition' => $options['definition']),
+                array('host' => $host, 'client_secret' => $secret, 'class' => 'Tr8n\Application', 'attributes' => array(
+                    'host' => $host,
+                    'key' => $key,
+                    'secret' => $secret)
+                )
+            );
+            \Tr8n\Cache::store('tr8n_application', $app);
+        }
 
         return $app;
     }
@@ -83,6 +88,7 @@ class Application extends Base {
         $this->sources_by_key       = null;
         $this->components_by_key    = null;
         $this->translation_keys     = array();
+        $this->missing_keys_by_sources = null;
     }
 
     /*
@@ -91,7 +97,7 @@ class Application extends Base {
     public function language($locale = null, $fetch = false) {
         $locale = ($locale == null ? Config::instance()->default_locale : $locale);
 
-        if (count($this->languages_by_locale) == null) {
+        if ($this->languages_by_locale == null) {
             $this->languages_by_locale = array();
             foreach($this->languages as $lang) {
                 $this->languages_by_locale[$lang->locale] = $lang;
@@ -126,12 +132,40 @@ class Application extends Base {
     }
 
 
-    public function source($key) {
+    public function source($key, $register = true) {
+        if ($this->sources_by_key == null) {
+            $this->sources_by_key = array();
+            foreach($this->sources as $source) {
+                $this->sources_by_key[$source->source] = $source;
+            }
+        }
 
+        if (isset($this->sources_by_key[$key])) {
+            return $this->sources_by_key[$key];
+        }
+
+        if ($register != true) return null;
+
+        $this->sources_by_key[$key] = $this->post("source/register", array("source" => $key), array("class" => '\Tr8n\Source', "attributes" => array("application" => $this)));
+        return $this->sources_by_key[$key];
     }
 
-    public function component($key) {
+    public function component($key, $register = true) {
+        if ($this->components_by_key == null) {
+            $this->components_by_key = array();
+            foreach($this->components as $component) {
+                $this->components_by_key[$component->key] = $component;
+            }
+        }
 
+        if (isset($this->components_by_key[$key])) {
+            return $this->components_by_key[$key];
+        }
+
+        if ($register != true) return null;
+
+        $this->components_by_key[$key] = $this->post("component/register", array("components_by_key" => $key), array("class" => '\Tr8n\Component', "attributes" => array("application" => $this)));
+        return $this->components_by_key[$key];
     }
 
     /*
@@ -145,7 +179,7 @@ class Application extends Base {
 
     public function cacheTranslationKey($translation_key) {
         $cached_key = $this->translationKey($translation_key->key);
-        if ($cached_key) {
+        if ($cached_key !== null) {
             # move translations from tkey to the cached key
             foreach($translation_key->translations as $locale => $translations) {
                 $cached_key->setLanguageTranslations($this->language($locale), $translations);
@@ -158,9 +192,40 @@ class Application extends Base {
         return $translation_key;
     }
 
+    public function registerMissingKey($translation_key, $source) {
+        if ($this->missing_keys_by_sources === null) {
+            $this->missing_keys_by_sources = array();
+        }
+
+        if (!isset($this->missing_keys_by_sources[$source->source])) {
+            $this->missing_keys_by_sources[$source->source] = array();
+        }
+
+        if (!isset($this->missing_keys_by_sources[$source->source][$translation_key->key])) {
+            $this->missing_keys_by_sources[$source->source][$translation_key->key] = $translation_key;
+        }
+    }
+
+    public function submitMissingKeys() {
+        if ($this->missing_keys_by_sources == null)
+            return;
+
+        $params = array();
+        foreach($this->missing_keys_by_sources as $source => $keys) {
+            $keys_data = array();
+            foreach($keys as $key) {
+                array_push($keys_data, $key->toArray());
+            }
+            array_push($params, array("source" => $source, "keys" => $keys_data));
+        }
+
+        $this->post('source/register_keys', array("source_keys" => json_encode($params)));
+        $this->missing_keys_by_sources = null;
+    }
+
     /*
      *
-     * API Related methods
+     * Api Related methods
      *
      */
     public function get($path, $params = array(), $options = array()) {

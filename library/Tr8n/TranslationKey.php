@@ -80,6 +80,13 @@ class TranslationKey extends Base {
         return $this->application->cacheTranslationKey($translation_key);
     }
 
+    public function toArray() {
+        return array(   "label"         => $this->label,
+                        "description"   => $this->description,
+                        "locale"        => $this->locale,
+                        "level"         => $this->level);
+    }
+
     /*
      * Re-assigns the ownership of the application and translation key
      */
@@ -178,6 +185,13 @@ class TranslationKey extends Base {
         }
 
         return $label;
+    }
+
+    public function setLanguageTranslations($language, $translations) {
+        foreach($translations as $translation) {
+            $translation->setTranslationKey($this);
+        }
+        $this->translations[$language->locale] = $translations;
     }
 
 }

@@ -32,6 +32,30 @@ class Source extends Base {
 
 	function __construct($attributes=array()) {
         parent::__construct($attributes);
+
+        $this->translation_keys = null;
 	}
+
+    public function fetchTranslationsForLanguage($language, $options = array()) {
+        # for current translators who use inline mode - always fetch translations
+        if (\Tr8n\Config::instance()->current_translator && \Tr8n\Config::instance()->current_translator->isInlineModeEnabled()) {
+
+        }
+
+        if ($this->translation_keys !== null) {
+            return $this->translation_keys;
+        }
+
+        $keys_with_translations = $this->application->get("source/translations", array("source" => $this->source, "locale" => $language->locale),
+                            array("class" => '\Tr8n\TranslationKey', "attributes" => array("application" => $this->application, "language" => $language)));
+
+        $this->translation_keys = array();
+
+        foreach($keys_with_translations as $translation_key) {
+            $this->translation_keys[$translation_key->key] = $this->application->cacheTranslationKey($translation_key);
+        }
+
+        return $this->translation_keys;
+    }
 
 }

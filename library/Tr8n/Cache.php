@@ -26,6 +26,45 @@
 namespace Tr8n;
 
 class Cache {
-	function __construct() {
-	}
+
+    public static function instance() {
+        static $inst = null;
+        if ($inst === null) {
+            $class = \Tr8n\Config::instance()->cacheAdapterClass();
+            $inst = new $class();
+        }
+        return $inst;
+    }
+
+    public static function fetch($key, $default = null) {
+        if (!\Tr8n\Config::instance()->isCachingEnabled()) {
+            if (is_callable($default)) {
+                return $default();
+            }
+            return $default;
+        }
+        return self::instance()->fetch($key, $default);
+    }
+
+    public static function store($key, $value) {
+        if (!\Tr8n\Config::instance()->isCachingEnabled()) {
+            return false;
+        }
+        return self::instance()->store($key, $value);
+    }
+
+    public static function delete($key) {
+        if (!\Tr8n\Config::instance()->isCachingEnabled()) {
+            return false;
+        }
+        return self::instance()->delete($key);
+    }
+
+    public static function exists($key) {
+        if (!\Tr8n\Config::instance()->isCachingEnabled()) {
+            return false;
+        }
+        return self::instance()->exists($key);
+    }
+
 }

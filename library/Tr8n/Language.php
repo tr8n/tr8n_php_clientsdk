@@ -95,10 +95,10 @@ class Language extends Base {
     }
 
 	public function translate($label, $description = "", $token_values = array(), $options = array()) {
-        $locale = array_key_exists("locale", $options) ? $options["locale"] : Config::instance()->blockOption("locale");
+        $locale = isset($options["locale"]) ? $options["locale"] : Config::instance()->blockOption("locale");
         if ($locale == null) Config::instance()->default_locale;
 
-        $level = array_key_exists("level", $options) ? $options["level"] : Config::instance()->blockOption("level");
+        $level = isset($options["level"]) ? $options["level"] : Config::instance()->blockOption("level");
         if ($level == null) Config::instance()->default_level;
 
         $temp_key = new TranslationKey(array(
@@ -114,13 +114,17 @@ class Language extends Base {
             return $temp_key->substituteTokens($label, $token_values, $this, $options);
         }
 
-        $source_key = array_key_exists('source', $options) ? $options["source"] : Config::instance()->current_source;
+        $source_key = isset($options['source']) ? $options["source"] : Config::instance()->blockOption('source');
+        if ($source_key == null) $source_key = Config::instance()->current_source;
+
         $cached_key = null;
         if ($source_key) {
-            $source = $this->application->sourceByKey($source_key);
+            $source = $this->application->source($source_key);
             $source_translation_keys = $source->fetchTranslationsForLanguage($this, $options);
-            $cached_key = $source_translation_keys[$temp_key->key()];
-            if ($cached_key == null) {
+
+            if (isset($source_translation_keys[$temp_key->key])) {
+                $cached_key = $source_translation_keys[$temp_key->key];
+            } else {
                 $this->application->registerMissingKey($temp_key, $source);
                 $cached_key = $temp_key;
             }

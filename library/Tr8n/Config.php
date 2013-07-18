@@ -37,6 +37,12 @@ class Config {
     private $block_options;
     private $rules_engine, $token_classes;
 
+    // Allows for setting a custom config class
+    public static function init($config) {
+        static $inst = null;
+        $inst = $config;
+    }
+
     public static function instance() {
         static $inst = null;
         if ($inst === null) {
@@ -106,11 +112,11 @@ class Config {
     }
 
     public function isCachingEnabled() {
-        return true;
+        return false;
     }
 
-    public function cacheStore() {
-        return "memcache";
+    public function cacheAdapterClass() {
+        return '\Tr8n\Cache\ApcAdapter';
     }
 
     public function decoratorClass() {
