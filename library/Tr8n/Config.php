@@ -60,8 +60,11 @@ class Config {
 
     public function initApplication($host, $client_id, $client_secret) {
         if ($this->application == null) {
-            // TODO: get application from cache
-            $this->application = \Tr8n\Application::init($host, $client_id, $client_secret);
+            try {
+                $this->application = \Tr8n\Application::init($host, $client_id, $client_secret);
+            } catch (Tr8nException $e) {
+                $this->application = null;
+            }
         }
         return $this->application;
     }
@@ -91,7 +94,7 @@ class Config {
     }
 
     public function isEnabled() {
-        return true;
+        return ($this->application != null);
     }
 
     public function isDisabled() {

@@ -39,7 +39,7 @@ class Language extends Base {
         parent::__construct($attributes);
 
         $this->context_rules = array();
-        if (array_key_exists('context_rules', $attributes)) {
+        if (isset($attributes['context_rules'])) {
             foreach($attributes['context_rules'] as $rule_class => $hash) {
                 if (!array_key_exists($rule_class, $this->context_rules))
                     $this->context_rules[$rule_class] = array();
@@ -53,7 +53,7 @@ class Language extends Base {
         }
 
         $this->language_cases = array();
-        if (array_key_exists('language_cases', $attributes)) {
+        if (isset($attributes['language_cases'])) {
             foreach($attributes['language_cases'] as $key => $case) {
                 $this->language_cases[$key] = new \Tr8n\LanguageCase(array_merge($case, array("language" => $this)));
             }

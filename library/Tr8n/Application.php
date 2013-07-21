@@ -59,26 +59,26 @@ class Application extends Base {
     function __construct($attributes=array()) {
         parent::__construct($attributes);
 
-        if (!array_key_exists('definition', $attributes)) {
+        if (!isset($attributes['definition'])) {
             $this->definition = array();
         }
 
         $this->languages = array();
-        if (array_key_exists('languages', $attributes)) {
+        if (isset($attributes['languages'])) {
             foreach($attributes['languages'] as $l) {
                 array_push($this->languages, new Language(array_merge($l, array("application" => $this))));
             }
         }
 
         $this->sources = array();
-        if (array_key_exists('sources', $attributes)) {
+        if (isset($attributes['sources'])) {
             foreach($attributes['sources'] as $l) {
                 array_push($this->sources, new Source(array_merge($l, array("application" => $this))));
             }
         }
 
         $this->components = array();
-        if (array_key_exists('components', $attributes)) {
+        if (isset($attributes['components'])) {
             foreach($attributes['components'] as $l) {
                 array_push($this->components, new Component(array_merge($l, array("application" => $this))));
             }

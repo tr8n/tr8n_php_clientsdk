@@ -33,8 +33,12 @@ foreach($files as $dir) {
 
 function tr8n_init_client_sdk($host, $key, $secret) {
     header('Content-type: text/html; charset=utf-8');
-
     \Tr8n\Config::instance()->initApplication($host, $key, $secret);
+
+    if (\Tr8n\Config::instance()->isDisabled()) {
+        \Tr8n\Logger::instance()->error("Tr8n application failed to initialize. Please verify if you set the host, key and secret correctly.");
+        return false;
+    }
 
     $cookie_name = "tr8n_" . \Tr8n\Config::instance()->application->key;
     \Tr8n\Logger::instance()->info("Locating cookie file $cookie_name...");
@@ -57,22 +61,39 @@ function tr8n_init_client_sdk($host, $key, $secret) {
     \Tr8n\Config::instance()->initRequest(array('locale' => $locale, 'translator' => $translator));
 }
 
+function tr8n_application() {
+    return \Tr8n\Config::instance()->application;
+}
+
+function tr8n_current_language() {
+    return \Tr8n\Config::instance()->current_language;
+}
+
+function tr8n_current_translator() {
+    return \Tr8n\Config::instance()->current_translator;
+}
+
 function tr($label, $description = "", $tokens = array(), $options = array()) {
-    $language = \Tr8n\Config::instance()->current_language;
+    try {
+        $language = \Tr8n\Config::instance()->current_language;
 
-    if (isset($options['split'])) {
-        $sentences = \Tr8n\Utils\StringUtils::splitSentences($label);
+        if (isset($options['split'])) {
+            $sentences = \Tr8n\Utils\StringUtils::splitSentences($label);
 
-        foreach($sentences as $sentence) {
-            $label = str_replace($sentence, $language->translate($sentence, $description, $tokens, $options), $label);
+            foreach($sentences as $sentence) {
+                $label = str_replace($sentence, $language->translate($sentence, $description, $tokens, $options), $label);
+            }
+
+            return $label;
         }
 
+        $stripped_label = str_replace(array("\r\n", "\n"), '', strip_tags(trim($label)));
+        $label = str_replace($stripped_label, $language->translate($stripped_label, $description, $tokens, $options), $label);
+        return $label;
+    } catch(\Tr8n\Tr8nException $ex) {
+        \Tr8n\Logger::instance()->error("Failed to translate $label : $ex");
         return $label;
     }
-
-    $stripped_label = str_replace(array("\r\n", "\n"), '', strip_tags(trim($label)));
-    $label = str_replace($stripped_label, $language->translate($stripped_label, $description, $tokens, $options), $label);
-	return $label;
 }
 
 function trl($label, $description = "", $tokens = array(), $options = array()) {

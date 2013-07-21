@@ -63,6 +63,12 @@ class Base {
         curl_setopt_array($ch, $opts);
 
         $result = curl_exec($ch);
+        $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if ($http_status != 200) {
+            Logger::instance()->error("Got HTTP response: $http_status");
+            throw new Tr8nException("Got HTTP response: $http_status");
+        }
 
 //        Logger::instance()->info($result);
 
@@ -70,7 +76,7 @@ class Base {
 
         $data = json_decode($result, true);
 
-        if (array_key_exists('error', $data)) {
+        if (isset($data['error'])) {
             throw (new Tr8nException("Error: " . $data['error']));
         }
 
@@ -78,7 +84,7 @@ class Base {
     }
 
     public static function processResponse($data, $options = array()) {
-        if (array_key_exists('results', $data)) {
+        if (isset($data['results'])) {
             Logger::instance()->info("received " . count($data["results"]) ." result(s)");
 
             if (!isset($options["class"])) return $data["results"];
