@@ -83,7 +83,7 @@ class DecorationToken extends Base {
             foreach($tokens as $token) {
                 $token->appendToFullName($ch);
             }
-            switch ($label[$position]) {
+            switch ($ch) {
                 case '[':
                     array_push($tokens, new DecorationToken($label, "["));
                     break;
