@@ -27,7 +27,7 @@ namespace Tr8n;
 
 class Translator extends Base {
 
-    public $application, $id, $name, $email, $gender, $mugshot, $link, $inline;
+    public $application, $id, $name, $email, $inline;
     public $voting_power, $rank, $level, $locale, $manager, $code, $access_token;
 
     public function __construct($attributes=array()) {
@@ -42,4 +42,9 @@ class Translator extends Base {
         return ($this->manager==true);
     }
 
+    public function mugshot() {
+        if (!isset($this->email)) return null;
+        $gravatar_id = md5(strtolower($this->email));
+        return "http://gravatar.com/avatar/$gravatar_id.png?s=48";
+    }
 }

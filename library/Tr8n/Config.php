@@ -77,6 +77,11 @@ class Config {
         $this->current_language = $this->application->language($locale, true);
     }
 
+    public function completeRequest($options = array()) {
+        if (!isset($this->application)) return;
+        $this->application->submitMissingKeys();
+    }
+
     public function beginBlockWithOptions($options = array()) {
         array_push($this->block_options, $options);
     }

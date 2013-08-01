@@ -1,7 +1,7 @@
 <?php
 
 # TODO: comment this out once it is set in php.ini
-date_default_timezone_set('America/Los_Angeles');
+# date_default_timezone_set('America/Los_Angeles');
 
 $files = array(
     "Tr8n/Utils",
@@ -14,7 +14,8 @@ $files = array(
     "Tr8n/Decorators/Base.php",
     "Tr8n/Decorators",
     "Tr8n/Cache/Base.php",
-    "Tr8n/Cache"
+    "Tr8n/Cache",
+    "Tr8n/Includes/Tags.php"
 );
 
 foreach($files as $dir) {
@@ -61,6 +62,10 @@ function tr8n_init_client_sdk($host, $key, $secret) {
     \Tr8n\Config::instance()->initRequest(array('locale' => $locale, 'translator' => $translator));
 }
 
+function tr8n_complete_request($options = array()) {
+    \Tr8n\Config::instance()->completeRequest($options);
+}
+
 function tr8n_application() {
     return \Tr8n\Config::instance()->application;
 }
@@ -73,32 +78,39 @@ function tr8n_current_translator() {
     return \Tr8n\Config::instance()->current_translator;
 }
 
+function tr8n_begin_block_with_options($options = array()) {
+    return \Tr8n\Config::instance()->beginBlockWithOptions($options);
+}
+
+function tr8n_finish_block_with_options() {
+    return \Tr8n\Config::instance()->finishBlockWithOptions();
+}
+
 function tr($label, $description = "", $tokens = array(), $options = array()) {
     try {
-        $language = \Tr8n\Config::instance()->current_language;
-
         if (isset($options['split'])) {
             $sentences = \Tr8n\Utils\StringUtils::splitSentences($label);
 
             foreach($sentences as $sentence) {
-                $label = str_replace($sentence, $language->translate($sentence, $description, $tokens, $options), $label);
+                $label = str_replace($sentence, tr8n_current_language()->translate($sentence, $description, $tokens, $options), $label);
             }
 
-            return $label;
+            echo $label;
+            return;
         }
 
         $stripped_label = str_replace(array("\r\n", "\n"), '', strip_tags(trim($label)));
-        $label = str_replace($stripped_label, $language->translate($stripped_label, $description, $tokens, $options), $label);
-        return $label;
+        $label = str_replace($stripped_label, tr8n_current_language()->translate($stripped_label, $description, $tokens, $options), $label);
+        echo $label;
     } catch(\Tr8n\Tr8nException $ex) {
         \Tr8n\Logger::instance()->error("Failed to translate $label : $ex");
-        return $label;
+        echo $label;
     }
 }
 
 function trl($label, $description = "", $tokens = array(), $options = array()) {
 	$options["skip_decorations"] = true;
-	return tr($label, $description, $tokens, $options);
+	echo tr($label, $description, $tokens, $options);
 }
 
 ?>

@@ -138,4 +138,7 @@ class Language extends Base {
         return $cached_key->translate($this, array_merge($token_values, array("viewing_user" => Config::instance()->current_user)), $options);;
 	}
 
+    public function flagUrl() {
+        return $this->application->host . '/assets/tr8n/flags/' . $this->locale . '.png';
+    }
 }

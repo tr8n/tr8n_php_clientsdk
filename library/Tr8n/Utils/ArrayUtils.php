@@ -51,4 +51,12 @@ class ArrayUtils {
         }
         $target = $value;
     }
+
+    public static function toHTMLAttributes($arr) {
+        $attrs = array();
+        foreach($arr as $key=>$value) {
+             array_push($attrs, $key . '="' . $value . '"');
+        }
+        return implode($attrs, " ");
+    }
 }
