@@ -84,16 +84,12 @@ function tr8n_link_to($dest, $title = null, $opts = array()) {
 
     if ($path != null) {
         $path = Tr8n\Config::instance()->application->host . $path;
-        echo '<a ' . \Tr8n\Utils\ArrayUtils::toHTMLAttributes($opts) . ' href="' . $path . '">';
-        tr($title);
-        echo '</a>';
+        echo '<a ' . \Tr8n\Utils\ArrayUtils::toHTMLAttributes($opts) . ' href="' . $path . '">' . tr($title) . '</a>';
         return;
     }
 
     if ($function != null) {
-        echo '<a ' . \Tr8n\Utils\ArrayUtils::toHTMLAttributes($opts) . ' href="#" onClick="' . $function . '">';
-        tr($title);
-        echo '</a>';
+        echo '<a ' . \Tr8n\Utils\ArrayUtils::toHTMLAttributes($opts) . ' href="#" onClick="' . $function . '">' . tr($title) . '</a>';
         return;
     }
 

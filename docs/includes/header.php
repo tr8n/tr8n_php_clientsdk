@@ -12,12 +12,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php javascript_tag("jquery191.js") ?>
     <?php javascript_tag("bootstrap.js") ?>
+    <?php javascript_tag("sh.js") ?>
     <?php stylesheet_tag("bootstrap.css") ?>
+    <?php stylesheet_tag("sh.css") ?>
     <?php include(__DIR__ . '/../../library/Tr8n/Includes/Scripts.php'); ?>
     <style>
         body {
             padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
             padding-bottom: 40px;
+            background: white url(<?php echo url_for('/docs/assets/img/bg-pattern.png') ?>);
         }
     </style>
 </head>
@@ -32,25 +35,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="brand" href="#"><?php tr("Tr8n For PHP") ?></a>
+
+            <?php link_to(tr("Tr8n For PHP"), "index.php", array("class" => "brand")) ?>
+
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li class="active"><a href="#"><?php tr("Home") ?></a></li>
-                    <li>
-                        <ul class="nav navbar-nav">
-                            <li class="dropdown">
-                                <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown"><?php tr("Examples") ?> <b class="caret"></b></a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat"><?php tr("Data Tokens") ?></a></li>
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat"><?php tr("Decoration Tokens") ?></a></li>
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat"><?php tr("Numeric Rules") ?></a></li>
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat"><?php tr("Gender Rules") ?></a></li>
-                                    <li role="presentation" class="divider"></li>
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat"><?php tr("Combined Examples") ?></a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
+                    <li <?php active_link("index.php")?>><?php link_to(tr("Home"), "index.php") ?></li>
+                    <li <?php active_link("docs/installation.php")?>><?php link_to(tr("Installation Instructions"), "docs/installation.php") ?></li>
+                    <li <?php active_link("docs/", "docs/installation.php")?>><?php link_to(tr("Documentation"), "docs/introduction.php") ?></li>
                 </ul>
                 <ul class="nav navbar-nav pull-right">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onClick="Tr8n.UI.LanguageSelector.show(true)"><?php tr8n_language_name_tag(tr8n_current_language(), array("flag" => true)) ?></a></li>

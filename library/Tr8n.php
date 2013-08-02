@@ -95,22 +95,29 @@ function tr($label, $description = "", $tokens = array(), $options = array()) {
                 $label = str_replace($sentence, tr8n_current_language()->translate($sentence, $description, $tokens, $options), $label);
             }
 
-            echo $label;
-            return;
+            return $label;
         }
 
         $stripped_label = str_replace(array("\r\n", "\n"), '', strip_tags(trim($label)));
         $label = str_replace($stripped_label, tr8n_current_language()->translate($stripped_label, $description, $tokens, $options), $label);
-        echo $label;
+        return $label;
     } catch(\Tr8n\Tr8nException $ex) {
         \Tr8n\Logger::instance()->error("Failed to translate $label : $ex");
-        echo $label;
+        return $label;
     }
+}
+
+function tre($label, $description = "", $tokens = array(), $options = array()) {
+    echo tr($label, $description, $tokens, $options);
 }
 
 function trl($label, $description = "", $tokens = array(), $options = array()) {
 	$options["skip_decorations"] = true;
-	echo tr($label, $description, $tokens, $options);
+	return tr($label, $description, $tokens, $options);
+}
+
+function trle($label, $description = "", $tokens = array(), $options = array()) {
+    echo trl($label, $description, $tokens, $options);
 }
 
 ?>
