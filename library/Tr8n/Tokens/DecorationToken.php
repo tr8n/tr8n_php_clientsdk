@@ -39,8 +39,6 @@
 
 namespace Tr8n\Tokens;
 
-use tr8n\Tr8nException;
-
 class DecorationToken extends Base {
 
     private $decorated_value;

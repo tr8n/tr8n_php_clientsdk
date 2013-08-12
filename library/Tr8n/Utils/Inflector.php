@@ -35,8 +35,8 @@ namespace Tr8n\Utils;
 //   Added rule for potato -> potatoes
 //   Added rule for *us -> *uses
 
-class Inflector
-{
+class Inflector {
+
     static $plural = array(
         '/(quiz)$/i'               => "$1zes",
         '/^(ox)$/i'                => "$1en",

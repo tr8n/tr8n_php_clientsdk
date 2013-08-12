@@ -23,7 +23,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-namespace tr8n\rules;
+namespace Tr8n\Rules;
 
 class DateRule extends Base {
 

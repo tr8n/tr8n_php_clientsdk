@@ -1,6 +1,5 @@
 <?php
 
-
 function tr8n_language_name_tag($language = null, $opts = array()) {
     if ($language == null) $language = tr8n_current_language();
     if (isset($opts["flag"])) {
@@ -14,7 +13,6 @@ function tr8n_language_flag_tag($language = null) {
     if ($language == null) $language = tr8n_current_language();
     echo "<img src='" . $language->flagUrl() . "' style='margin-right:3px;'>";
 }
-
 
 function tr8n_link_to($dest, $title = null, $opts = array()) {
     $path = null;

@@ -25,8 +25,6 @@
 
 namespace Tr8n\Tokens;
 
-use tr8n\Tr8nException;
-
 abstract class Base {
 
     protected $label, $name, $full_name, $declared_name, $sanitized_name, $pipeless_name;

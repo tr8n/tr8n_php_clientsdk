@@ -1,8 +1,5 @@
 <?php
 
-# TODO: comment this out once it is set in php.ini
-# date_default_timezone_set('America/Los_Angeles');
-
 $files = array(
     "Tr8n/Utils",
     "Tr8n/Base.php",
@@ -119,5 +116,3 @@ function trl($label, $description = "", $tokens = array(), $options = array()) {
 function trle($label, $description = "", $tokens = array(), $options = array()) {
     echo trl($label, $description, $tokens, $options);
 }
-
-?>

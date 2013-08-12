@@ -34,8 +34,6 @@
 
 namespace Tr8n\Tokens;
 
-use tr8n\Tr8nException;
-
 class MethodToken extends Base {
 
     protected $object_name, $object_method;
