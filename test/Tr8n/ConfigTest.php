@@ -16,8 +16,7 @@ class ConfigTest extends \BaseTest {
     public function testConfigInstance() {
         $config = \Tr8n\Config::instance();
 
-        $this->assertEquals(true, $config->isEnabled());
-        $this->assertEquals(false, $config->isDisabled());
+        $this->assertEquals(false, $config->isEnabled());
         $this->assertEquals(true, $config->isLoggerEnabled());
         $this->assertEquals('\Tr8n\Rules\NumericRule', $config->ruleClassByType("number"));
         $this->assertEquals('\Tr8n\Rules\GenderRule', $config->ruleClassByType("gender"));

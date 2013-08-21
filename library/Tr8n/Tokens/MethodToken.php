@@ -71,7 +71,7 @@ class MethodToken extends Base {
         else
             $token_value = $object->$method;
 
-        $token_value = $this->sanitize($token_value, $language, array_merge($options, array("sanitize" => true)));
+        $token_value = $this->sanitize($token_value, $token_values, $language, array_merge($options, array("sanitize" => true)));
         return str_replace($this->fullName(), $token_value, $label);
     }
 

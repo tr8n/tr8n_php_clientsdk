@@ -187,6 +187,7 @@ class LanguageTest extends \BaseTest {
 
     public function testForeignTranslationsWithNoTokens() {
         $app = new \Tr8n\Application(self::loadJSON('application.json'));
+        \Tr8n\Config::instance()->application = $app;
         $english = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
         $russian = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/ru.json')));
 
@@ -225,6 +226,7 @@ class LanguageTest extends \BaseTest {
 
     public function testForeignTranslationsWithBasicTokens() {
         $app = new \Tr8n\Application(self::loadJSON('application.json'));
+        \Tr8n\Config::instance()->application = $app;
         $russian = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/ru.json')));
 
         Config::instance()->beginBlockWithOptions(array("dry" => true));
@@ -253,6 +255,7 @@ class LanguageTest extends \BaseTest {
 
     public function testForeignTranslationsWithDecorationTokens() {
         $app = new \Tr8n\Application(self::loadJSON('application.json'));
+        \Tr8n\Config::instance()->application = $app;
         $english = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
         $russian = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/ru.json')));
 
@@ -298,6 +301,7 @@ class LanguageTest extends \BaseTest {
 
     public function testForeignLanguageAsDefaultLanguage() {
         $app = new \Tr8n\Application(self::loadJSON('application.json'));
+        \Tr8n\Config::instance()->application = $app;
         $russian = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/ru.json')));
 
         Config::instance()->beginBlockWithOptions(array("dry" => true, "locale" => 'ru'));
@@ -355,6 +359,7 @@ class LanguageTest extends \BaseTest {
 
     public function testForeignTranslationsWithTransformTokens() {
         $app = new \Tr8n\Application(self::loadJSON('application.json'));
+        \Tr8n\Config::instance()->application = $app;
         $english = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
         $russian = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/ru.json')));
 
@@ -504,6 +509,7 @@ class LanguageTest extends \BaseTest {
 
     public function testDefaultLanguageCases() {
         $app = new \Tr8n\Application(self::loadJSON('application.json'));
+        \Tr8n\Config::instance()->application = $app;
         $english = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
 
         $this->assertEquals('This is your 1st warning',
@@ -562,6 +568,7 @@ class LanguageTest extends \BaseTest {
 
     public function testTranslatedLanguageCases() {
         $app = new \Tr8n\Application(self::loadJSON('application.json'));
+        \Tr8n\Config::instance()->application = $app;
         $english = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
         $russian = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/ru.json')));
 

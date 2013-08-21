@@ -33,8 +33,6 @@ Genealogical societies are essential to family history researchers. </p>
 <p>They provide resources, programs, conferences, and other important assistance. MyHeritage is spotlighting these societies in a new series over the year.<br />";
         $matches = StringUtils::splitSentences($text);
         $this->assertEquals(3, count($matches));
-        print_r($matches);
-
     }
 
 }
