@@ -35,17 +35,23 @@
     <div class="span4">
         <p class="text-center"><?php image_tag("how_it_works_1.gif") ?></p>
         <h4 class="text-center"><?php tre("Use your users") ?></h4>
-        <p>Your multilngual users can sign up to help translate your site into over 270 different languages. Their translations can then be viewed and voted on by other users.</p>
+        <p>
+            <?php tre("Your multilingual users can sign up to help translate your site into over {count||different languages}.", "", array("count" => 300)) ?>
+            <?php tre("The translations they provide can then be viewed and voted on by other users.") ?>
+        </p>
     </div>
     <div class="span4">
         <p class="text-center"><?php image_tag("how_it_works_2.gif") ?></p>
         <h4 class="text-center"><?php tre("Share translations") ?></h4>
-        <p>Translations from your site get synced to our servers and can then be shared with thousands of other websites.</p>
+        <p>
+            <?php tre("The translations they provide can then be viewed and voted on by other users.") ?>
+            <?php tre("Translations from your site get synced to Tr8n service and can then be shared with thousands of other websites.") ?>
+        </p>
     </div>
     <div class="span4">
         <p class="text-center"><?php image_tag("how_it_works_3.gif") ?></p>
         <h4 class="text-center"><?php tre("Get what you give") ?></h4>
-        <p>Regularly pull down new translations from not only your users but users of other websites as you sync your translations.</p>
+        <p><?php tre("The Tr8n service pulls down new translations from not only your users but users of other websites as you sync your translations.") ?></p>
     </div>
 </div>
 
@@ -53,45 +59,45 @@
 
 <div class="row">
     <div class="span4">
-        <h4>Support for over 250 languages</h4>
+        <h4><?php tre("Supports all languages") ?></h4>
         <p>All browser supported language are included. Just choose which languages you want to enabled on your app.</p>
     </div>
     <div class="span4">
-        <h4>Inline translation tools</h4>
+        <h4><?php tre("Inline translation tools") ?></h4>
         <p>Intuitive translation tools allow your users to easily translate your website.</p>
     </div>
     <div class="span4">
-        <h4>Translation management</h4>
+        <h4><?php tre("Translation management") ?></h4>
         <p>Keep track of all the translated text on your website, through an easy to use dashboard.</p>
     </div>
 </div>
 
 <div class="row">
     <div class="span4">
-        <h4>Translation ranking system</h4>
+        <h4><?php tre("Translation ranking") ?></h4>
         <p>Translators vote on translations and the best translations are used in your application.</p>
     </div>
     <div class="span4">
-        <h4>Translator ranking system</h4>
+        <h4><?php tre("Translator ranking") ?></h4>
         <p>Translators are ranked based on the quality of the work they do. The higher the rank the more valuable they become.</p>
     </div>
     <div class="span4">
-        <h4>Powerful Metrics</h4>
+        <h4><?php tre("Powerful Metrics") ?></h4>
         <p>Stay up to date on the progress of your translations.</p>
     </div>
 </div>
 
 <div class="row">
     <div class="span4">
-        <h4>Translation Markup Language</h4>
+        <h4><?php tre("Translation Markup Language") ?></h4>
         <p>TML syntax makes developers happy - it simplifies the code and allows to encode complex rules using simple structures.</p>
     </div>
     <div class="span4">
-        <h4>Language Context Rules</h4>
+        <h4><?php tre("Language Context Rules") ?></h4>
         <p>Tr8n supports all language rules to make translations very accurate.</p>
     </div>
     <div class="span4">
-        <h4>Language Cases</h4>
+        <h4><?php tre("Language Cases") ?></h4>
         <p>Language cases are supported across all languages to make translations sound as native as they can be.</p>
     </div>
 </div>
@@ -102,11 +108,11 @@
         <p>Create a glossary of the key terms of your application. Translators will see those terms and will be able to provide more accurate translations.</p>
     </div>
     <div class="span4">
-        <h4>Language Discussion Boards</h4>
+        <h4><?php tre("Language Discussion Boards") ?></h4>
         <p>Translators can discuss translations and terms in the message boards across all languages.</p>
     </div>
     <div class="span4">
-        <h4>Admin Tools</h4>
+        <h4><?php tre("Admin Tools") ?></h4>
         <p>Administration tools allow you to configure every aspect of your application.</p>
     </div>
 </div>

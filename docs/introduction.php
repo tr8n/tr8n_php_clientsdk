@@ -3,7 +3,7 @@
 
 <?php tr8n_begin_block_with_options(array("source" => "/docs/introduction")) ?>
 
-<h1>Introduction</h1>
+<h1><?php tre("Introduction") ?></h1>
 
 <p>
     Tr8n Translation Engine is a framework for crowd-source translations and management of any internationalized text throughout any web or mobile application.
