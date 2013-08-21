@@ -24,6 +24,8 @@
 #++
 
 namespace Tr8n\Rules;
+use Tr8n\Config;
+use Tr8n\Tr8nException;
 
 abstract class Base extends \Tr8n\Base {
     public $language, $type, $keyword;

@@ -24,6 +24,9 @@
 #++
 
 namespace Tr8n\Tokens;
+use Tr8n\Config;
+use Tr8n\Tr8nException;
+use \Tr8n\Utils\ArrayUtils;
 
 abstract class Base {
 
@@ -38,7 +41,7 @@ abstract class Base {
             $matches = $token->parse($label, $options);
             array_push($tokens, $matches);
         }
-        return \Tr8n\Utils\ArrayUtils::flatten($tokens);
+        return ArrayUtils::flatten($tokens);
     }
 
     function __construct($label, $token) {
