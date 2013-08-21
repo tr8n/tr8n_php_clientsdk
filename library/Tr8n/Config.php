@@ -136,12 +136,12 @@ class Config {
             $this->rules_engine = array(
                 "number" => array(
                     "class"             => '\Tr8n\Rules\NumericRule',
-                    "Tokens"            => array("count", "num", "age", "hours", "minutes", "years", "seconds"),
+                    "tokens"            => array("count", "num", "age", "hours", "minutes", "years", "seconds"),
                     "object_method"     => "number"
                 ),
                 "gender" => array(
                     "class"            => '\Tr8n\Rules\GenderRule',
-                    "Tokens"           => array("user", "profile", "actor", "target"),
+                    "tokens"           => array("user", "profile", "actor", "target"),
                     "object_method"    => "gender",
                     "method_values"    =>  array(
                         "female"         => "female",
@@ -152,22 +152,22 @@ class Config {
                 ),
                 "gender_list" => array(   // requires gender rule to be present
                     "class"            => '\Tr8n\Rules\GenderListRule',
-                    "Tokens"           => array("users", "profiles", "actors", "targets"),
+                    "tokens"           => array("users", "profiles", "actors", "targets"),
                     "object_method"    => "size"
                 ),
                 "list" => array(
                     "class"            => '\Tr8n\Rules\ListRule',
-                    "Tokens"           => array("list", "items", "objects", "elements"),
+                    "tokens"           => array("list", "items", "objects", "elements"),
                     "object_method"    => "size"
                 ),
                 "date" => array(
                     "class"            => '\Tr8n\Rules\DateRule',
-                    "Tokens"           => array("date"),
+                    "tokens"           => array("date"),
                     "object_method"    => "to_date"
                 ),
                 "value" => array(
                     "class"            => '\Tr8n\Rules\ValueRule',
-                    "Tokens"           => "*",
+                    "tokens"           => "*",
                     "object_method"    => "to_s"
                 )
             );
@@ -190,7 +190,7 @@ class Config {
         $sanitized_token_name = preg_replace("/[^A-Za-z]/", '', end(array_values(explode("_", $token_name))));
 
         foreach($this->rulesEngine() as $type => $config) {
-            if ($config["Tokens"] == "*" || in_array($sanitized_token_name, $config["Tokens"])) {
+            if ($config["tokens"] == "*" || in_array($sanitized_token_name, $config["tokens"])) {
                 array_push($types, $type);
             }
         }
