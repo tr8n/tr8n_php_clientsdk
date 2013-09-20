@@ -1,26 +1,26 @@
 <?php
-#--
-# Copyright (c) 2010-2013 Michael Berkovich, tr8nhub.com
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
+/**
+ * Copyright (c) 2013 Michael Berkovich, tr8nhub.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 #######################################################################
 #
@@ -47,17 +47,18 @@ class DecorationToken extends Base {
         return '/(\[\w+:[^\]]+\])/';
     }
 
-    function name() {
-        if ($this->name == null) {
-            $this->name = substr($this->full_name, 1, -1);
-            $parts = explode(':', $this->name);
-            $this->name = trim(array_shift($parts));
-        }
-        return $this->name;
+    function name($opts = array()) {
+        $name_without_parens = preg_replace('/[\[\]]/', '', $this->full_name);
+        $parts = explode(':', $name_without_parens);
+        $val = trim($parts[0]);
+
+        if (isset($opts["parens"]))
+            $val = "[" . $val . ": ]";
+        return $val;
     }
 
     public function isToken() {
-        return preg_match('/^\[\w+:/', $this->fullName());
+        return preg_match('/^\[\w+:/', $this->full_name);
     }
 
     public function isSimple() {
@@ -104,13 +105,6 @@ class DecorationToken extends Base {
         return $tokens;
     }
 
-    public function sanitizedName() {
-        if ($this->sanitized_name == null) {
-            $this->sanitized_name = "[" . $this->name() . ": ]";
-        }
-        return $this->sanitized_name;
-    }
-
     public function decoratedValue() {
         if (!$this->decorated_value) {
             $this->decorated_value = substr($this->full_name, 1, -1);
@@ -121,6 +115,29 @@ class DecorationToken extends Base {
         return $this->decorated_value;
     }
 
+    public function defaultToken($token_data, $language, $options = array()) {
+        $token_value = $language->application->defaultToken($this->name(), 'decoration');
+        if ($token_value == null)
+            throw new \Tr8n\Tr8nException("Invalid decoration token for label: $this->label");
+
+        $token_value = "" . $token_value;
+
+        if ($token_data == null) $token_data = array();
+
+        $token_value = str_replace('{$0}', $this->decoratedValue(), $token_value);
+        if (\Tr8n\Utils\ArrayUtils::isHash($token_data)) {
+            foreach($token_data as $key=>$value) {
+                $token_value = str_replace('{$' . $key . '}', $value, $token_value);
+            }
+        } else {
+            $index = 1;
+            foreach($token_data as $value) {
+                $token_value = str_replace('{$' . ($index++) . '}', $value, $token_value);
+            }
+        }
+
+        return $token_value;
+    }
 
     /*
      * There are a number of ways to substitute decoration tokens:
@@ -146,6 +163,8 @@ class DecorationToken extends Base {
      *
      */
     public function substitute($label, $token_values, $language, $options = array()) {
+        $token_value = null;
+
         if (array_key_exists($this->name(), $token_values)) {
             $token_data = $token_values[$this->name()];
 
@@ -160,30 +179,8 @@ class DecorationToken extends Base {
             $token_value = $this->defaultToken(null, $language, $options);
         }
 
-        return str_replace($this->fullName(), $token_value, $label);
+        return str_replace($this->full_name, $token_value, $label);
     }
 
-    public function defaultToken($token_data, $language, $options = array()) {
-        $token_value = $language->application->defaultToken($this->name(), 'decoration');
-        if ($token_value == null)
-            throw new Tr8nException("Invalid decoration token for label: $this->label");
 
-        $token_value = "".$token_value;
-
-        if ($token_data == null) $token_data = array();
-
-        $token_value = str_replace('{$0}', $this->decoratedValue(), $token_value);
-        if (\Tr8n\Utils\ArrayUtils::isHash($token_data)) {
-            foreach($token_data as $key=>$value) {
-                $token_value = str_replace('{$' . $key . '}', $value, $token_value);
-            }
-        } else {
-            $index = 1;
-            foreach($token_data as $value) {
-                $token_value = str_replace('{$' . ($index++) . '}', $value, $token_value);
-            }
-        }
-
-        return $token_value;
-    }
 }

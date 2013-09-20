@@ -1,27 +1,26 @@
 <?php
-
-#--
-# Copyright (c) 2010-2013 Michael Berkovich, tr8nhub.com
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
+/**
+ * Copyright (c) 2013 Michael Berkovich, tr8nhub.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 namespace Tr8n\Tokens;
 use Tr8n\Config;
@@ -30,9 +29,7 @@ use \Tr8n\Utils\ArrayUtils;
 
 abstract class Base {
 
-    protected $label, $name, $full_name, $declared_name, $sanitized_name, $pipeless_name;
-    protected $case_keys, $caseless_name, $types, $associated_rule_types, $language_rule_classes;
-    protected $transformable_language_rule_classes;
+    protected $label, $full_name, $short_name, $case_keys, $context_keys;
 
     public static function registerTokens($label, $category = "data", $options = array()) {
         $tokens = array();
@@ -47,6 +44,32 @@ abstract class Base {
     function __construct($label, $token) {
         $this->label = $label;
         $this->full_name = $token;
+        $this->parseElements();
+    }
+
+    function parseElements() {
+        $name_without_parens = preg_replace('/[{}\[\]]/', '', $this->full_name);
+        $parts = explode('::', $name_without_parens);
+        $name_without_case_keys = trim($parts[0]);
+
+        $parts = explode(':', $name_without_parens);
+        $this->short_name = trim($parts[0]);
+
+        $keys = array();
+        preg_match_all('/(::[\w]+)/', $name_without_parens, $keys);
+        $keys = $keys[0];
+        $this->case_keys = array();
+        foreach($keys as $key) {
+            array_push($this->case_keys, str_replace('::', '', $key));
+        }
+
+        $keys = array();
+        preg_match_all('/(:[\w]+)/', $name_without_case_keys, $keys);
+        $keys = $keys[0];
+        $this->context_keys = array();
+        foreach($keys as $key) {
+            array_push($this->context_keys, str_replace(':', '', $key));
+        }
     }
 
     public abstract function expression();
@@ -63,126 +86,70 @@ abstract class Base {
         return $tokens;
     }
 
-    public function fullName() {
-        return $this->full_name;
+    public function name($opts = array()) {
+        $val = $this->short_name;
+        if (isset($opts["context_keys"]) and count($this->context_keys) > 0)
+            $val = $val . ":" . implode(':', $this->context_keys);
+
+        if (isset($opts["case_keys"]) and count($this->case_keys) > 0)
+            $val = $val . "::" . implode('::', $this->case_keys);
+
+        if (isset($opts["parens"]))
+            $val = "{" . $val . "}";
+
+        return $val;
     }
 
-    public function declaredName() {
-        if ($this->declared_name === null) {
-            $this->declared_name = preg_replace('/[{}\[\]]/', '', $this->fullName());
-        }
-        return $this->declared_name;
-    }
 
-    public function name() {
-        if ($this->name === null) {
-            $parts = explode(':', $this->declaredName());
-            $this->name = trim($parts[0]);
-        }
-        return $this->name;
-    }
-
-    public function sanitizedName() {
-        if ($this->sanitized_name == null) {
-            $this->sanitized_name = "{" . $this->name() . "}";
-        }
-        return $this->sanitized_name;
-    }
-
-    public function pipelessName() {
-        if ($this->pipeless_name == null) {
-            $parts = explode('|', $this->declaredName());
-            $this->pipeless_name = $parts[0];
-        }
-        return $this->pipeless_name;
-    }
-
-    /*
-     * Language Cases Support
+    /**
+     * For transform tokens, we can only use the first context key, if it is not mapped in the context itself.
      *
-     * Language cases can be chained by using ::ord::pre, etc...
+     * {user:gender | male: , female: ... }
      *
+     * It is not possible to apply multiple context rules on a single token at the same time:
+     *
+     * {user:gender:value | .... hah?}
+     *
+     * It is still possible to setup dependencies on multiple contexts.
+     *
+     * {user:gender:value}   - just not with transform tokens
+     *
+     * @param $language
+     * @param array $opts
      */
-    public function caseKeys() {
-        if ($this->case_keys == null) {
-            $cases = array();
-            preg_match_all('/(::[\w]+)/', $this->declaredName(), $cases);
-            $cases = $cases[0];
-            $this->case_keys = array();
-            foreach($cases as $case) {
-                array_push($this->case_keys, str_replace('::', '', $case));
-            }
+    public function contextForLanguage($language, $opts = array()) {
+        if (count($this->context_keys) > 0) {
+            $ctx = $language->contextByKeyword($this->context_keys[0]);
+        } else {
+            $ctx = $language->contextByTokenName($this->short_name);
         }
 
-        return $this->case_keys;
-    }
-
-    public function hasCases() {
-        return (count($this->caseKeys()) > 0);
-    }
-
-    public function caselessName() {
-        if ($this->caseless_name == null) {
-            $parts = explode('::', $this->pipelessName());
-            $this->caseless_name = $parts[0];
+        if (!isset($opts["silent"])) {
+            throw new \Tr8n\Tr8nException("Unknown context for token: " . $this->full_name . " in " . $language->locale);
         }
-        return $this->caseless_name;
+
+        return $ctx;
     }
-    /*
-     * Context Rules Support
-     *
-     * Rules can also be chained :gender:value
+
+    /**
+    #
+    # case is identified with ::
+    #
+    # examples:
+    #
+    # tr("Hello {user::nom}", "", :user => current_user)
+    # tr("{actor} gave {target::dat} a present", "", :actor => user1, :target => user2)
+    # tr("This is {user::pos} toy", "", :user => current_user)
+    #
      */
-    public function types() {
-        if ($this->types == null) {
-            $types = array();
-            preg_match_all('/(:[\w]+)/', $this->caselessName(), $types);
-            $types = $types[0];
-            $this->types = array();
-            foreach($types as $type) {
-                array_push($this->types, str_replace(':', '', $type));
-            }
-        }
-        return $this->types;
+    public function applyCase($case, $token_value, $token_values, $language, $options) {
+        $case = $language->languageCase($case);
+        if ($case == null) return $token_value;
+        return $case->apply(self::tokenObject($token_values, $this->name()), $token_value);
     }
 
-    public function hasTypes() {
-        return (count($this->types()) > 0);
-    }
 
-    public function associatedRuleTypes() {
-        if ($this->associated_rule_types == null) {
-            $this->associated_rule_types = ($this->hasTypes() ? $this->types() : \Tr8n\Config::instance()->ruleTypesByTokenName($this->name()));
-        }
-        return $this->associated_rule_types;
-    }
-
-    public function languageRuleClasses() {
-        if ($this->language_rule_classes == null) {
-            $this->language_rule_classes = array();
-            foreach($this->associatedRuleTypes() as $type) {
-                $class = \Tr8n\Config::instance()->ruleClassByType($type);
-                if ($class == null)
-                    throw new Tr8nException("Undefined rule type " . $this->type() . " for " . $this->fullName());
-                array_push($this->language_rule_classes, $class);
-            }
-        }
-        return $this->language_rule_classes;
-    }
-
-    public function transformableLanguageRuleClasses() {
-        if ($this->transformable_language_rule_classes == null) {
-            $this->transformable_language_rule_classes = array();
-            foreach($this->languageRuleClasses() as $class) {
-                if ($class::isTransformable()) {
-                    array_push($this->transformable_language_rule_classes, $class);
-                }
-            }
-        }
-        return $this->transformable_language_rule_classes;
-    }
-
-    /*
+    /**
      * Method for getting an object from values hash.
      *
      */
@@ -206,7 +173,7 @@ abstract class Base {
         return $token_object;
     }
 
-    /*
+    /**
      * Method for getting a value from values hash.
      *
      * Token objects can be passed as:
@@ -240,7 +207,7 @@ abstract class Base {
         if (array_key_exists($this->name(), $token_values)) {
             $token_data = $token_values[$this->name()];
         } else {
-            $token_data = $this->application->defaultTokens($this->name(), 'data');
+            $token_data = $language->application->defaultTokens($this->name(), 'data');
         }
 
         if ($token_data === null) {
@@ -254,7 +221,7 @@ abstract class Base {
         if (is_array($token_data)) {
             if (\Tr8n\Utils\ArrayUtils::isHash($token_data)) {
                 if (!array_key_exists('object', $token_data))
-                    throw new Tr8nException("object attribute is missing in the hash for token: " . $this->fullName());
+                    throw new Tr8nException("object attribute is missing in the hash for token: " . $this->full_name);
 
                 $token_object = $token_data['object'];
 
@@ -269,7 +236,7 @@ abstract class Base {
                         if (array_key_exists($attribute, $token_object)) {
                             return $this->sanitize($token_object[$attribute], $token_values, $language, array_merge($options, array("sanitize" => true)));
                         }
-                        throw new Tr8nException("Invalid attribute properties for object in the hash of token: " . $this->fullName());
+                        throw new Tr8nException("Invalid attribute properties for object in the hash of token: " . $this->full_name);
                     }
                     return $this->sanitize($token_object->$attribute, $token_values, $language, array_merge($options, array("sanitize" => true)));
                 }
@@ -277,16 +244,16 @@ abstract class Base {
                 if (array_key_exists('method', $token_data)) {
                     $method = $token_data['method'];
                     if (is_array($token_object)) {
-                        throw new Tr8nException("Invalid method properties for hash of token: " . $this->fullName());
+                        throw new Tr8nException("Invalid method properties for hash of token: " . $this->full_name);
                     }
                     return $this->sanitize($token_object->$method(), $token_values, $language, array_merge($options, array("sanitize" => true)));
                 }
 
-                throw new Tr8nException("value and attribute properties are missing in the hash for token: " . $this->fullName());
+                throw new Tr8nException("value and attribute properties are missing in the hash for token: " . $this->full_name);
             }
 
             if (count($token_data) == 0)
-                throw new Tr8nException("Invalid array value for token: " . $this->fullName());
+                throw new Tr8nException("Invalid array value for token: " . $this->full_name);
 
             $token_object = $token_data[0];
 
@@ -319,36 +286,20 @@ abstract class Base {
                 return $this->sanitize($token_value, $token_values, $language, array_merge($options, array("sanitize" => false)));
             }
 
-            throw new Tr8nException("Unsupported token array method for token: " . $this->fullName());
+            throw new Tr8nException("Unsupported token array method for token: " . $this->full_name);
         }
 
         return $this->sanitize($token_data, $token_values, $language, $options);
     }
 
-    ##############################################################################
-    #
-    # case is identified with ::
-    #
-    # examples:
-    #
-    # tr("Hello {user::nom}", "", :user => current_user)
-    # tr("{actor} gave {target::dat} a present", "", :actor => user1, :target => user2)
-    # tr("This is {user::pos} toy", "", :user => current_user)
-    #
-    ##############################################################################
-    public function applyCase($case, $token_value, $token_values, $language, $options) {
-        $case = $language->languageCase($case);
-        if ($case == null) return $token_value;
-        return $case->apply(self::tokenObject($token_values, $this->name()), $token_value);
-    }
 
     public function sanitize($token_object, $token_values, $language, $options) {
         $token_value = "" . $token_object;
 
-        // TODO: add language cases support and HTML escaping
+        // TODO: add HTML escaping
 
-        if ($this->hasCases()) {
-            foreach($this->caseKeys() as $case) {
+        if (isset($this->case_keys) && count($this->case_keys) > 0) {
+            foreach($this->case_keys as $case) {
                 $token_value = $this->applyCase($case, $token_value, $token_values, $language, $options);
             }
         }
@@ -356,16 +307,16 @@ abstract class Base {
         return $token_value;
     }
 
-    /*
+    /**
      * Main substitution function
      */
     public function substitute($label, $token_values, $language, $options = array()) {
         $token_value = $this->tokenValue($token_values, $language, $options);
-        return str_replace($this->fullName(), $token_value, $label);
+        return str_replace($this->full_name, $token_value, $label);
     }
 
     function __toString() {
-        return $this->fullName();
+        return $this->full_name;
     }
 }
 

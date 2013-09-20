@@ -1,27 +1,26 @@
 <?php
-
-#--
-# Copyright (c) 2010-2013 Michael Berkovich, tr8nhub.com
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
+/**
+ * Copyright (c) 2013 Michael Berkovich, tr8nhub.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 namespace Tr8n;
 
@@ -131,70 +130,53 @@ class Config {
         return '\Tr8n\Decorators\HtmlDecorator';
     }
 
-    public function rulesEngine() {
-        if ($this->rules_engine == null) {
-            $this->rules_engine = array(
-                "number" => array(
-                    "class"             => '\Tr8n\Rules\NumericRule',
-                    "tokens"            => array("count", "num", "age", "hours", "minutes", "years", "seconds"),
-                    "object_method"     => "number"
-                ),
-                "gender" => array(
-                    "class"            => '\Tr8n\Rules\GenderRule',
-                    "tokens"           => array("user", "profile", "actor", "target"),
-                    "object_method"    => "gender",
-                    "method_values"    =>  array(
-                        "female"         => "female",
-                        "male"           => "male",
-                        "neutral"        => "neutral",
-                        "unknown"        => "unknown"
-                    )
-                ),
-                "gender_list" => array(   // requires gender rule to be present
-                    "class"            => '\Tr8n\Rules\GenderListRule',
-                    "tokens"           => array("users", "profiles", "actors", "targets"),
-                    "object_method"    => "size"
-                ),
-                "list" => array(
-                    "class"            => '\Tr8n\Rules\ListRule',
-                    "tokens"           => array("list", "items", "objects", "elements"),
-                    "object_method"    => "size"
-                ),
-                "date" => array(
-                    "class"            => '\Tr8n\Rules\DateRule',
-                    "tokens"           => array("date"),
-                    "object_method"    => "to_date"
-                ),
-                "value" => array(
-                    "class"            => '\Tr8n\Rules\ValueRule',
-                    "tokens"           => "*",
-                    "object_method"    => "to_s"
+    public function contextRules() {
+        return array(
+            "number" => array(
+                "variables" => array()                      // if mapping is not setup, use the actual object as value
+            ),
+            "gender" => array(
+                "variables" => array(
+                    "@gender" => "gender",                // string means attribute of an object
+//                    "@gender" => function($obj) {
+//                        return $obj->gender;
+//                    }
                 )
-            );
-        }
-        return $this->rules_engine;
+            ),
+            "genders" => array(
+                "variables" => array(
+                    "@genders" => function($list){
+                        $genders = array();
+                        foreach($list as $obj) {
+                           array_push($genders, $obj->gender());
+                        }
+                        return $genders;
+                    },
+                    "@size" => function($list){
+                        return count($list);
+                    }
+                )
+            ),
+            "date" => array(
+                "variables" => array(
+                )
+            ),
+            "time" => array(
+                "variables" => array(
+                )
+            ),
+            "list" => array(
+                "variables" => array(
+                    "@count" => function($list){
+                        return count($list);
+                    }
+              )
+          )
+        );
     }
 
     public function supportedGenders() {
         return array("male", "female", "unknown", "neutral");
-    }
-
-    public function ruleClassByType($type) {
-        $config = $this->rulesEngine();
-        if ($config[$type] === null) return null;
-        return $config[$type]["class"];
-    }
-
-    public function ruleTypesByTokenName($token_name) {
-        $types = array();
-        $sanitized_token_name = preg_replace("/[^A-Za-z]/", '', end(array_values(explode("_", $token_name))));
-
-        foreach($this->rulesEngine() as $type => $config) {
-            if ($config["tokens"] == "*" || in_array($sanitized_token_name, $config["tokens"])) {
-                array_push($types, $type);
-            }
-        }
-        return $types;
     }
 
     public function tokenClasses($type = null) {

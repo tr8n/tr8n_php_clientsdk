@@ -59,4 +59,24 @@ class ArrayUtils {
         }
         return implode($attrs, " ");
     }
+
+    public static function normalizeTr8nParameters($label, $description = "", $tokens = array(), $options = array()) {
+        if (is_array($label)) return $label;
+
+        if (is_array($description)) {
+            return array(
+                "label" => $label,
+                "description" => "",
+                "tokens" => $description,
+                "options" => $tokens
+            );
+        }
+
+        return array(
+            "label" => $label,
+            "description" => $description,
+            "tokens" => $tokens,
+            "options" => $options
+        );
+    }
 }

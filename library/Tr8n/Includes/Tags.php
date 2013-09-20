@@ -64,19 +64,19 @@ function tr8n_link_to($dest, $title = null, $opts = array()) {
             break;
         case 'notifications_popup':
             if ($title == null) $title = "Notifications";
-            $function = "Tr8n.UI.Lightbox.show('/tr8n/translator/lb_notifications', {height:600, width:600});";
+            $function = "Tr8n.UI.Lightbox.show('/tr8n/translator/lb_notifications', {width:600});";
             break;
         case 'shortcuts_popup':
             if ($title == null) $title = "Shortcuts";
-            $function = "Tr8n.UI.Lightbox.show('/tr8n/help/lb_shortcuts', {width:400, height:480});";
+            $function = "Tr8n.UI.Lightbox.show('/tr8n/help/lb_shortcuts', {width:400});";
             break;
         case 'login':
             if ($title == null) $title = "Login";
-            $function = "Tr8n.UI.Lightbox.show('/login/index?mode=lightbox', {width:400, height:680});";
+            $function = "Tr8n.UI.Lightbox.show('/login/index?mode=lightbox', {width:550, height:500});";
             break;
         case 'logout':
             if ($title == null) $title = "Logout";
-            $function = "Tr8n.UI.Lightbox.show('/login/out?mode=lightbox', {width:400, height:680});";
+            $function = "Tr8n.UI.Lightbox.show('/login/out?mode=lightbox', {width:400});";
             break;
     }
 

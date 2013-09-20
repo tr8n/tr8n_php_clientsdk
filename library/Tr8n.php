@@ -6,8 +6,7 @@ $files = array(
     "Tr8n",
     "Tr8n/Tokens/Base.php",
     "Tr8n/Tokens",
-    "Tr8n/Rules/Base.php",
-    "Tr8n/Rules",
+    "Tr8n/RulesEngine",
     "Tr8n/Decorators/Base.php",
     "Tr8n/Decorators",
     "Tr8n/Cache/Base.php",
@@ -48,6 +47,8 @@ function tr8n_init_client_sdk($host, $key, $secret) {
         \Tr8n\Logger::instance()->info("Cookie file $cookie_name found!");
 
         $cookie_params = \Tr8n\Config::instance()->decodeAndVerifyParams($_COOKIE[$cookie_name], \Tr8n\Config::instance()->application->secret);
+        \Tr8n\Logger::instance()->info("Cookie params", $cookie_params);
+
         $locale = $cookie_params['locale'];
         if (isset($cookie_params["translator"])) {
             $translator = new \Tr8n\Translator(array_merge($cookie_params["translator"], array('application' => \Tr8n\Config::instance()->application)));
@@ -83,23 +84,36 @@ function tr8n_finish_block_with_options() {
     return \Tr8n\Config::instance()->finishBlockWithOptions();
 }
 
+
+//############################################################
+//# There are three ways to call the tr method
+//#
+//# tr($label, $description = "", $tokens = array(), options = array())
+//# or
+//# tr($label, $tokens = array(), $options = array())
+//# or
+//# tr($params = array("label" => label, "description" => "", "tokens" => array(), "options" => array()))
+//############################################################
+
 function tr($label, $description = "", $tokens = array(), $options = array()) {
+    $params = \Tr8n\Utils\ArrayUtils::normalizeTr8nParameters($label, $description, $tokens, $options);
+
     try {
-        if (isset($options['split'])) {
-            $sentences = \Tr8n\Utils\StringUtils::splitSentences($label);
+        if (isset($params["options"]['split'])) {
+            $sentences = \Tr8n\Utils\StringUtils::splitSentences($params["label"]);
 
             foreach($sentences as $sentence) {
-                $label = str_replace($sentence, tr8n_current_language()->translate($sentence, $description, $tokens, $options), $label);
+                $params["label"] = str_replace($sentence, tr8n_current_language()->translate($sentence, $params["description"], $params["tokens"], $params["options"]), $params["label"]);
             }
 
             return $label;
         }
 
-        $stripped_label = str_replace(array("\r\n", "\n"), '', strip_tags(trim($label)));
-        $label = str_replace($stripped_label, tr8n_current_language()->translate($stripped_label, $description, $tokens, $options), $label);
+        $stripped_label = str_replace(array("\r\n", "\n"), '', strip_tags(trim($params["label"])));
+        $label = str_replace($stripped_label, tr8n_current_language()->translate($stripped_label, $params["description"],  $params["tokens"], $params["options"]), $params["label"]);
         return $label;
     } catch(\Tr8n\Tr8nException $ex) {
-        \Tr8n\Logger::instance()->error("Failed to translate $label : $ex");
+//        \Tr8n\Logger::instance()->error("Failed to translate " . $params["label"] . ": " . $ex);
         return $label;
     }
 }
@@ -109,8 +123,9 @@ function tre($label, $description = "", $tokens = array(), $options = array()) {
 }
 
 function trl($label, $description = "", $tokens = array(), $options = array()) {
-	$options["skip_decorations"] = true;
-	return tr($label, $description, $tokens, $options);
+    $params = \Tr8n\Utils\ArrayUtils::normalizeTr8nParameters($label, $description, $tokens, $options);
+    $params["options"]["skip_decorations"] = true;
+	return tr($params);
 }
 
 function trle($label, $description = "", $tokens = array(), $options = array()) {

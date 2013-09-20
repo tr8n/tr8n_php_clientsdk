@@ -1,7 +1,7 @@
 <?php
 
 #--
-# Copyright (c) 2010-2013 Michael Berkovich, tr8nhub.com
+# Copyright (c) 2013 Michael Berkovich, tr8nhub.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -23,43 +23,46 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-namespace Tr8n\Rules;
+namespace Tr8n\RulesEngine;
 
-class ListRule extends Base {
+class Parser {
 
-    public $value;
+    public $tokens;
 
-    public function key() {
-        return "list";
+    function __construct($expression) {
+        $this->tokens = array();
+        preg_match_all('/[()]|\w+|@\w+|[\+\-\!\|\=>&<\*\/%]+|".*?"|\'.*?\'/', $expression, $matches);
+        $this->tokens = $matches[0];
     }
 
-    # FORM: [one, many]
-    # we like {items | this, those} {items}
-    # we like {items | one: this, other: those} {items}
-    public function defaultTransformOptions($params, $token) {
-        $options = array();
-        switch (count($params)) {
-            case 2:
-                $options["one"] = $params[0];
-                $options["other"] = $params[1];
-                break;
-            default:
-                throw new Tr8nException("Invalid number of parameters in the transform token $token");
-        }
-        return $options;
+    function peek() {
+        return $this->tokens[0];
     }
 
-    public function evaluate($token) {
-        $list_size = $this->tokenValue($token);
-        if ($list_size === null) return false;
+    function nextToken() {
+        return array_shift($this->tokens);
+    }
 
-        switch ($this->value) {
-            case "one_element":
-                return ($list_size == 1);
-            case "at_least_two_elements":
-                return ($list_size > 1);
+    function parse() {
+        $token = $this->nextToken();
+        if ($token == '(') {
+            return $this->parseList();
         }
+        if (preg_match('/[\'"].*/', $token)) {
+            return  substr($token, 1, -1);
+        }
+        if (preg_match('/\d+/', $token)) {
+            return intval($token);
+        }
+        return $token;
+    }
 
-        return false;
+    function parseList() {
+        $list = array();
+        while ($this->peek() != ')') {
+            array_push($list, $this->parse());
+        }
+        $this->nextToken();
+        return $list;
     }
 }

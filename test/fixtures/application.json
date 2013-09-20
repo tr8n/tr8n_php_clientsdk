@@ -1,91 +1,69 @@
 {
-  "key": "29adc3257b6960703",
-  "name": "Tr8n Client SDK Sample Application",
-  "description": "Demonstrates translation examples",
-  "definition": {
-    "default_data_tokens": {
-      "ndash": "&ndash;",
-      "mdash": "&mdash;",
-      "iexcl": "&iexcl;",
-      "iquest": "&iquest;",
-      "quot": "&quot;",
-      "ldquo": "&ldquo;",
-      "rdquo": "&rdquo;",
-      "lsquo": "&lsquo;",
-      "rsquo": "&rsquo;",
-      "laquo": "&laquo;",
-      "raquo": "&raquo;",
-      "nbsp": "&nbsp;",
-      "lsaquo": "&lsaquo;",
-      "rsaquo": "&rsaquo;",
-      "br": "<br\/>",
-      "lbrace": "{",
-      "rbrace": "}"
+    "key":"default",
+    "name":"Tr8n Translation Services",
+    "description":"Main translation application",
+    "definition":{
+        "styles":{
+            "tr8n_not_translated":"padding:3px; background: #FFD9E6 url(http://localhost:3000/assets/tr8n/lines/red3.png) repeat-x bottom;",
+            "tr8n_translated":"padding:3px; background: #E0FFD9 url(http://localhost:3000/assets/tr8n/lines/green3.png) repeat-x bottom;",
+            "tr8n_fallback":"padding:3px; background: #FFFCD9 url(http://localhost:3000/assets/tr8n/lines/yellow3.png) repeat-x bottom;",
+            "tr8n_pending":"padding:3px; background: #FFFCD9 url(http://localhost:3000/assets/tr8n/lines/yellow3.png) repeat-x bottom;",
+            "tr8n_locked":"padding:3px; background: #D9EEFF url(http://localhost:3000/assets/tr8n/lines/blue3.png) repeat-x bottom;",
+            "tr8n_language_case":"padding:3px; background: #D9EEFF; border: 1px dotted blue;"
+        },
+        "features":{
+            "inline_translations":{
+                "enabled":true,
+                "description":"Inline translations"
+            },
+            "google_suggestions":{
+                "enabled":true,
+                "description":"Google translation suggestions"
+            },
+            "decorations":{
+                "enabled":true,
+                "description":"Custom inline decorations"
+            },
+            "shortcuts":{
+                "enabled":true,
+                "description":"Keyboard shortcuts"
+            },
+            "context_rules":{
+                "enabled":true,
+                "description":"Language context rules"
+            },
+            "language_cases":{
+                "enabled":true,
+                "description":"Language cases"
+            },
+            "javascript_sdk":{
+                "enabled":false,
+                "description":"JavaScript SDK"
+            },
+            "glossary":{
+                "enabled":true,
+                "description":"Application glossary"
+            },
+            "forum":{
+                "enabled":true,
+                "description":"Translator forums"
+            },
+            "awards":{
+                "enabled":true,
+                "description":"Translator awards"
+            },
+            "admin_translations":{
+                "enabled":false,
+                "description":"Translation of administration tools"
+            }
+        },
+        "threshold":1,
+        "translator_level":1
     },
-    "default_decoration_tokens": {
-      "strong": "<strong>{$0}<\/strong>",
-      "bold": "<strong>{$0}<\/strong>",
-      "b": "<strong>{$0}<\/strong>",
-      "em": "<em>{$0}<\/em>",
-      "italic": "<i>{$0}<\/i>",
-      "i": "<i>{$0}<\/i>",
-      "link": "<a href='{$href}' target='_top'>{$0}<\/a>",
-      "br": "<br>{$0}",
-      "div": "<div id='{$id}' class='{$class}' style='{$style}'>{$0}<\/div>",
-      "span": "<span id='{$id}' class='{$class}' style='{$style}'>{$0}<\/span>",
-      "h1": "<h1>{$0}<\/h1>",
-      "h2": "<h2>{$0}<\/h2>",
-      "h3": "<h3>{$0}<\/h3>"
-    },
-    "enable_language_cases": true,
-    "enable_language_flags": true,
-    "rules": {
-      "number": {
-        "token_suffixes": [
-          "count",
-          "num",
-          "age",
-          "hours",
-          "minutes",
-          "years",
-          "seconds"
-        ],
-        "object_method": "to_i"
-      },
-      "gender": {
-        "token_suffixes": [
-          "user",
-          "profile",
-          "actor",
-          "target",
-          "partner"
-        ],
-        "object_method": "gender",
-        "method_values": {
-          "female": "female",
-          "male": "male",
-          "neutral": "neutral",
-          "unknown": "unknown"
-        }
-      },
-      "gender_list": {
-        "object_method": "size",
-        "token_suffixes": [
-          "list"
-        ]
-      },
-      "date": {
-        "token_suffixes": [
-          "date"
-        ],
-        "object_method": "to_date"
-      },
-      "value": {
-        "token_suffixes": "*",
-        "object_method": "to_s"
-      }
-    }
-  },
-  "languages": [     
-  ]
+    "languages":[
+    ],
+    "sources":[
+    ],
+    "components":[
+    ]
 }

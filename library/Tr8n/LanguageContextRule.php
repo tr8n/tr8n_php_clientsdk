@@ -24,37 +24,40 @@
 
 namespace Tr8n;
 
-class Source extends Base {
+class LanguageContextRule extends Base {
 
-    public $application, $source, $url, $name, $description;
-    public $translation_keys;  // hashed by key
+    public $keyword, $description, $examples, $definition;
+    public $language_context;
 
-	function __construct($attributes=array()) {
+    function __construct($attributes=array()) {
         parent::__construct($attributes);
+    }
 
-        $this->translation_keys = null;
-	}
+    function isFallback() {
+        return ($this->keyword == "other");
+    }
 
-    public function fetchTranslationsForLanguage($language, $options = array()) {
-        # for current translators who use inline mode - always fetch translations
-        if (\Tr8n\Config::instance()->current_translator && \Tr8n\Config::instance()->current_translator->isInlineModeEnabled()) {
+    function conditions() {
+        return ($this->definition["conditions"]);
+    }
 
+    function conditionsExpression() {
+        if (!isset($this->definition["conditions_expression"])) {
+            $p = new \Tr8n\RulesEngine\Parser($this->conditions());
+            $this->definition["conditions_expression"] = $p->parse();
+        }
+        return $this->definition["conditions_expression"];
+    }
+
+    function evaluate($vars = array()) {
+        if ($this->isFallback()) return true;
+
+        $e = new \Tr8n\RulesEngine\Evaluator();
+        foreach($vars as $key => $value) {
+            $e->evaluate(array("let", $key, $value));
         }
 
-        if ($this->translation_keys !== null) {
-            return $this->translation_keys;
-        }
-
-        $keys_with_translations = $this->application->get("source/translations", array("source" => $this->source, "locale" => $language->locale),
-                            array("class" => '\Tr8n\TranslationKey', "attributes" => array("application" => $this->application, "language" => $language)));
-
-        $this->translation_keys = array();
-
-        foreach($keys_with_translations as $translation_key) {
-            $this->translation_keys[$translation_key->key] = $this->application->cacheTranslationKey($translation_key);
-        }
-
-        return $this->translation_keys;
+        return $e->evaluate($this->conditionsExpression());
     }
 
 }

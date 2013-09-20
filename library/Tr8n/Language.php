@@ -1,76 +1,72 @@
 <?php
-
-#--
-# Copyright (c) 2010-2013 Michael Berkovich, tr8nhub.com
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
+/**
+ * Copyright (c) 2013 Michael Berkovich, tr8nhub.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 namespace tr8n;
 
 require_once 'Base.php';
 require_once 'TranslationKey.php';
-require_once 'Rules/Base.php';
 
 class Language extends Base {
 
     public $application;
 	public $locale, $name, $english_name, $native_name, $right_to_left, $enabled;
-    public $google_key, $facebook_key, $myheritage_key, $context_rules, $language_cases;
+    public $google_key, $facebook_key, $myheritage_key, $contexts, $cases;
+    private $has_definition;
 
     function __construct($attributes=array()) {
         parent::__construct($attributes);
 
-        $this->context_rules = array();
-        if (isset($attributes['context_rules'])) {
-            foreach($attributes['context_rules'] as $rule_class => $hash) {
-                if (!array_key_exists($rule_class, $this->context_rules))
-                    $this->context_rules[$rule_class] = array();
-
-                foreach($hash as $keyword => $rule) {
-                    $class_name = Config::instance()->ruleClassByType($rule_class);
-                    $this->context_rules[$rule_class][$keyword] = new $class_name(array_merge($rule, array("language" => $this)));
-                }
+        $this->contexts = array();
+        if (isset($attributes['contexts'])) {
+            $this->has_definition = true;
+            foreach($attributes['contexts'] as $key => $context) {
+                $this->contexts[$key] = new \Tr8n\LanguageContext(array_merge($context, array("language" => $this)));
             }
-
         }
 
-        $this->language_cases = array();
-        if (isset($attributes['language_cases'])) {
-            foreach($attributes['language_cases'] as $key => $case) {
-                $this->language_cases[$key] = new \Tr8n\LanguageCase(array_merge($case, array("language" => $this)));
+        $this->cases = array();
+        if (isset($attributes['cases'])) {
+            $this->has_definition = true;
+            foreach($attributes['cases'] as $key => $case) {
+                $this->cases[$key] = new \Tr8n\LanguageCase(array_merge($case, array("language" => $this)));
             }
         }
     }
 
-    public function contextRule($type, $key = null) {
-        if (!array_key_exists($type, $this->context_rules))
-            return null;
+    public function contextByKeyword($keyword) {
+        if (isset($this->contexts[$keyword]))
+            return $this->contexts[$keyword];
+        return null;
+    }
 
-        $rule = $this->context_rules[$type];
-        if ($key == null) return $rule;
+    public function contextByTokenName($token_name) {
+        foreach($this->contexts as $key => $ctx) {
+            if ($ctx->isAppliedToToken($token_name))
+                return $ctx;
+        }
 
-        if (!array_key_exists($key, $rule))
-            return null;
-
-        return $rule[$key];
+        return null;
     }
 
     public function languageCase($key) {
@@ -78,6 +74,15 @@ class Language extends Base {
             return null;
 
         return $this->language_cases[$key];
+    }
+
+    /*
+    By default, application fetches only the basic information about language,
+    so it can be displayed in the language selector. When languages are used for translation,
+    they must fetch full definition, including context and case rules.
+    */
+    public function hasDefinition() {
+        return $this->has_definition;
     }
 
     public function isDefault() {
@@ -135,7 +140,7 @@ class Language extends Base {
             }
         }
 
-        return $cached_key->translate($this, array_merge($token_values, array("viewing_user" => Config::instance()->current_user)), $options);;
+        return $cached_key->translate($this, array_merge($token_values, array("viewing_user" => Config::instance()->current_user)), $options);
 	}
 
     public function flagUrl() {

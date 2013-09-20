@@ -1,6 +1,6 @@
 <?php require_once(__DIR__ . '/../../library/Tr8n.php'); ?>
 <!-- ?php tr8n_init_client_sdk("http://sandbox.tr8nhub.com", "0c1eb03d6c6e12cb2", "5ff3d87a83c13fcdb"); ? -->
-<?php tr8n_init_client_sdk("http://localhost:3000", "default", "e6ee64803c7b1cf51"); ?>
+<?php tr8n_init_client_sdk("http://localhost:3000", "default", "92a0a241c409c0480"); ?>
 
 <?php include('helpers.php'); ?>
 
@@ -40,12 +40,12 @@
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li <?php active_link("index.php")?>><?php link_to(tr("Home"), "index.php") ?></li>
+                    <li <?php active_link("index.php")?>><?php link_to(tr("Home", "Main page of the site"), "index.php") ?> </li>
                     <li <?php active_link("docs/installation.php")?>><?php link_to(tr("Installation Instructions"), "docs/installation.php") ?></li>
                     <li <?php active_link("docs/", "docs/installation.php")?>><?php link_to(tr("Documentation"), "docs/introduction.php") ?></li>
                 </ul>
                 <ul class="nav navbar-nav pull-right">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onClick="Tr8n.UI.LanguageSelector.show(true)"><?php tr8n_language_name_tag(tr8n_current_language(), array("flag" => true)) ?></a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onClick="Tr8n.UI.LanguageSelector.show()"><?php tr8n_language_name_tag(tr8n_current_language(), array("flag" => true)) ?></a></li>
 
                     <?php if (tr8n_current_translator() == null) { ?>
                         <li role="presentation"><?php tr8n_link_to('login', null , array("role" => "menuitem", "tabindex" => "-1")) ?></li>

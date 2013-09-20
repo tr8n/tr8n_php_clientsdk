@@ -37,8 +37,7 @@ class HtmlDecorator extends Base {
         if ($translation_key->isLocked() && !$config->current_translator->isManager()) return $label;
 
         if ($translation_key->id == null) {
-            $html = "<span style='border-bottom: 2px dotted #ff0000;'>";
-            $html = $html . $label . "</span>";
+            $html = "<span class='tr8n_pending'>" . $label . "</span>";
             return $html;
         }
 
@@ -56,7 +55,7 @@ class HtmlDecorator extends Base {
             array_push($classes, 'tr8n_not_translated');
         }
 
-        $html = "<span class='" . implode(' ', $classes) . "' translation_key_id='" . $translation_key->id . "'>";
+        $html = "<span class='" . implode(' ', $classes) . "' data-translation_key_id='" . $translation_key->id . "'>";
         $html = $html . $label;
         $html = $html . "</span>";
 
