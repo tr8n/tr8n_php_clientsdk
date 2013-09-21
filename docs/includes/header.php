@@ -40,9 +40,9 @@
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li <?php active_link("index.php")?>><?php link_to(tr("Home", "Main page of the site"), "index.php") ?> </li>
-                    <li <?php active_link("docs/installation.php")?>><?php link_to(tr("Installation Instructions"), "docs/installation.php") ?></li>
-                    <li <?php active_link("docs/", "docs/installation.php")?>><?php link_to(tr("Documentation"), "docs/introduction.php") ?></li>
+                    <li <?php active_link("index.php", "docs/index.php")?>><?php link_to(tr("Home", "Main page of the site"), "index.php") ?> </li>
+                    <li <?php active_link("docs/installation.php", "docs/index.php")?>><?php link_to(tr("Installation Instructions"), "docs/installation.php") ?></li>
+                    <li <?php active_link("docs/index.php")?>><?php link_to(tr("Documentation"), "docs/index.php") ?></li>
                 </ul>
                 <ul class="nav navbar-nav pull-right">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onClick="Tr8n.UI.LanguageSelector.show()"><?php tr8n_language_name_tag(tr8n_current_language(), array("flag" => true)) ?></a></li>

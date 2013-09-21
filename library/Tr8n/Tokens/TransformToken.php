@@ -97,7 +97,6 @@ class TransformToken extends Base {
         return ($this->pipe_separator == '||');
     }
 
-
     /**
     * token:      {count|| one: message, many: messages}
     * results in: {"one": "message", "many": "messages"}
@@ -154,17 +153,38 @@ class TransformToken extends Base {
         }
 
         // {}
-
         foreach($token_mapping as $key => $value) {
             $values[$key] = $value;
 
-//            $keys = array();
-//            preg_match_all('/(::[\w]+)/', $value, $keys);
-//            $keys = $keys[0];
-//            foreach($keys as $key) {
-//                $token =
-//
-//            }
+            // token form {$0::plural} - number followed by language cases
+            $keys = array();
+            preg_match_all('/{\$\d(::[\w]+)*}/', $value, $keys);
+            $keys = $keys[0];
+
+            foreach($keys as $tkey) {
+                $token = $tkey;
+                $token_without_parens = preg_replace('/[{}]/', '', $token);
+                $parts = explode('::', $token_without_parens);
+                $index = preg_replace('/[$]/', '', $parts[0]);
+
+                if (count($params) < $index) {
+                    throw new \Tr8n\Tr8nException("The index inside " . $token_mapping . " is out of bound: " . $this->full_name);
+                }
+
+                $val = $params[$index];
+
+                // TODO: check if language cases are enabled
+                foreach(array_slice($parts, 1) as $case_key) {
+                    $lcase = $context->language->languageCase($case_key);
+                    if ($lcase == null) {
+                        throw new \Tr8n\Tr8nException("Language case " . $case_key . " for context " . $context->keyword . "  mapping " . $key . " is not defined: " . $this->full_name);
+                    }
+
+                    $val = $lcase->apply($val);
+                }
+
+                $values[$key] = str_replace($tkey, $val, $values[$key]);
+            }
         }
 
         return $values;

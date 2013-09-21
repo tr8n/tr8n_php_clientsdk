@@ -113,7 +113,7 @@ function tr($label, $description = "", $tokens = array(), $options = array()) {
         $label = str_replace($stripped_label, tr8n_current_language()->translate($stripped_label, $params["description"],  $params["tokens"], $params["options"]), $params["label"]);
         return $label;
     } catch(\Tr8n\Tr8nException $ex) {
-//        \Tr8n\Logger::instance()->error("Failed to translate " . $params["label"] . ": " . $ex);
+        \Tr8n\Logger::instance()->error("Failed to translate " . $params["label"] . ": " . $ex);
         return $label;
     }
 }

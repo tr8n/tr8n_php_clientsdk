@@ -32,14 +32,12 @@ class Language extends Base {
     public $application;
 	public $locale, $name, $english_name, $native_name, $right_to_left, $enabled;
     public $google_key, $facebook_key, $myheritage_key, $contexts, $cases;
-    private $has_definition;
 
     function __construct($attributes=array()) {
         parent::__construct($attributes);
 
         $this->contexts = array();
         if (isset($attributes['contexts'])) {
-            $this->has_definition = true;
             foreach($attributes['contexts'] as $key => $context) {
                 $this->contexts[$key] = new \Tr8n\LanguageContext(array_merge($context, array("language" => $this)));
             }
@@ -47,7 +45,6 @@ class Language extends Base {
 
         $this->cases = array();
         if (isset($attributes['cases'])) {
-            $this->has_definition = true;
             foreach($attributes['cases'] as $key => $case) {
                 $this->cases[$key] = new \Tr8n\LanguageCase(array_merge($case, array("language" => $this)));
             }
@@ -70,10 +67,10 @@ class Language extends Base {
     }
 
     public function languageCase($key) {
-        if (!array_key_exists($key, $this->language_cases))
+        if (!array_key_exists($key, $this->cases))
             return null;
 
-        return $this->language_cases[$key];
+        return $this->cases[$key];
     }
 
     /*
@@ -82,7 +79,7 @@ class Language extends Base {
     they must fetch full definition, including context and case rules.
     */
     public function hasDefinition() {
-        return $this->has_definition;
+        return (count($this->contexts)>0);
     }
 
     public function isDefault() {
@@ -101,10 +98,13 @@ class Language extends Base {
 
 	public function translate($label, $description = "", $token_values = array(), $options = array()) {
         $locale = isset($options["locale"]) ? $options["locale"] : Config::instance()->blockOption("locale");
-        if ($locale == null) Config::instance()->default_locale;
+        if ($locale == null) $locale = Config::instance()->default_locale;
 
         $level = isset($options["level"]) ? $options["level"] : Config::instance()->blockOption("level");
-        if ($level == null) Config::instance()->default_level;
+        if ($level == null) $level = Config::instance()->default_level;
+
+        $source_key = isset($options['source']) ? $options["source"] : Config::instance()->blockOption('source');
+        if ($source_key == null) $source_key = Config::instance()->current_source;
 
         $temp_key = new TranslationKey(array(
             "application"   => $this->application,
@@ -119,11 +119,8 @@ class Language extends Base {
             return $temp_key->substituteTokens($label, $token_values, $this, $options);
         }
 
-        $source_key = isset($options['source']) ? $options["source"] : Config::instance()->blockOption('source');
-        if ($source_key == null) $source_key = Config::instance()->current_source;
-
         $cached_key = null;
-        if ($source_key) {
+        if ($source_key != null) {
             $source = $this->application->source($source_key);
             $source_translation_keys = $source->fetchTranslationsForLanguage($this, $options);
 

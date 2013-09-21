@@ -33,8 +33,15 @@ class TranslationKey extends Base {
         parent::__construct($attributes);
 
 		$this->key = $this->generateKey($this->label, $this->description);
-        if ($this->locale == null) $this->locale = Config::instance()->default_locale;
-        if ($this->language == null) $this->language = $this->application->language($this->locale);
+
+        if ($this->locale == null) {
+            $this->locale = Config::instance()->default_locale;
+        }
+
+        if ($this->language == null) {
+            $this->language = $this->application->language($this->locale);
+//            \Tr8n\Logger::instance()->debug("Loading key: " . $this->locale . " " . $this->language->locale);
+        }
 
         $this->translations = array();
         if (array_key_exists('translations', $attributes)) {
@@ -74,7 +81,7 @@ class TranslationKey extends Base {
 
         $translation_key = $this->application->post("translation_key/translations",
                                 array("key"=>$this->key, "label"=>$this->label, "description"=>$this->description, "locale" => $language->locale),
-                                array("class"=>'\Tr8n\TranslationKey', "attributes"=>array("application"=>$this->application, "language"=>$this->language)));
+                                array("class"=>'\Tr8n\TranslationKey', "attributes"=>array("application"=>$this->application)));
 
         return $this->application->cacheTranslationKey($translation_key);
     }
@@ -129,20 +136,20 @@ class TranslationKey extends Base {
     }
 
     public function translate($language, $token_values = array(), $options = array()) {
-		if (Config::instance()->isDisabled()) {
-            return $this->substituteTokens($this->label, $token_values, $this->language(), $options);
+        if (Config::instance()->isDisabled() || ($language->locale == $this->language->locale)) {
+            return $this->substituteTokens($this->label, $token_values, $this->language, $options);
         }
 
         $translation = $this->findFirstValidTranslation($language, $token_values);
         $decorator = \Tr8n\Decorators\Base::decorator();
 
-        if ($translation) {
-            $processed_label = $this->substituteTokens($translation->label, $token_values, $language, $options);
-            return $decorator->decorate($this, $language, $processed_label, array_merge($options, array("translated" => true)));
+        if ($translation != null) {
+            $processed_label = $this->substituteTokens($translation->label, $token_values, $translation->language, $options);
+            return $decorator->decorate($this, $translation->language, $processed_label, array_merge($options, array("translated" => true)));
         }
 
         $processed_label =  $this->substituteTokens($this->label, $token_values, $this->language, $options);
-        return $decorator->decorate($this, $language, $processed_label, array_merge($options, array("translated" => false)));
+        return $decorator->decorate($this, $this->language, $processed_label, array_merge($options, array("translated" => false)));
 	}
 
     ###############################################################

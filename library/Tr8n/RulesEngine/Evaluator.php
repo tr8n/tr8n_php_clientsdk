@@ -37,7 +37,7 @@ class Evaluator {
             "car"       => function($e, $args)      { return $args[0][1]; },
             "cdr"       => function($e, $args)      { return array_slice($args[0], 1); },
             "cons"      => function($e, $args)      { return array_merge(array($args[0]), $args[1]); },
-            "eq"        => function($e, $args)      { return ($args[0] === $args[1]); },
+            "eq"        => function($e, $args)      { return ($args[0] == $args[1]); },
             "atom"      => function($e, $args)      { return (is_array($args[0]) ? false : true); },
             "cond"      => function($e, $args)      { return ($e->evaluate($args[0]) ? $e->evaluate($args[1]) : $e->evaluate($args[2])); },
 

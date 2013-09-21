@@ -46,7 +46,7 @@ class Source extends Base {
         }
 
         $keys_with_translations = $this->application->get("source/translations", array("source" => $this->source, "locale" => $language->locale),
-                            array("class" => '\Tr8n\TranslationKey', "attributes" => array("application" => $this->application, "language" => $language)));
+                            array("class" => '\Tr8n\TranslationKey', "attributes" => array("application" => $this->application)));
 
         $this->translation_keys = array();
 

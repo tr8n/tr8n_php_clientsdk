@@ -94,7 +94,7 @@ class Application extends Base {
     /*
      * TODO: cache this method
     */
-    public function language($locale = null, $fetch = false) {
+    public function language($locale = null, $fetch = true) {
         $locale = ($locale == null ? Config::instance()->default_locale : $locale);
 
         if ($this->languages_by_locale == null) {
@@ -106,8 +106,10 @@ class Application extends Base {
 
         if (array_key_exists($locale, $this->languages_by_locale)) {
             $language = $this->languages_by_locale[$locale];
-            if ($language->hasDefinition() || $fetch == false)
+            if ($language->hasDefinition()) {
                 return $this->languages_by_locale[$locale];
+            }
+
         }
 
         if ($fetch == false) return null;

@@ -124,7 +124,7 @@ abstract class Base {
             $ctx = $language->contextByTokenName($this->short_name);
         }
 
-        if (!isset($opts["silent"])) {
+        if ($ctx==null && !isset($opts["silent"])) {
             throw new \Tr8n\Tr8nException("Unknown context for token: " . $this->full_name . " in " . $language->locale);
         }
 
@@ -145,7 +145,7 @@ abstract class Base {
     public function applyCase($case, $token_value, $token_values, $language, $options) {
         $case = $language->languageCase($case);
         if ($case == null) return $token_value;
-        return $case->apply(self::tokenObject($token_values, $this->name()), $token_value);
+        return $case->apply($token_value, self::tokenObject($token_values, $this->name()), $options);
     }
 
 

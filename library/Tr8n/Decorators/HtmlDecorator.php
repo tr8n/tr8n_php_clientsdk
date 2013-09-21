@@ -29,7 +29,7 @@ class HtmlDecorator extends Base {
 
     public function decorate($translation_key, $language, $label, $options) {
         if (array_key_exists("skip_decorations", $options)) return $label;
-        if ($translation_key->locale == $language->locale) return $label;
+//        if ($translation_key->locale == $language->locale) return $label;
 
         $config = \Tr8n\Config::instance();
         if ($config->current_translator == null) return $label;

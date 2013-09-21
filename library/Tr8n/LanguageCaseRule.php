@@ -30,92 +30,79 @@ use \Tr8n\Rules\GenderRule;
 class LanguageCaseRule extends Base {
 
     public $language_case;
-    public $fallback, $gender, $operator, $multipart, $part1, $value1, $part2, $value2, $operation, $operation_value;
+    public $definition, $position, $description, $examples;
 
-    public function evaluate($object, $value) {
-        if ($this->isFallback())
-            return true;
+    function conditions() {
+        return ($this->definition["conditions"]);
+    }
 
-        if (in_array($this->gender, Config::instance()->supportedGenders())) {
-            $object_gender = GenderRule::genderObjectValue($this->gender);
-            foreach(Config::instance()->supportedGenders() as $gender) {
-                if ($this->gender==$gender && $object_gender!=GenderRule::genderObjectValue($gender))
-                    return false;
-            }
+    function conditionsExpression() {
+        if (!isset($this->definition["conditions_expression"])) {
+            $p = new \Tr8n\RulesEngine\Parser($this->conditions());
+            $this->definition["conditions_expression"] = $p->parse();
+        }
+        return $this->definition["conditions_expression"];
+    }
+
+    function operations() {
+        return ($this->definition["operations"]);
+    }
+
+    function operationsExpression() {
+        if (!isset($this->definition["operations_expression"])) {
+            $p = new \Tr8n\RulesEngine\Parser($this->conditions());
+            $this->definition["operations_expression"] = $p->parse();
+        }
+        return $this->definition["operations_expression"];
+    }
+
+    /**
+     * Some language cases may depend on the object gender.
+     * This is the only context that is injected/hard coded into the language cases.
+     *
+     * The language must support Gender Context.
+     *
+     * @param $object
+     */
+    function genderVariables($object) {
+        if (strstr($this->conditions(), "@gender") == false)
+            return array();
+
+        if ($object == null)
+            return array("@gender" => "unknown");
+
+        // TODO: is there a better way to do this?
+        $context = $this->language_case->language->context("gender");
+
+        if ($context == null)
+            return array("@gender" => "unknown");
+
+        return $context->vars($object);
+    }
+
+    public function evaluate($value, $object = null) {
+        if ($this->conditions() == null)
+            return false;
+
+        $re = new \Tr8n\RulesEngine\Evaluator();
+        $re->evaluate(array("let", "@value", $value));
+
+        $vars = $this->genderVariables($object);
+        foreach($vars as $key=>$val) {
+            $re->evaluate(array("let", $key, $val));
         }
 
-        $result1 = $this->evaluatePart($value, 1);
-
-        if (!$this->isMultipart())
-            return $result1;
-
-        $result2 = $this->evaluatePart($value, 2);
-
-        if ($this->operator == 'and' && ($result1 && $result2))
-            return true;
-
-        if ($this->operator == 'or' && ($result1 || $result2))
-            return true;
-
-        return false;
-    }
-
-    private function isFallback() {
-        return ($this->fallback == 'true');
-    }
-
-    private function isMultipart() {
-        return ($this->multipart == 'true');
-    }
-
-    public function evaluatePart($token_value, $index) {
-        $case_part = "part".$index;
-        $case_part = $this->$case_part;
-        $case_value = "value".$index;
-        $case_value = $this->$case_value;
-
-        $values = ArrayUtils::split($case_value);
-
-        switch ($case_part) {
-            case "starts_with":
-                return \Tr8n\Utils\StringUtils::startsWith($values, $token_value);
-            case "does_not_start_with":
-                return !\Tr8n\Utils\StringUtils::startsWith($values, $token_value);
-            case "ends_in":
-                return \Tr8n\Utils\StringUtils::endsWith($values, $token_value);
-            case "does_not_end_in":
-                return !\Tr8n\Utils\StringUtils::endsWith($values, $token_value);
-            case "is":
-                return in_array($token_value, $values);
-            case "is_not":
-                return !in_array($token_value, $values);
-        }
-
-        return false;
+        return $re->evaluate($this->conditionsExpression());
     }
 
     public function apply($value) {
-        switch ($this->operation) {
-            case "replace":
-                switch ($this->part1) {
-                    case "starts_with":
-                        $values = ArrayUtils::split($this->value1);
-                        $regex = implode($values, '|');
-                        return preg_replace('/^('.$regex.')/', $this->operation_value, $value);
-                    case "is":
-                        return $this->operation_value;
-                    case "ends_in":
-                        $values = ArrayUtils::split($this->value1);
-                        $regex = implode($values, '|');
-                        return preg_replace('/('.$regex.')$/', $this->operation_value, $value);
-                }
-            case "prepand":
-                return "" . $this->operation_value . $value;
-            case "append":
-                return "" . $value.$this->operation_value;
-        }
+        if ($this->operations() == null)
+            return $value;
 
-        return $value;
+        $re = new \Tr8n\RulesEngine\Evaluator();
+        $re->evaluate(array("let", "@value", $value));
+
+        return $re->evaluate($this->operationsExpression());
     }
 
 }

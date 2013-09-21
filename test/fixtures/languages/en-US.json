@@ -559,9 +559,8 @@
                             "sheep,fish,series,species,money,rice,information,equipment",
                             "@value"
                         ],
-                        "operations": "(quote @value)",
+                        "operations": "@value",
                         "operations_expression": [
-                            "quote",
                             "@value"
                         ]
                     },

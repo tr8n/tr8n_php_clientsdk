@@ -44,7 +44,16 @@ class LanguageCase extends Base {
         return '/<\/?[^>]*>/';
     }
 
-    public function apply($object, $value, $options = array()) {
+    public function findMatchingRule($value, $object = null) {
+        foreach($this->rules as $rule) {
+            if ($rule->evaluate($value, $object) == true)
+                return $rule;
+        }
+
+        return null;
+    }
+
+    public function apply($value, $object = null, $options = array()) {
         $tags = array();
         preg_match_all($this->substitutionExpression(), $value, $tags);
         $tags = array_unique($tags[0]);
@@ -69,9 +78,9 @@ class LanguageCase extends Base {
 
         $transformed_elements = array();
         foreach($elements as $element) {
-            $case_rule = $this->matchRule($object, $element);
-            $case_value = ($case_rule == null ? $element : $case_rule->apply($element));
-            array_push($transformed_elements, $this->decorate($element, $case_value, $case_rule, $options));
+            $rule = $this->findMatchingRule($element, $object);
+            $case_value = ($rule==null ? $element : $rule->apply($element));
+            array_push($transformed_elements, $this->decorate($element, $case_value, $rule, $options));
         }
 
         # replace back temporary placeholders {$w1}
@@ -87,16 +96,17 @@ class LanguageCase extends Base {
         return $value;
     }
 
-    public function matchRule($object, $value) {
-        foreach($this->rules as $rule) {
-            if ($rule->evaluate($object, $value))
-                return $rule;
-        }
-        return null;
-    }
+    public function decorate($element, $value, $rule, $options = array()) {
+        if (isset($options["skip_decoration"])) return $value;
+        if ($this->language->isDefault()) return $value;
 
-    public function decorate($object, $value, $rule, $options = array()) {
-        return $value;
+        $config = \Tr8n\Config::instance();
+        if ($config->current_translator == null) return $value;
+        if (!$config->current_translator->isInlineModeEnabled()) return $value;
+
+        return "<span class='tr8n_language_case' data-case_id='" . $this->id .
+               "' data-rule_id='" . ($rule ? $rule->id : '') .
+               "' data-case_key='" . str_replace("'", "\'", $element) . "'>" . $value . "</span>";
     }
 
 }
