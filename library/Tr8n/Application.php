@@ -31,7 +31,12 @@ class Application extends Base {
     public $languages, $sources, $components;
 
     # TODO: move those attributes out - must be cached
-    public $languages_by_locale, $sources_by_key, $components_by_key, $translation_keys;
+    public $languages_by_locale, $sources_by_key, $components_by_key;
+
+    /**
+     * @var TranslationKey[]
+     */
+    public $translation_keys;
     public $missing_keys_by_sources;
 
     public static function init($host, $key, $secret, $options = array()) {
@@ -184,8 +189,11 @@ class Application extends Base {
         return $this->components_by_key[$key];
     }
 
-    /*
+    /**
      * TODO: cache this method
+     *
+     * @param $key
+     * @return null|TranslationKey
      */
     public function translationKey($key) {
         if (!array_key_exists($key, $this->translation_keys))
@@ -193,7 +201,7 @@ class Application extends Base {
         return $this->translation_keys[$key];
     }
 
-    public function cacheTranslationKey($translation_key) {
+    public function cacheTranslationKey(TranslationKey $translation_key) {
         $cached_key = $this->translationKey($translation_key->key);
         if ($cached_key !== null) {
             # move translations from tkey to the cached key
