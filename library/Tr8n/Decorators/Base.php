@@ -27,6 +27,9 @@ namespace Tr8n\Decorators;
 
 abstract class Base {
 
+    /**
+     * @return self
+     */
     public static function decorator() {
         $class = \Tr8n\Config::instance()->decoratorClass();
         return new $class();

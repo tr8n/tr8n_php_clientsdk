@@ -31,7 +31,17 @@ class Application extends Base {
     public $languages, $sources, $components;
 
     # TODO: move those attributes out - must be cached
-    public $languages_by_locale, $sources_by_key, $components_by_key;
+    public $languages_by_locale;
+
+    /**
+     * @var Source[]
+     */
+    public $sources_by_key;
+
+    /**
+     * @var Component[]
+     */
+    public $components_by_key;
 
     /**
      * @var TranslationKey[]
@@ -96,9 +106,14 @@ class Application extends Base {
         $this->missing_keys_by_sources = null;
     }
 
-    /*
+
+    /**
      * TODO: cache this method
-    */
+     *
+     * @param null $locale
+     * @param bool $fetch
+     * @return Language
+     */
     public function language($locale = null, $fetch = true) {
         $locale = ($locale == null ? Config::instance()->default_locale : $locale);
 

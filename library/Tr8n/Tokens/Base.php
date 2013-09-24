@@ -31,6 +31,12 @@ abstract class Base {
 
     protected $label, $full_name, $short_name, $case_keys, $context_keys;
 
+    /**
+     * @param $label
+     * @param string $category
+     * @param array $options
+     * @return self[]
+     */
     public static function registerTokens($label, $category = "data", $options = array()) {
         $tokens = array();
         foreach(\Tr8n\Config::instance()->tokenClasses($category) as $class) {
