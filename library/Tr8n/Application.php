@@ -130,6 +130,12 @@ class Application extends Base {
     }
 
     public function defaultToken($key, $type = "data") {
+        // first check the config, then fallback onto the application
+        $token = \Tr8n\Config::instance()->defaultToken($key, $type);
+
+        if ($token != null) return $token;
+
+        // TODO: fix the structure of the tokens in the API - similar to config.
         $default_tokens_key = "default_".$type."_tokens";
 
         if (!isset($this->definition[$default_tokens_key]))

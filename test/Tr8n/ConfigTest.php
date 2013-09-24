@@ -33,9 +33,31 @@ class ConfigTest extends \BaseTest {
 
         $this->assertEquals(false, $config->isEnabled());
         $this->assertEquals(true, $config->isLoggerEnabled());
-        $this->assertEquals('\Tr8n\Rules\NumericRule', $config->ruleClassByType("number"));
-        $this->assertEquals('\Tr8n\Rules\GenderRule', $config->ruleClassByType("gender"));
-
    }
+
+    public function testDefaultTokens() {
+        $config = \Tr8n\Config::instance();
+
+        $this->assertEquals(
+            '<strong>{$0}</strong>',
+            $config->defaultToken("bold", "decoration", "html")
+        );
+
+        $this->assertEquals(
+            '<strong>{$0}</strong>',
+            $config->defaultToken("bold", "decoration")
+        );
+
+        $this->assertEquals(
+            '{$0}',
+            $config->defaultToken("bold", "decoration", "plain")
+        );
+
+        $this->assertEquals(
+            '&ndash;',
+            $config->defaultToken("ndash")
+        );
+
+    }
 
 }

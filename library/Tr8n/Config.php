@@ -29,7 +29,7 @@ require_once "Application.php";
 
 class Config {
 
-    public $application, $default_locale, $default_level;
+    public $application, $default_locale, $default_level, $default_tokens;
     public $current_user, $current_language, $current_translator, $current_source, $current_component;
     public $current_translation_keys;
 
@@ -128,6 +128,29 @@ class Config {
 
     public function decoratorClass() {
         return '\Tr8n\Decorators\HtmlDecorator';
+    }
+
+    public function configFilePath($file_name) {
+        return __DIR__."/../../config/" . $file_name;
+    }
+
+    // TODO: must be cached
+    public function defaultToken($key, $type = 'data', $format = 'html') {
+        if ($this->default_tokens == null) {
+            $data = file_get_contents($this->configFilePath('tokens.json'));
+            $this->default_tokens = json_decode($data, true);
+        }
+
+        if (!isset($this->default_tokens[$type]))
+            return null;
+
+        if (!isset($this->default_tokens[$type][$format]))
+            return null;
+
+        if (!isset($this->default_tokens[$type][$format][$key]))
+            return null;
+
+        return $this->default_tokens[$type][$format][$key];
     }
 
     public function contextRules() {
