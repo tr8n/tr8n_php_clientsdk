@@ -404,5 +404,4 @@ tre("{actor} tagged {target} in a photo {target|he, she} just uploaded.", array(
 
 <?php tr8n_finish_block_with_options() ?>
 
-<?php include('includes/nav_footer.php'); ?>
 <?php include('includes/footer.php'); ?>

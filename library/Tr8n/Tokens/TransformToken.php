@@ -51,7 +51,7 @@ class TransformToken extends Base {
 
     protected $pipe_separator, $piped_parameters;
 
-    public function expression() {
+    public static function  expression() {
         return '/(\{[^_:|][\w]*(:[\w]+)*(::[\w]+)*\s*\|\|?[^{^}]+\})/';
     }
 
@@ -85,11 +85,14 @@ class TransformToken extends Base {
 
         $this->pipe_separator = (strpos($this->full_name,'||') !== false) ? '||' : '|';
 
-        $parts = explode($this->pipe_separator, $name_without_parens);
-        $parts = explode(',', $parts[1]);
         $this->piped_parameters = array();
-        foreach($parts as $part) {
-            array_push($this->piped_parameters, trim($part));
+
+        $parts = explode($this->pipe_separator, $name_without_parens);
+        if (count($parts) > 1) {
+            $parts = explode(',', $parts[1]);
+            foreach($parts as $part) {
+                array_push($this->piped_parameters, trim($part));
+            }
         }
     }
 

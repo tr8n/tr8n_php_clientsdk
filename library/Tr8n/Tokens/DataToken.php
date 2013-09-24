@@ -46,7 +46,7 @@ namespace Tr8n\Tokens;
 
 class DataToken extends Base {
 
-    public function expression() {
+    public static function expression() {
         return '/(\{[^_:][\w]*(:[\w]+)*(::[\w]+)*\})/';
     }
 

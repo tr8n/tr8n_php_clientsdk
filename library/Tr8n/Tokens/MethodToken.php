@@ -37,7 +37,7 @@ class MethodToken extends Base {
 
     protected $object_name, $object_method;
 
-    public function expression() {
+    public static function expression() {
         return '/(\{[^_:.][\w]*(\.[\w]+)(:[\w]+)*(::[\w]+)*\})/';
     }
 

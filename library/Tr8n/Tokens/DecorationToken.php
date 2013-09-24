@@ -43,7 +43,7 @@ class DecorationToken extends Base {
 
     private $decorated_value;
 
-    public function expression() {
+    public static function expression() {
         return '/(\[\w+:[^\]]+\])/';
     }
 
@@ -62,7 +62,7 @@ class DecorationToken extends Base {
     }
 
     public function isSimple() {
-        return !preg_match($this->expression(), $this->decoratedValue());
+        return !preg_match(self::expression(), $this->decoratedValue());
     }
 
     public function isNested() {
@@ -73,7 +73,7 @@ class DecorationToken extends Base {
         $this->full_name = $this->full_name . $str;
     }
 
-    public function parse($label, $options = array()) {
+    public static function parse($label, $expression, $options = array()) {
         $length = strlen($label);
         $tokens = array();
         $candidates = array();

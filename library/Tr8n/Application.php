@@ -130,9 +130,15 @@ class Application extends Base {
     }
 
     public function defaultToken($key, $type = "data") {
-        if (!array_key_exists($key, $this->definition["default_".$type."_tokens"]))
+        $default_tokens_key = "default_".$type."_tokens";
+
+        if (!isset($this->definition[$default_tokens_key]))
             return null;
-        return $this->definition["default_".$type."_tokens"][$key];
+
+        if (!isset($this->definition[$default_tokens_key][$key]))
+            return null;
+
+        return $this->definition[$default_tokens_key][$key];
     }
 
 

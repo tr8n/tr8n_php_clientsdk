@@ -34,8 +34,9 @@ abstract class Base {
     public static function registerTokens($label, $category = "data", $options = array()) {
         $tokens = array();
         foreach(\Tr8n\Config::instance()->tokenClasses($category) as $class) {
-            $token = new $class($label, null); // TODO: can this be made into a static function?
-            $matches = $token->parse($label, $options);
+//            $token = new $class($label, null); // TODO: can this be made into a static function?
+//            call_user_func_array($class, array($label, $options));
+            $matches = $class::parse($label, $class::expression(), $options);
             array_push($tokens, $matches);
         }
         return ArrayUtils::flatten($tokens);
@@ -72,11 +73,11 @@ abstract class Base {
         }
     }
 
-    public abstract function expression();
+    public static abstract function expression();
 
-    public function parse($label, $options = array()) {
+    public static function parse($label, $expression, $options = array()) {
         $matches = array();
-        preg_match_all($this->expression(), $label, $matches);
+        preg_match_all($expression, $label, $matches);
         $matches = array_unique($matches[0]);
         $tokens = array();
         $class = get_called_class();
