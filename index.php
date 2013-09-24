@@ -36,7 +36,7 @@
         <p class="text-center"><?php image_tag("how_it_works_1.gif") ?></p>
         <h4 class="text-center"><?php tre("Use your users") ?></h4>
         <p>
-            <?php tre("Your multilingual users can sign up to help translate your site into over {count||different languages}.", "", array("count" => 300)) ?>
+            <?php tre("Your multilingual users can sign up to help translate your site into over {count||different languages}.", array("count" => 300)) ?>
             <?php tre("The translations they provide can then be viewed and voted on by other users.") ?>
         </p>
     </div>

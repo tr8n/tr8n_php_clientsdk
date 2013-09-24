@@ -234,6 +234,124 @@ tr("{user| He, She} likes this movie. ", array("user" => $female))
                 </div>
             </div>
 
+            <pre><code class="language-php">tr("{user| male: He, female: She} likes this movie.", array("user" => $male))</code></pre>
+
+            <div class="example">
+                <div class="title"><?php tre("results in") ?></div>
+                <div class="content">
+                    <?php tre("{user| male: He, female: She} likes this movie.", array("user" => $male)) ?>
+                </div>
+            </div>
+
+            <pre><code class="language-php">tr("{user| Born on}: ", array("user" => $male))</code></pre>
+
+            <div class="example">
+                <div class="title"><?php tre("results in") ?></div>
+                <div class="content">
+                    <?php tre("{user| Born on}: ", array("user" => $male)) ?>
+                </div>
+            </div>
+
+
+            <h2><?php tre("Decoration Tokens") ?></h2>
+            <?php tre("Decoration tokens are used to inject HTML styling into translations.") ?>
+
+            <pre><code class="language-php">tr("Hello [bold: World]", array("bold" => function($value) { return "&lt;strong>" . $value . "&lt;/strong>";} ))</code></pre>
+
+            <div class="example">
+                <div class="title"><?php tre("results in") ?></div>
+                <div class="content">
+                    <?php tre("Hello [bold: World]", array("bold" => function($value) { return "<strong>$value</strong>";} )) ?>
+                </div>
+            </div>
+
+            <pre><code class="language-php">("Hello [bold: World]", array("bold" => '&lt;strong&gt;{$0}&lt;/strong&gt;'))</code></pre>
+
+            <div class="example">
+                <div class="title"><?php tre("results in") ?></div>
+                <div class="content">
+                    <?php tre("Hello [bold: World]", array("bold" => '<strong>{$0}</strong>')) ?>
+                </div>
+            </div>
+
+            <pre><code class="language-php">tr("Hello [bold: World]")</code></pre>
+
+            <div class="example">
+                <div class="title"><?php tre("results in") ?></div>
+                <div class="content">
+                    <?php tre("Hello [bold: World]") ?>
+                </div>
+            </div>
+
+            <h2><?php tre("Nested Tokens") ?></h2>
+            <pre><code class="language-php">tr("You have [link: {count||message}]", array(
+                        "count" => 10,
+                        "link" => function($value) { return "&lt;a href='http://www.google.com'> $value &lt;/a>"; }
+                    )
+)</code></pre>
+
+            <div class="example">
+                <div class="title"><?php tre("results in") ?></div>
+                <div class="content">
+                    <?php tre("You have [link: {count||message}]", array("count" => 10, "link" => function($value) { return "<a href='http://www.google.com'> $value </a>"; } )) ?>
+                </div>
+            </div>
+
+            <pre><code class="language-php">tr("[bold: {user}], you have [italic: [link: [bold: {count}] {count|message}]]!", array(
+                        "user" => $male,
+                        "count" => 10,
+                        "italic" => '&lt;i>{$0}&lt;/i>',
+                        "bold" => '&lt;strong>{$0}&lt;/strong>',
+                        "link" => function($value) { return "&lt;a href='http://www.google.com'> $value &lt;/a>"; }
+                    )
+)</code></pre>
+
+            <div class="example">
+                <div class="title"><?php tre("results in") ?></div>
+                <div class="content">
+                    <?php tre("[bold: {user}], you have [italic: [link: [bold: {count}] {count|message}]]!", array("user" => $male, "bold" => '<strong>{$0}</strong>', "italic" => '<i>{$0}</i>', "count" => 10, "link" => function($value) { return "<a href='http://www.google.com'> $value </a>"; } )) ?>
+                </div>
+            </div>
+
+
+            <h1><?php tre("Context Rules") ?></h1>
+
+            <h2><?php tre("Numbers") ?></h2>
+            <pre><code class="language-php">for($i=0; $i<10; $i++) {
+    tr("You have {count||message}", array("count" => $i))
+}</code></pre>
+            <div class="example">
+                <div class="title"><?php tre("results in") ?></div>
+                <div class="content">
+                    <?php for($i=0; $i<10; $i++) { ?>
+                        <?php tre("You have {count||message}", array("count" => $i)) ?><br>
+                    <?php } ?>
+                </div>
+            </div>
+
+            <h2>Genders</h2>
+            <pre><code class="language-php">tre("{actor} tagged {target} in a photo {target|he, she} just uploaded.", array("actor" => $male, "target" => $female))
+tre("{actor} tagged {target} in a photo {target|he, she} just uploaded.", array("actor" => $female, "target" => $male))
+</code></pre>
+            <div class="example">
+                <div class="title"><?php tre("results in") ?></div>
+                <div class="content">
+                    <?php tre("{actor} tagged {target} in a photo {target|he, she} just uploaded.", array("actor" => $male, "target" => $female)) ?><br>
+                    <?php tre("{actor} tagged {target} in a photo {target|he, she} just uploaded.", array("actor" => $female, "target" => $male)) ?><br>
+                </div>
+            </div>
+
+
+            <h1>Language Cases</h1>
+            <h2>Possessives</h2>
+            <pre><code class="language-php">tre("This is {user::pos} photo", array("user" => $male))</code></pre>
+            <div class="example">
+                <div class="title"><?php tre("results in") ?></div>
+                <div class="content">
+                    <?php tre("This is {user::pos} photo", array("user" => $male)) ?>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
