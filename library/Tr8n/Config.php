@@ -28,13 +28,59 @@ require_once "Logger.php";
 require_once "Application.php";
 
 class Config {
+    /**
+     * @var Application
+     */
+    public $application;
 
-    public $application, $default_locale, $default_level, $default_tokens;
-    public $current_user, $current_language, $current_translator, $current_source, $current_component;
+    /**
+     * @var string
+     */
+    public $default_locale;
+
+    /**
+     * @var int
+     */
+    public $default_level;
+
+    /**
+     * @var string[]
+     */
+    public $default_tokens;
+
+    /**
+     * @var mixed
+     */
+    public $current_user;
+
+    /**
+     * @var Language
+     */
+    public $current_language;
+
+    /**
+     * @var Translator
+     */
+    public $current_translator;
+
+    /**
+     * @var Source
+     */
+    public $current_source;
+
+    /**
+     * @var Component
+     */
+    public $current_component;
+
+    /**
+     * @var TranslationKey[]
+     */
     public $current_translation_keys;
 
     private $block_options;
-    private $rules_engine, $token_classes;
+    private $rules_engine;
+    private $token_classes;
 
     // Allows for setting a custom config class
     public static function init($config) {

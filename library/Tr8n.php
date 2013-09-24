@@ -61,6 +61,8 @@ function tr8n_init_client_sdk($host, $key, $secret) {
     }
 
     \Tr8n\Config::instance()->initRequest(array('locale' => $locale, 'translator' => $translator));
+
+    return true;
 }
 
 function tr8n_complete_request($options = array()) {
@@ -71,6 +73,9 @@ function tr8n_application() {
     return \Tr8n\Config::instance()->application;
 }
 
+/**
+ * @return \Tr8n\Language
+ */
 function tr8n_current_language() {
     return \Tr8n\Config::instance()->current_language;
 }
@@ -80,7 +85,7 @@ function tr8n_current_translator() {
 }
 
 function tr8n_begin_block_with_options($options = array()) {
-    return \Tr8n\Config::instance()->beginBlockWithOptions($options);
+    \Tr8n\Config::instance()->beginBlockWithOptions($options);
 }
 
 function tr8n_finish_block_with_options() {
