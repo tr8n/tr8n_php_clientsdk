@@ -36,9 +36,13 @@ class HtmlParser {
         $this->env = array(
             "tr8n"     => function($p, $attributes, $value) { return $value; },
             "span"     => function($p, $attributes, $value) {
-                $token = $p->decorationTokenName('span', $attributes);
-                $p->decorations[$token] = $attributes;
-                return '[' . $token . ': ' . $value . ']';
+                return $p->sanitizeDecorationToken('span', $attributes, $value);
+            },
+            "div"      => function($p, $attributes, $value) {
+                return $p->sanitizeDecorationToken('div', $attributes, $value);
+            },
+            "p"         => function($p, $attributes, $value) {
+                return $p->sanitizeDecorationToken('p', $attributes, $value);
             },
             "strong"   => function($p, $attributes, $value) {
                 return '[strong: ' . $value . ']';
@@ -46,12 +50,22 @@ class HtmlParser {
             "bold"     => function($p, $attributes, $value) {
                 return '[bold: ' . $value . ']';
             },
+            "i"        => function($p, $attributes, $value) {
+                return '[italic: ' . $value . ']';
+            },
+            "italic"   => function($p, $attributes, $value) {
+                return '[italic: ' . $value . ']';
+            },
             "a"        => function($p, $attributes, $value) {
-                $token = $p->decorationTokenName('link', $attributes);
-                $p->decorations[$token] = $attributes;
-                return '[' . $token . ': ' . $value . ']';
+                return $p->sanitizeDecorationToken('link', $attributes, $value);
             },
         );
+    }
+
+    function sanitizeDecorationToken($name, $attributes, $value) {
+        $token = $this->decorationTokenName($name, $attributes);
+        $this->decorations[$token] = $attributes;
+        return '[' . $token . ': ' . $value . ']';
     }
 
     function decorationTokenName($name, $attributes) {

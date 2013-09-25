@@ -104,6 +104,11 @@ class TmlUtilsTest extends \BaseTest {
             \Tr8n\Utils\HtmlParser::translate("<span style='font-weight:bold;'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span>")
         );
 
+        $this->assertEquals(
+            "[p: [div: Message = [span1: Hello [span: World]]]]]",
+            \Tr8n\Utils\HtmlParser::translate("<p><div style='font-weight:bold;'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></div></p>")
+        );
+
     }
 
 }
