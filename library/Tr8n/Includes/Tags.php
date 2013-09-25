@@ -64,7 +64,7 @@ function tr8n_link_to($dest, $title = null, $opts = array()) {
             break;
         case 'notifications_popup':
             if ($title == null) $title = "Notifications";
-            $function = "Tr8n.UI.Lightbox.show('/tr8n/translator/lb_notifications', {width:600});";
+            $function = "Tr8n.UI.Lightbox.show('/tr8n/translator/notifications/lb_notifications', {width:600});";
             break;
         case 'shortcuts_popup':
             if ($title == null) $title = "Shortcuts";

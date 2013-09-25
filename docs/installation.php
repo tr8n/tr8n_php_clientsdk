@@ -16,17 +16,17 @@
     <pre><code class="language-php"> &lt;?php require_once('tr8n_php_clientsdk/library/Tr8n.php'); ?&gt; </code></pre>
 
     <p>
-        Make sure you provide a correct path to where you cloned tr8n_php_clientsdk.
+        <?php tre("Make sure you provide a correct path to where you cloned tr8n_php_clientsdk.") ?>
     </p>
 
     <h3><?php tre("Offline & online modes") ?></h3>
 
     <p>
-        Tr8n PHP Client SDK can run in two modes: offline and online.
+        <?php tre("Tr8n PHP Client SDK can run in two modes: offline and online.") ?>
     </p>
 
     <p>
-        The offline mode initializes languages and translations from your local cache files, applies rules and substitutes tokens.
+        <?php tre("The offline mode initializes languages and translations from your local cache files, applies rules and substitutes tokens.") ?>
         The offline mode is usually used when the application does not need any more translations.
         It is also used when a connection to the Tr8n service cannot be established.
         The offline mode does not register new keys and does not download translations.

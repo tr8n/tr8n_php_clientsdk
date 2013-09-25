@@ -73,6 +73,10 @@ class Language extends Base {
         return $this->cases[$key];
     }
 
+    public function cacheKey($locale) {
+        return "language_[" . $locale . "]";
+    }
+
     /*
     By default, application fetches only the basic information about language,
     so it can be displayed in the language selector. When languages are used for translation,

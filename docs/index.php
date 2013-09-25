@@ -27,7 +27,7 @@
 
             <?php tre("Tr8n provides a global translation function, called \"tr\".") ?>
 
-            <?php tre("The function has two flavors, either one case be used throughout the site:") ?>
+            <?php tre("The function has two flavors, either one can be used throughout the site:") ?>
 
             <pre><code class="language-php">tr($label, $description = "", $tokens = array(), $options = array())</code></pre>
 

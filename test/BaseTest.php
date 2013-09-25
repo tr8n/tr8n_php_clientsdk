@@ -8,13 +8,19 @@ class BaseTest extends PHPUnit_Framework_TestCase {
         return __DIR__."/fixtures/";
     }
 
-    protected static function loadJSON($path) {
+    protected static function loadFile($path) {
         $path = self::fixturesPath().$path;
 
         if (!file_exists($path)) {
             throw new Exception("Error: File $path not found.");
         }
+
         $string = file_get_contents($path);
+        return $string;
+    }
+
+    protected static function loadJSON($path) {
+        $string = loadFile($path);
         return json_decode($string,true);
     }
 
@@ -26,6 +32,7 @@ class BaseTest extends PHPUnit_Framework_TestCase {
             "translations" => $translations
         )));
     }
+
 }
 
 class User {

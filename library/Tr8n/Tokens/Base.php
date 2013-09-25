@@ -32,6 +32,9 @@ abstract class Base {
     protected $label, $full_name, $short_name, $case_keys, $context_keys;
 
     public static function registerTokens($label, $category = "data", $options = array()) {
+        if ($category == "data" && strpos($label, '{') === FALSE) return array();
+        if ($category == "decoration" && strpos($label, '[') === FALSE) return array();
+
         $tokens = array();
         foreach(\Tr8n\Config::instance()->tokenClasses($category) as $class) {
 //            $token = new $class($label, null); // TODO: can this be made into a static function?
