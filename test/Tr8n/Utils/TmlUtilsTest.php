@@ -16,8 +16,6 @@ require_once(__DIR__."/../../BaseTest.php");
 class TmlUtilsTest extends \BaseTest {
 
     public function testConvertToTml() {
-//        $results = \Tr8n\Utils\TmlUtils::parseHtml(self::loadFile("html/span.html"));
-
         $text = '<span>Hello <strong>World</strong></span>';
 
         $p = new \Tr8n\Utils\HtmlParser($text);
@@ -105,10 +103,32 @@ class TmlUtilsTest extends \BaseTest {
         );
 
         $this->assertEquals(
-            "[p: [div: Message = [span1: Hello [span: World]]]]]",
+            "[p: [div: Message = [span1: Hello [span: World]]]]",
             \Tr8n\Utils\HtmlParser::translate("<p><div style='font-weight:bold;'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></div></p>")
         );
 
+
+        $this->assertEquals(
+            "Hello {br} World",
+            \Tr8n\Utils\HtmlParser::translate("Hello <br> World")
+        );
+
+        $this->assertEquals(
+            "[span: Hello {br} World]",
+            \Tr8n\Utils\HtmlParser::translate("<span>Hello <br/> World</span>")
+        );
+
+        $this->assertEquals(
+            "[span: Hello {hr} World]",
+            \Tr8n\Utils\HtmlParser::translate("<span>Hello <hr/> World</span>")
+        );
+
+    }
+
+    public function testHTMLParsing() {
+//        print_r(\Tr8n\Utils\HtmlParser::translate(self::loadFile("html/span.html")));
+//        print_r(\Tr8n\Utils\HtmlParser::translate(self::loadFile("html/bold.html")));
+//        print_r(\Tr8n\Utils\HtmlParser::translate(self::loadFile("html/source/nested.html")));
     }
 
 }

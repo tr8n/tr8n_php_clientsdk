@@ -117,8 +117,18 @@ class HtmlParser {
     function parse() {
         $token = $this->nextToken();
 
-        if (preg_match('/</', $token)) {
+        if ($token == '<br>') {
+            return '{br}';
+        }
+
+        if (preg_match('/^</', $token)) {
             $token = trim($token, '<>');
+
+            if (preg_match('/\/$/', $token)) {
+                $token = trim($token, '/');
+                return '{' . $token . '}';
+            }
+
             $attrs = array();
             $parts = explode(' ', $token);
             $token = $parts[0];
@@ -179,6 +189,9 @@ class HtmlParser {
 
     static function translate($text) {
         $p = new \Tr8n\Utils\HtmlParser($text);
+
+        // TODO: add translation callback
+
         return $p->process();
     }
 }
