@@ -24,8 +24,24 @@
 
 namespace Tr8n;
 
+use Tr8n\Tokens\Base as TokenBase;
+
 class TranslationKey extends Base {
-    public $application, $language, $translations;
+    /**
+     * @var Application
+     */
+    public $application;
+
+    /**
+     * @var Language
+     */
+    public $language;
+
+    /**
+     * @var Translation[]
+     */
+    public $translations;
+
     public $id, $key, $label, $description, $locale, $level, $locked;
     public $tokens;
 
@@ -102,17 +118,20 @@ class TranslationKey extends Base {
      */
     public function setApplication($application) {
         $this->application = $application;
-        foreach($this->translations as $locale=>$translations) {
+        foreach($this->translations as $locale => $translations) {
             foreach($translations as $translation) {
                 $translation->setTranslationKey($this);
             }
         }
     }
 
-    /*
+    /**
      * Set translations for a specific language
+     *
+     * @param Language $language
+     * @param Translation[] $translations
      */
-    public function setTranslations($language, $translations) {
+    public function setTranslations(Language $language, $translations) {
         foreach($translations as $translation) {
             $translation->setTranslationKey($this);
         }
@@ -123,6 +142,11 @@ class TranslationKey extends Base {
     ###############################################################
     ## Translations Rules Evaluation
     ###############################################################
+
+    /**
+     * @param $language
+     * @return Translation[]
+     */
     public function translations($language) {
         if ($this->translations == null) return array();
         if (!array_key_exists($language->locale, $this->translations)) return array();
@@ -173,7 +197,7 @@ class TranslationKey extends Base {
         return $this->tokens;
     }
 
-    public function isTokenAllowed($token) {
+    public function isTokenAllowed(TokenBase $token) {
        return array_key_exists($token->name(), $this->tokens());
     }
 
@@ -197,7 +221,11 @@ class TranslationKey extends Base {
         return $label;
     }
 
-    public function setLanguageTranslations($language, $translations) {
+    /**
+     * @param Language $language
+     * @param Translation[] $translations
+     */
+    public function setLanguageTranslations(Language $language, $translations) {
         foreach($translations as $translation) {
             $translation->setTranslationKey($this);
         }

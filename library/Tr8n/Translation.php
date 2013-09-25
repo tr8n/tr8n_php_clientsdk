@@ -26,8 +26,30 @@ namespace Tr8n;
 
 class Translation extends Base {
 
-    public $translation_key, $language;
-    public $locale, $label, $context;
+    /**
+     * @var TranslationKey
+     */
+    public $translation_key;
+
+    /**
+     * @var Language
+     */
+    public $language;
+
+    /**
+     * @var string
+     */
+    public $locale;
+
+    /**
+     * @var string
+     */
+    public $label;
+
+    /**
+     * @var array[]
+     */
+    public $context;
 
     public function __construct($attributes=array()) {
         parent::__construct($attributes);

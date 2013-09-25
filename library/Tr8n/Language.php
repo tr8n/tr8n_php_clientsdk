@@ -29,9 +29,19 @@ require_once 'TranslationKey.php';
 
 class Language extends Base {
 
+    /**
+     * @var Application
+     */
     public $application;
 	public $locale, $name, $english_name, $native_name, $right_to_left, $enabled;
-    public $google_key, $facebook_key, $myheritage_key, $contexts, $cases;
+    public $google_key, $facebook_key, $myheritage_key;
+
+    /**
+     * @var LanguageContext[]
+     */
+    public $contexts;
+
+    public $cases;
 
     function __construct($attributes=array()) {
         parent::__construct($attributes);
