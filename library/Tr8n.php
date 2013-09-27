@@ -14,6 +14,8 @@ $files = array(
     "Tr8n/Decorators",
     "Tr8n/Cache/Base.php",
     "Tr8n/Cache",
+    "Tr8n/Cache/Generators/Base.php",
+    "Tr8n/Cache/Generators",
     "Tr8n/Includes/Tags.php"
 );
 
@@ -32,7 +34,7 @@ foreach($files as $dir) {
 }
 
 function tr8n_init_client_sdk($host, $key, $secret) {
-    header('Content-type: text/html; charset=utf-8');
+//    header('Content-type: text/html; charset=utf-8');
     \Tr8n\Config::instance()->initApplication($host, $key, $secret);
 
     if (\Tr8n\Config::instance()->isDisabled()) {

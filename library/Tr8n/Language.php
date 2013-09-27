@@ -22,7 +22,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace tr8n;
+namespace Tr8n;
 
 require_once 'Base.php';
 require_once 'TranslationKey.php';
@@ -61,6 +61,10 @@ class Language extends Base {
         }
     }
 
+    public static function cacheKey($locale) {
+        return "l@_[" . $locale . "]";
+    }
+
     public function contextByKeyword($keyword) {
         if (isset($this->contexts[$keyword]))
             return $this->contexts[$keyword];
@@ -81,10 +85,6 @@ class Language extends Base {
             return null;
 
         return $this->cases[$key];
-    }
-
-    public function cacheKey($locale) {
-        return "language_[" . $locale . "]";
     }
 
     /*

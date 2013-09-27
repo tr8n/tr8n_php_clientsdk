@@ -75,8 +75,8 @@ class TranslationKey extends Base {
         }
     }
 
-    public function translationsCacheKey($locale) {
-        return "translation_key_[" . $this->key . "]_[" . $locale . "]";
+    public static function cacheKey($label, $description, $locale) {
+        return "t@_[" . $locale . "]_[" . $label . "]_[" . $description . "]";
     }
 
     public function generateKey($label, $description) {

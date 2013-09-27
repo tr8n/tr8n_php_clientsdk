@@ -160,6 +160,10 @@ class Config {
         return __DIR__."/../../log/tr8n.log";
     }
 
+    public function cachePath() {
+        return __DIR__."/../../cache/";
+    }
+
     public function loggerSeverity() {
         return Logger::DEBUG;
     }

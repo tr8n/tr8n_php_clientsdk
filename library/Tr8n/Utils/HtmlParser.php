@@ -184,15 +184,21 @@ class HtmlParser {
     function process() {
         $this->tokenize();
         $expr = $this->parse();
+//        return array($a, $b);
         return $this->evaluate($expr);
     }
 
     static function translate($text) {
         $p = new \Tr8n\Utils\HtmlParser($text);
 
+        list($tml, $tokens) = $p->process();
+
+        retrun \Tr8n\Config::instance()->current_language->translate($tml, $tokens);
+
+
         // TODO: add translation callback
 
-        return $p->process();
+//        return ;
     }
 }
 
