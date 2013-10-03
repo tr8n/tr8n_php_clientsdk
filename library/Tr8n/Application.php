@@ -258,6 +258,7 @@ class Application extends Base {
             array_push($params, array("source" => $source, "keys" => $keys_data));
         }
 
+        $params = \Tr8n\Utils\ArrayUtils::trim($params);
         $this->post('source/register_keys', array("source_keys" => json_encode($params)));
         $this->missing_keys_by_sources = null;
     }
@@ -285,6 +286,6 @@ class Application extends Base {
     }
 
     public function jsBootUrl() {
-        return $this->host . "/tr8n/api/proxy/boot.js?app_key=" . $this->key;
+        return $this->host . "/tr8n/api/proxy/boot.js?client_id=" . $this->key;
     }
 }

@@ -60,6 +60,16 @@ class ArrayUtils {
         return implode($attrs, " ");
     }
 
+    public static function trim($array) {
+        foreach ($array as &$value) {
+            if (is_array($value)) {
+                $value = self::trim($value);
+            }
+        }
+
+        return array_filter($array);
+    }
+
     public static function normalizeTr8nParameters($label, $description = "", $tokens = array(), $options = array()) {
         if (is_array($label)) return $label;
 
