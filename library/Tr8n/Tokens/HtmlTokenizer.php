@@ -46,6 +46,13 @@ class HtmlTokenizer {
         if ($html!=null) $this->html = $html;
         $this->parse();
         $this->tml = $this->tokenizeTree($this->doc);
+
+        // remove all tabs and new lines - as they mean nothing in HTML
+        $this->tml = trim(preg_replace('/\t\n/', '', $this->tml));
+
+        // normalize multiple spaces to one space
+        $this->tml = preg_replace('/\s+/', ' ', $this->tml);
+
 //        print_r($this->tml);
 //        print_r($this->context);
         return array($this->tml, $this->context);

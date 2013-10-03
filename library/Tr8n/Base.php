@@ -95,7 +95,7 @@ class Base {
             return $objects;
         }
 
-        if (!$options["class"]) return $data;
+        if (!isset($options["class"])) return $data;
         return self::createObject($data, $options);
     }
 

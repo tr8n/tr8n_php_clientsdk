@@ -109,19 +109,24 @@ function tr($label, $description = "", $tokens = array(), $options = array()) {
     $params = \Tr8n\Utils\ArrayUtils::normalizeTr8nParameters($label, $description, $tokens, $options);
 
     try {
+        // Translate individual sentences
         if (isset($params["options"]['split'])) {
             $sentences = \Tr8n\Utils\StringUtils::splitSentences($params["label"]);
-
             foreach($sentences as $sentence) {
                 $params["label"] = str_replace($sentence, tr8n_current_language()->translate($sentence, $params["description"], $params["tokens"], $params["options"]), $params["label"]);
             }
-
             return $label;
         }
 
-        $stripped_label = str_replace(array("\r\n", "\n"), '', strip_tags(trim($params["label"])));
-        $label = str_replace($stripped_label, tr8n_current_language()->translate($stripped_label, $params["description"],  $params["tokens"], $params["options"]), $params["label"]);
-        return $label;
+        // Remove html and translate the content
+        if (isset($params["options"]["strip"])) {
+            $stripped_label = str_replace(array("\r\n", "\n"), '', strip_tags(trim($params["label"])));
+            $translation = tr8n_current_language()->translate($stripped_label, $params["description"], $params["tokens"], $params["options"]);
+            $label = str_replace($stripped_label, $translation, $params["label"]);
+            return $label;
+        }
+
+        return tr8n_current_language()->translate($params["label"], $params["description"], $params["tokens"], $params["options"]);
     } catch(\Tr8n\Tr8nException $ex) {
         \Tr8n\Logger::instance()->error("Failed to translate " . $params["label"] . ": " . $ex);
         return $label;
@@ -180,9 +185,11 @@ function trle($label, $description = "", $tokens = array(), $options = array()) 
  * @param array $options
  */
 function trh($html, $description = "", $tokens = array(), $options = array()) {
+
+    $html = trim($html);
     $ht = new \Tr8n\Tokens\HtmlTokenizer($html);
     $tokens = $ht->context; //array_merge($ht->context, $tokens);
+//    \Tr8n\Logger::instance()->error("Translating HTML: ". $ht->tml, $ht->context);
+    $options["use_div"] = true;
     tre($ht->tml, $description, $tokens, $options);
-
-    \Tr8n\Logger::instance()->error("Translating HTML: ". $ht->tml, $ht->context);
 }

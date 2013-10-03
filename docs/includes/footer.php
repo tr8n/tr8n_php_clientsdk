@@ -1,12 +1,10 @@
 
-        <hr>
+    <hr>
 
-        <footer>
-            <p>&copy; Tr8nHub 2013</p>
-        </footer>
+    <footer>
+        <p>&copy; Tr8nHub 2013</p>
+    </footer>
 
-    </div>
-</body>
-</html>
+</div>
 
-<?php tr8n_complete_request() ?>
+<?php include('foot.php'); ?>

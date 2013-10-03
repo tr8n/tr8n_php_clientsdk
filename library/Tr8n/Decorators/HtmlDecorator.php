@@ -36,8 +36,13 @@ class HtmlDecorator extends Base {
         if (!$config->current_translator->isInlineModeEnabled()) return $label;
         if ($translation_key->isLocked() && !$config->current_translator->isManager()) return $label;
 
+        $element = "span";
+        if (isset($options["use_div"])) {
+            $element = "div";
+        }
+
         if ($translation_key->id == null) {
-            $html = "<span class='tr8n_pending'>" . $label . "</span>";
+            $html = "<".$element." class='tr8n_pending'>" . $label . "</".$element.">";
             return $html;
         }
 
@@ -55,9 +60,9 @@ class HtmlDecorator extends Base {
             array_push($classes, 'tr8n_not_translated');
         }
 
-        $html = "<span class='" . implode(' ', $classes) . "' data-translation_key_id='" . $translation_key->id . "'>";
+        $html = "<".$element." class='" . implode(' ', $classes) . "' data-translation_key_id='" . $translation_key->id . "'>";
         $html = $html . $label;
-        $html = $html . "</span>";
+        $html = $html . "</".$element.">";
 
         return $html;
     }
