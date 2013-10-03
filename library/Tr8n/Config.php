@@ -29,6 +29,11 @@ require_once "Application.php";
 
 class Config {
     /**
+     * @var string[]
+     */
+    public $config;
+
+    /**
      * @var Application
      */
     public $application;
@@ -103,7 +108,33 @@ class Config {
         $this->block_options = array();
     }
 
-    public function initApplication($host, $client_id, $client_secret) {
+    public static function configure($configurator) {
+        $configurator(self::instance());
+    }
+
+    public function configValue($key) {
+        if ($this->config == null) {
+            $data = file_get_contents($this->configFilePath('config.json'));
+            $this->config = json_decode($data, true);
+        }
+
+        $value = $this->config;
+        $parts = explode(".", $key);
+        foreach($parts as $part) {
+            if (!isset($value[$part])) return null;
+            $value = $value[$part];
+        }
+
+        return $value;
+    }
+
+    public function initApplication($host = null, $client_id = null, $client_secret = null) {
+        if ($host == null) { // fallback onto the configuration file
+            $host = $this->configValue("application.host");
+            $client_id = $this->configValue("application.key");
+            $client_secret = $this->configValue("application.secret");
+        }
+
         if ($this->application == null) {
             try {
                 $this->application = \Tr8n\Application::init($host, $client_id, $client_secret);
@@ -250,29 +281,6 @@ class Config {
 
     public function supportedGenders() {
         return array("male", "female", "unknown", "neutral");
-    }
-
-    public function tokenClasses($type = null) {
-        if ($this->token_classes == null) {
-            $this->token_classes = array(
-                "data" => array('\Tr8n\Tokens\DataToken', '\Tr8n\Tokens\MethodToken', '\Tr8n\Tokens\TransformToken'),
-                "decoration" => array('\Tr8n\Tokens\DecorationToken')
-            );
-        }
-        if ($type == null) return $this->token_classes;
-        return $this->token_classes[$type];
-    }
-
-    /*
-     * The token types here must be in the priority of evaluation.
-     *
-     * Data tokens must always be substituted before decoration tokens, so that the following example would work:
-     *
-     * [link: {user}] has [bold: {count||message}]
-     *
-     */
-    public function tokenTypes() {
-        return array("data", "decoration");
     }
 
     protected function base64UrlDecode($input) {

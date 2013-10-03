@@ -3,7 +3,7 @@
 <?php
 
 include(__DIR__ . '/../library/Tr8n.php');
-tr8n_init_client_sdk("http://localhost:3000", "default", "92a0a241c409c0480");
+tr8n_init_client_sdk();
 
 //fwrite(STDOUT,  "Please enter in some input: ");
 //$line = trim(fgets(STDIN));

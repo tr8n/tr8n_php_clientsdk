@@ -20,7 +20,7 @@ class BaseTest extends PHPUnit_Framework_TestCase {
     }
 
     protected static function loadJSON($path) {
-        $string = loadFile($path);
+        $string = self::loadFile($path);
         return json_decode($string,true);
     }
 

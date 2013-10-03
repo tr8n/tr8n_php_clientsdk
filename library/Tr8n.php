@@ -7,7 +7,6 @@ $files = array(
     "Tr8n/Utils",
     "Tr8n/Base.php",
     "Tr8n",
-    "Tr8n/Tokens/Base.php",
     "Tr8n/Tokens",
     "Tr8n/RulesEngine",
     "Tr8n/Decorators/Base.php",
@@ -33,8 +32,7 @@ foreach($files as $dir) {
     }
 }
 
-function tr8n_init_client_sdk($host, $key, $secret) {
-//    header('Content-type: text/html; charset=utf-8');
+function tr8n_init_client_sdk($host = null, $key = null, $secret = null) {
     \Tr8n\Config::instance()->initApplication($host, $key, $secret);
 
     if (\Tr8n\Config::instance()->isDisabled()) {
@@ -94,17 +92,19 @@ function tr8n_finish_block_with_options() {
     return \Tr8n\Config::instance()->finishBlockWithOptions();
 }
 
-
-//############################################################
-//# There are three ways to call the tr method
-//#
-//# tr($label, $description = "", $tokens = array(), options = array())
-//# or
-//# tr($label, $tokens = array(), $options = array())
-//# or
-//# tr($params = array("label" => label, "description" => "", "tokens" => array(), "options" => array()))
-//############################################################
-
+/**
+ * There are three ways to call this method:
+ *
+ * 1. tr($label, $description = "", $tokens = array(), options = array())
+ * 2. tr($label, $tokens = array(), $options = array())
+ * 3. tr($params = array("label" => label, "description" => "", "tokens" => array(), "options" => array()))
+ *
+ * @param string $label
+ * @param string $description
+ * @param array $tokens
+ * @param array $options
+ * @return mixed
+ */
 function tr($label, $description = "", $tokens = array(), $options = array()) {
     $params = \Tr8n\Utils\ArrayUtils::normalizeTr8nParameters($label, $description, $tokens, $options);
 
@@ -125,19 +125,64 @@ function tr($label, $description = "", $tokens = array(), $options = array()) {
     } catch(\Tr8n\Tr8nException $ex) {
         \Tr8n\Logger::instance()->error("Failed to translate " . $params["label"] . ": " . $ex);
         return $label;
+    } catch(\Exception $ex) {
+        \Tr8n\Logger::instance()->error("ERROR: Failed to translate " . $params["label"] . ": " . $ex);
+        throw $ex;
     }
 }
 
+/**
+ * Translates a label and prints it to the page
+ *
+ * @param string $label
+ * @param string $description
+ * @param array $tokens
+ * @param array $options
+ */
 function tre($label, $description = "", $tokens = array(), $options = array()) {
     echo tr($label, $description, $tokens, $options);
 }
 
+/**
+ * Translates a label while suppressing its decorations
+ * The method is useful for translating alt tags, list options, etc...
+ *
+ * @param string $label
+ * @param string $description
+ * @param array $tokens
+ * @param array $options
+ * @return mixed
+ */
 function trl($label, $description = "", $tokens = array(), $options = array()) {
     $params = \Tr8n\Utils\ArrayUtils::normalizeTr8nParameters($label, $description, $tokens, $options);
     $params["options"]["skip_decorations"] = true;
 	return tr($params);
 }
 
+/**
+ * Same as trl, but with printing it to the page
+ *
+ * @param string $label
+ * @param string $description
+ * @param array $tokens
+ * @param array $options
+ */
 function trle($label, $description = "", $tokens = array(), $options = array()) {
     echo trl($label, $description, $tokens, $options);
+}
+
+/**
+ * Translates a block of html, converts it to TML, then prints it back to HTML
+ *
+ * @param string $html
+ * @param string $description
+ * @param array $tokens
+ * @param array $options
+ */
+function trh($html, $description = "", $tokens = array(), $options = array()) {
+    $ht = new \Tr8n\Tokens\HtmlTokenizer($html);
+    $tokens = $ht->context; //array_merge($ht->context, $tokens);
+    tre($ht->tml, $description, $tokens, $options);
+
+    \Tr8n\Logger::instance()->error("Translating HTML: ". $ht->tml, $ht->context);
 }

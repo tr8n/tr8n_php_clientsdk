@@ -15,10 +15,11 @@
             </div>
 
             <h1><?php tre("Introduction") ?></h1>
-            <p>
-                <?php tre("This document will provide you with some examples of how to use TML for internationalizing your application.") ?>
-                <?php tre("The same document is present with every Tr8n Client SDK to ensure that all samples work the same.") ?>
-            </p>
+            <?php trh('
+                <p>
+                    This document will provide you with some examples of how to use TML for internationalizing your application. The same document is present with every Tr8n Client SDK to ensure that all samples work the same.
+                </p>
+            ') ?>
 
 
             <h1><?php tre("Translation Markup Language") ?></h1>

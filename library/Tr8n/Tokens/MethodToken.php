@@ -33,7 +33,7 @@
 
 namespace Tr8n\Tokens;
 
-class MethodToken extends Base {
+class MethodToken extends DataToken {
 
     protected $object_name, $object_method;
 

@@ -78,7 +78,7 @@ class ChdbGenerator extends Base {
         $fp = fopen("chdb://ChdbInMemory", "r+");
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, \Tr8n\Config::instance()->application->host . \Tr8n\Application::API_PATH . "application/translations");
+        curl_setopt($ch, CURLOPT_URL, \Tr8n\Config::instance()->application->host . \Tr8n\Application::API_PATH . "application/translations?app_key=" . \Tr8n\Config::instance()->application->key);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_BUFFERSIZE, 256);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -90,7 +90,7 @@ class ChdbGenerator extends Base {
     }
 
     public function generateDhcb() {
-        $this->chdb_path = \Tr8n\Config::instance()->cachePath() . 'chdb/tr8n_' . count($this->translations) . '_@_' . $this->started_at->format('Y_m_d_H_i_s') . '.chdb';
+        $this->chdb_path = \Tr8n\Config::instance()->cachePath() . 'chdb/tr8n_' . \Tr8n\Config::instance()->application->key . '_' . count($this->translations) . '_@_' . $this->started_at->format('Y_m_d_H_i_s') . '.chdb';
         $this->extracted_at = new \DateTime();
 
         $this->log("Writing chdb file...");

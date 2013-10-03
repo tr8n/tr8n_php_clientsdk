@@ -47,7 +47,7 @@
 
 namespace Tr8n\Tokens;
 
-class TransformToken extends Base {
+class TransformToken extends DataToken {
 
     protected $pipe_separator, $piped_parameters;
 
@@ -55,7 +55,7 @@ class TransformToken extends Base {
         return '/(\{[^_:|][\w]*(:[\w]+)*(::[\w]+)*\s*\|\|?[^{^}]+\})/';
     }
 
-    public function parseElements() {
+    public function parse() {
         $name_without_parens = preg_replace('/[{}\[\]]/', '', $this->full_name);
 
         $parts = explode('|', $name_without_parens);

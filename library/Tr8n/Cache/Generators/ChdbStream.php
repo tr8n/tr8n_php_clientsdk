@@ -59,6 +59,8 @@ class ChdbStream {
         else
             $this->log("Extraction took " . $since_start->s . " seconds");
 
+        $this->log("Received total of " . $this->key_count . " keys and " . $this->translation_count . " translations");
+
         $this->log("Closing stream...");
 
         \Tr8n\Cache\Generators\ChdbGenerator::instance()->translations = $this->translations;
@@ -115,7 +117,7 @@ class ChdbStream {
                         }
                     }
 
-//                    print_r($key . "\n");
+                    print_r($key . "\n");
 //                    print_r($translations_data . "\n\n");
                     $this->translations[$key] = json_encode($translations_data);
                 }

@@ -26,32 +26,22 @@ namespace Tr8n\Tokens;
 
 require_once(__DIR__."/../../BaseTest.php");
 
-class MethodTokenTest extends \BaseTest {
-
+class DataTokenizerTest extends \BaseTest {
     public function testParsing() {
-        $dt = new \Tr8n\Tokens\DataTokenizer("Hello {user.name}");
+        $dt = new \Tr8n\Tokens\DataTokenizer("Hello World");
+        $this->assertEquals(array(), $dt->tokens);
+
+        $dt = new \Tr8n\Tokens\DataTokenizer("Hello {world}");
         $this->assertEquals(1, count($dt->tokens));
-        $this->assertEquals('Tr8n\Tokens\MethodToken', get_class($dt->tokens[0]));
+        $this->assertEquals('world', $dt->tokens[0]->name());
+        $this->assertEquals('{world}', $dt->tokens[0]->name(array("parens"=>true)));
+
+        $dt = new \Tr8n\Tokens\DataTokenizer("Dear {user:gender}");
+        $this->assertEquals(1, count($dt->tokens));
+        $this->assertEquals('user', $dt->tokens[0]->name());
+        $this->assertEquals('{user}', $dt->tokens[0]->name(array("parens"=>true)));
+        $this->assertEquals(array('gender'), $dt->tokens[0]->context_keys);
+        $this->assertEquals('{user:gender}', $dt->tokens[0]->name(array("parens"=>true, "context_keys"=>true)));
+
     }
-
-    public function testObjectName() {
-        $dt = new \Tr8n\Tokens\DataTokenizer("Hello {user.name}");
-        $this->assertEquals("user", $dt->tokens[0]->objectName());
-    }
-
-    public function testObjectMethod() {
-        $dt = new \Tr8n\Tokens\DataTokenizer("Hello {user.name}");
-        $this->assertEquals("name", $dt->tokens[0]->objectMethod());
-    }
-
-    public function testSubstitution() {
-        $russian = new \Tr8n\Language(self::loadJSON('languages/ru.json'));
-
-        $label = "Hello {user.name}";
-        $dt = new \Tr8n\Tokens\DataTokenizer("Hello {user.name}");
-        $user = new \User("Michael");
-
-        $this->assertEquals("Hello Michael", $dt->tokens[0]->substitute($label, array("user" => $user), $russian));
-    }
-
 }

@@ -1,6 +1,5 @@
 <?php require_once(__DIR__ . '/../../library/Tr8n.php'); ?>
-<!-- ?php tr8n_init_client_sdk("http://sandbox.tr8nhub.com", "0c1eb03d6c6e12cb2", "5ff3d87a83c13fcdb"); ? -->
-<?php tr8n_init_client_sdk("http://localhost:3000", "default", "92a0a241c409c0480"); ?>
+<?php tr8n_init_client_sdk(); ?>
 
 <?php include('helpers.php'); ?>
 

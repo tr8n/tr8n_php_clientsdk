@@ -284,4 +284,7 @@ class Application extends Base {
         return self::executeRequest($path, $params, $options);
     }
 
+    public function jsBootUrl() {
+        return $this->host . "/tr8n/api/proxy/boot.js?app_key=" . $this->key;
+    }
 }

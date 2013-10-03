@@ -45,6 +45,16 @@ class TranslationKey extends Base {
     public $id, $key, $label, $description, $locale, $level, $locked;
     public $tokens;
 
+    /**
+     * @var string[]
+     */
+    private $decoration_tokens;
+
+    /**
+     * @var object[]
+     */
+    private $data_tokens;
+
 	public function __construct($attributes=array()) {
         parent::__construct($attributes);
 
@@ -142,7 +152,6 @@ class TranslationKey extends Base {
     ###############################################################
     ## Translations Rules Evaluation
     ###############################################################
-
     /**
      * @param $language
      * @return Translation[]
@@ -183,42 +192,42 @@ class TranslationKey extends Base {
     ###############################################################
     ## Token Substitution
     ###############################################################
-    public function tokens() {
-        if (!$this->tokens) {
-            $this->tokens = array();
-            foreach(Config::instance()->tokenTypes() as $token_type) {
-                $tokens = \Tr8n\Tokens\Base::registerTokens($this->label, $token_type);
-                foreach($tokens as $token) {
-                    $this->tokens[$token->name()] = $token;
-                }
-            }
+    /**
+     * Returns an array of decoration tokens from the translation key
+     * @return \string[]
+     */
+    public function decorationTokens() {
+        if ($this->decoration_tokens == null) {
+            $dt = new \Tr8n\Tokens\DecorationTokenizer($this->label);
+            $dt->parse();
+            $this->decoration_tokens = $dt->tokens;
         }
 
-        return $this->tokens;
+        return $this->decoration_tokens;
     }
 
-    public function isTokenAllowed(TokenBase $token) {
-       return array_key_exists($token->name(), $this->tokens());
+    /**
+     * Returns an array of data tokens from the translation key
+     * @return \object[]
+     */
+    public function dataTokens() {
+        if ($this->data_tokens == null) {
+            $dt = new \Tr8n\Tokens\DataTokenizer($this->label);
+            $this->data_tokens = $dt->tokens;
+        }
+
+        return $this->data_tokens;
     }
 
     public function substituteTokens($label, $token_values, $language, $options = array()) {
-        $tokens = \Tr8n\Tokens\Base::registerTokens($label, 'data');
-        foreach($tokens as $token) {
-            if (!$this->isTokenAllowed($token)) continue;
-            $label = $token->substitute($label, $token_values, $language, $options);
+        if (strpos($label, '{') !== FALSE) {
+            $dt = new \Tr8n\Tokens\DataTokenizer($label, $token_values, array("allowed_tokens" => $this->dataTokens()));
+            $label = $dt->substitute($language, $options);
         }
 
-        // decoration tokens can be nested, so process tokens in a loop until no more tokens are left
-        $tokens = \Tr8n\Tokens\Base::registerTokens($label, 'decoration', array("exclude_nested" => true));
-        while (count($tokens) > 0) {
-            foreach($tokens as $token) {
-                if (!$this->isTokenAllowed($token)) continue;
-                $label = $token->substitute($label, $token_values, $language, $options);
-            }
-            $tokens = \Tr8n\Tokens\Base::registerTokens($label, 'decoration', array("exclude_nested" => true));
-        }
-
-        return $label;
+        if (strpos($label, '[') === FALSE) return $label;
+        $dt = new \Tr8n\Tokens\DecorationTokenizer($label, $token_values, array("allowed_tokens" => $this->decorationTokens()));
+        return $dt->substitute();
     }
 
     /**
