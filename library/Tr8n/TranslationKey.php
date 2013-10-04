@@ -226,8 +226,6 @@ class TranslationKey extends Base {
         }
 
         if (strpos($label, '[') === FALSE) return $label;
-        \Tr8n\Logger::instance()->debug("Processing decorations: ". $label, $token_values);
-
         $dt = new \Tr8n\Tokens\DecorationTokenizer($label, $token_values, array("allowed_tokens" => $this->decorationTokens()));
         return $dt->substitute();
     }

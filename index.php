@@ -37,14 +37,12 @@
         <h4 class="text-center"><?php tre("Use your users") ?></h4>
         <p>
             <?php tre("Your multilingual users can sign up to help translate your site into over {count||different languages}.", array("count" => 300)) ?>
-            <?php tre("The translations they provide can then be viewed and voted on by other users.") ?>
         </p>
     </div>
     <div class="span4">
         <p class="text-center"><?php image_tag("how_it_works_2.gif") ?></p>
         <h4 class="text-center"><?php tre("Share translations") ?></h4>
         <p>
-            <?php tre("The translations they provide can then be viewed and voted on by other users.") ?>
             <?php tre("Translations from your site get synced to Tr8n service and can then be shared with thousands of other websites.") ?>
         </p>
     </div>

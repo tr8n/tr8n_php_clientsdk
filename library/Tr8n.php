@@ -177,19 +177,22 @@ function trle($label, $description = "", $tokens = array(), $options = array()) 
 }
 
 /**
- * Translates a block of html, converts it to TML, then prints it back to HTML
+ * Translates a block of html, converts it to TML, translates it and then converts it back to HTML
  *
  * @param string $html
  * @param string $description
  * @param array $tokens
  * @param array $options
  */
-function trh($html, $description = "", $tokens = array(), $options = array()) {
+function trh($label, $description = "", $tokens = array(), $options = array()) {
+    $params = \Tr8n\Utils\ArrayUtils::normalizeTr8nParameters($label, $description, $tokens, $options);
 
-    $html = trim($html);
-    $ht = new \Tr8n\Tokens\HtmlTokenizer($html);
-    $tokens = $ht->context; //array_merge($ht->context, $tokens);
-//    \Tr8n\Logger::instance()->error("Translating HTML: ". $ht->tml, $ht->context);
-    $options["use_div"] = true;
-    tre($ht->tml, $description, $tokens, $options);
+    $html = trim($params["label"]);
+    $ht = new \Tr8n\Tokens\HtmlTokenizer($html, array(), $params["options"]);
+    $params["tokens"] = array_merge($ht->context, $params["tokens"]);
+    $params["label"] = $ht->tml;
+    $params["options"]["use_div"] = true;
+
+//    \Tr8n\Logger::instance()->debug("Translating HTML: ". $params["label"], $params["tokens"]);
+    tre($params);
 }

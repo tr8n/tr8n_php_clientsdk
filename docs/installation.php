@@ -10,7 +10,7 @@
     <pre><code class="language-php"> git clone git@github.com:tr8n/tr8n_php_clientsdk.git </code></pre>
 
     <p>
-        Require tr8n_php_clientsdk/library/Tr8n.php in your application:
+        <?php tre("Require Tr8n library in your application:") ?>
     </p>
 
     <pre><code class="language-php"> &lt;?php require_once('tr8n_php_clientsdk/library/Tr8n.php'); ?&gt; </code></pre>
@@ -25,14 +25,15 @@
         <?php tre("Tr8n PHP Client SDK can run in two modes: offline and online.") ?>
     </p>
 
+    <?php trh("
     <p>
-        <?php tre("The offline mode initializes languages and translations from your local cache files, applies rules and substitutes tokens.") ?>
+        The offline mode initializes languages and translations from your local cache files, applies rules and substitutes tokens.
         The offline mode is usually used when the application does not need any more translations.
         It is also used when a connection to the Tr8n service cannot be established.
         The offline mode does not register new keys and does not download translations.
         It also disables the inline translations tools.
         The offline mode can be enabled in the Tr8n configuration class.
-    <p>
+    </p>
 
     <p>
         The online mode, on the other hand, constantly monitors for new translation keys, registers them on the service, downloads translations and provides inline translation tools.
@@ -42,8 +43,10 @@
     <p>
         The following section will outline how to configure the SDK in the online mode.
     </p>
+    ") ?>
 
     <h3><?php tre("Connecting to Tr8n service") ?></h3>
+    <?php trh("
     <p>
         Tr8n is a distributed translation memory that allows multiple Tr8n instances to exchange translations with each other.
         Tr8n is open sourced so you can run your own instance of the service. Alternatively, you can connect to an existing instance of the service.
@@ -51,13 +54,14 @@
     <p>
         To connect to a remote service, visit tr8nhub.com, register as a user and create a new application.
     </p>
+    ") ?>
 
     <pre><code class="language-php"> &lt;?php tr8n_init_client_sdk('http://tr8nhub.com', APPLICATION_KEY, APPLICATION_SECRET); ?&gt; </code></pre>
 
     <h3><?php tre("Running your own Tr8n service") ?></h3>
 
     <p>
-        Tr8n service is written using Ruby on Rails. To run the service yourself, clone the git repository:
+        <?php tre("Tr8n service is written using Ruby on Rails. To run the service yourself, clone the git repository:") ?>
     </p>
 
     <pre><code class="language-php">
@@ -65,7 +69,7 @@
     </code></pre>
 
     <p>
-        Run the following commands: (temporary, until the node is ready)
+        <?php tre("Run the following commands: (temporary, until the node is ready)") ?>
     </p>
 
     <pre><code class="language-php">
@@ -77,7 +81,7 @@
     </code></pre>
 
     <p>
-        You should see the following output:
+        <?php tre("You should see the following output:") ?>
     </p>
 
     <pre><code class="language-php">
@@ -90,10 +94,12 @@
         [2013-08-14 20:21:39] INFO  WEBrick::HTTPServer#start: pid=29722 port=3000
     </code></pre>
 
-    <p>This means that the service is running. Visit http://localhost:3000 and register as a new user. Go to the admin tools and retrieve your application secret.</p>
+    <p>
+        <?php tre("This means that the service is running. Visit http://localhost:3000 and register as a new user. Go to the admin tools and retrieve your application secret.") ?>
+    </p>
 
     <p>
-        In your PHP application, provide the following information:
+        <?php tre("In your PHP application, provide the following information:") ?>
     </p>
     <pre><code class="language-php"> &lt;?php tr8n_init_client_sdk('http://localhost:3000', 'default', APPLICATION_SECRET); ?&gt; </code></pre>
 

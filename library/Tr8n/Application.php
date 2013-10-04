@@ -285,6 +285,6 @@ class Application extends Base {
     }
 
     public function jsBootUrl() {
-        return $this->host . "/tr8n/api/proxy/boot.js?app_key=" . $this->key;
+        return $this->host . "/tr8n/api/proxy/boot.js?client_id=" . $this->key;
     }
 }

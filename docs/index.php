@@ -330,7 +330,7 @@ tr("{user| He, She} likes this movie. ", array("user" => $female))
                 </div>
             </div>
 
-            <h2>Genders</h2>
+            <h2><?php tre("Genders") ?></h2>
             <pre><code class="language-php">tre("{actor} tagged {target} in a photo {target|he, she} just uploaded.", array("actor" => $male, "target" => $female))
 tre("{actor} tagged {target} in a photo {target|he, she} just uploaded.", array("actor" => $female, "target" => $male))
 </code></pre>
@@ -343,8 +343,8 @@ tre("{actor} tagged {target} in a photo {target|he, she} just uploaded.", array(
             </div>
 
 
-            <h1>Language Cases</h1>
-            <h2>Possessives</h2>
+            <h1><?php tre("Language Cases") ?></h1>
+            <h2><?php tre("Possessive") ?></h2>
             <pre><code class="language-php">tre("This is {user::pos} photo", array("user" => $male))</code></pre>
             <div class="example">
                 <div class="title"><?php tre("results in") ?></div>

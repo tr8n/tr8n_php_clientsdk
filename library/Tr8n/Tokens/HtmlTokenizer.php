@@ -44,14 +44,15 @@ class HtmlTokenizer {
 
     public function tokenize($html = null) {
         if ($html!=null) $this->html = $html;
-        $this->parse();
-        $this->tml = $this->tokenizeTree($this->doc);
 
         // remove all tabs and new lines - as they mean nothing in HTML
-        $this->tml = trim(preg_replace('/\t\n/', '', $this->tml));
+        $this->html = trim(preg_replace('/\t\n/', '', $this->html));
 
         // normalize multiple spaces to one space
-        $this->tml = preg_replace('/\s+/', ' ', $this->tml);
+        $this->html = preg_replace('/\s+/', ' ', $this->html);
+
+        $this->parse();
+        $this->tml = $this->tokenizeTree($this->doc);
 
 //        print_r($this->tml);
 //        print_r($this->context);
@@ -67,15 +68,42 @@ class HtmlTokenizer {
         $token = $this->adjustName($node->tagName);
         $token = $this->contextize($token, $context);
 
-        if ($this->isShortToken($token, $value))
-            return '['.$token.': '.$value.']';
+        $break = '';
+        if ($this->needsLineBreak($node)) {
+            $break = "\n\n";
+        }
 
-        return '['.$token.']'.$value.'[/'.$token.']';
+        $value = $this->sanitizeValue($value);
+
+        if ($this->isShortToken($token, $value))
+            return '['.$token.': '.$value.']'.$break;
+
+        return '['.$token.']'.$value.'[/'.$token.']'.$break;
+    }
+
+    private function sanitizeValue($value) {
+        $value = ltrim($value);
+        return $value;
+    }
+
+    private function generateDataTokens($text) {
+        if (isset($this->options["data_tokens"]) && $this->options["data_tokens"]) {
+            preg_match_all('/(\d+)/', $text, $matches);
+            $matches = array_unique($matches[0]);
+
+            $token_name = (isset($this->options["token_name"]) ? $this->options["token_name"] : 'num');
+
+            foreach ($matches as $match) {
+                $token = $this->contextize($token_name, $match);
+                $text = str_replace($match, "{" . $token . "}", $text);
+            }
+        }
+        return $text;
     }
 
     private function tokenizeTree($node) {
         if (get_class($node) == 'DOMText') {
-            return $node->wholeText;
+            return $this->generateDataTokens($node->wholeText);
         }
 
         $values = array();
@@ -136,6 +164,12 @@ class HtmlTokenizer {
 
         $this->context[$name] = $context;
         return $name;
+    }
+
+    private function needsLineBreak($node) {
+        if (!isset($node->tagName)) return false;
+        return (in_array($node->tagName, array('p', 'h1', 'h2', 'h3', 'h4', 'h5', 'div')));
+
     }
 
     private function isShortToken($token, $value) {
