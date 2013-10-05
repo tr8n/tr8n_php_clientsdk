@@ -33,14 +33,30 @@
 
 namespace Tr8n\Tokens;
 
+use Tr8n\Tr8nException;
+
 class MethodToken extends DataToken {
 
-    protected $object_name, $object_method;
+    /**
+     * @var string
+     */
+    protected $object_name;
 
+    /**
+     * @var string
+     */
+    protected $object_method;
+
+    /**
+     * @return string
+     */
     public static function expression() {
         return '/(\{[^_:.][\w]*(\.[\w]+)(:[\w]+)*(::[\w]+)*\})/';
     }
 
+    /**
+     * @return string
+     */
     public function objectName() {
         if ($this->object_name == null) {
             $parts = explode('.', $this->name());
@@ -49,6 +65,9 @@ class MethodToken extends DataToken {
         return $this->object_name;
     }
 
+    /**
+     * @return string
+     */
     public function objectMethod() {
         if ($this->object_method == null) {
             $parts = explode('.', $this->name());
@@ -57,11 +76,19 @@ class MethodToken extends DataToken {
         return $this->object_method;
     }
 
+    /**
+     * @param string $label
+     * @param \mixed[] $token_values
+     * @param \Tr8n\Language $language
+     * @param array $options
+     * @return mixed
+     * @throws Tr8nException
+     */
     public function substitute($label, $token_values, $language, $options = array()) {
         $name = $this->objectName();
         $object = self::tokenObject($token_values, $name);
         if ($object == null) {
-            throw new \Tr8n\Tr8nException("Missing value for token: " . $this->full_name);
+            throw new Tr8nException("Missing value for token: " . $this->full_name);
         }
         $method = $this->objectMethod();
 

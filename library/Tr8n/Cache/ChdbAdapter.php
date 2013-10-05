@@ -25,20 +25,24 @@
 
 namespace Tr8n\Cache;
 
+use Tr8n\Logger;
+
 class ChdbAdapter extends Base {
 
-    private $chdb_path;
     private $chdb;
 
-    function __construct($path) {
-        $this->chdb_path = $path;
-        $this->chdb = new \chdb($this->chdb_path);
+    function __construct() {
+        $this->chdb = new \chdb(\Tr8n\Config::instance()->chdbPath());
     }
 
     public function fetch($key, $default = null) {
         $value = $this->chdb->get($key);
-        if ($value)
-            return $value;
+        if ($value) {
+            Logger::instance()->info("Cache hit " . $key);
+            return $this->constructObject($key, $value);;
+        }
+
+        Logger::instance()->info("Cache miss " . $key);
 
         if ($default == null)
             return null;
@@ -50,6 +54,43 @@ class ChdbAdapter extends Base {
         }
 
         return $value;
+    }
+
+    private function constructObject($key, $data) {
+        if (substr($key, 0, 2) == 't@') {
+            if (strstr($data, '},{') === false) {
+                return new \Tr8n\Translation(array("label" => $data));
+            }
+
+            $translations_json = json_decode($data, true);
+            $translations = array();
+            foreach($translations_json as $json) {
+                $t =  new \Tr8n\Translation(array("label" => $json["label"]));
+                if (isset($json["context"]))
+                    $t->context = $json["context"];
+                array_push($translations, $t);
+            }
+            return $translations;
+        }
+
+        if (substr($key, 0, 2) == 'a@') {
+//            Logger::instance()->info("Constructing application", $data);
+            return new \Tr8n\Application(json_decode($data, true));
+        }
+
+        if (substr($key, 0, 2) == 'l@') {
+            return new \Tr8n\Language(json_decode($data, true));
+        }
+
+        if (substr($key, 0, 2) == 'c@') {
+            return new \Tr8n\Component(json_decode($data, true));
+        }
+
+        if (substr($key, 0, 2) == 's@') {
+            return new \Tr8n\Source(json_decode($data, true));
+        }
+
+        return $data;
     }
 
     public function store($key, $value) {

@@ -26,8 +26,35 @@ namespace Tr8n;
 
 class LanguageContextRule extends Base {
 
-    public $keyword, $description, $examples, $definition;
+    /**
+     * @var LanguageContext
+     */
     public $language_context;
+
+    /**
+     * @var string
+     */
+    public $keyword;
+
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var string
+     */
+    public $examples;
+
+    /**
+     * @var string
+     */
+    public $conditions;
+
+    /*
+     * string[]
+     */
+    public $conditions_expression;
 
     function __construct($attributes=array()) {
         parent::__construct($attributes);
@@ -37,22 +64,18 @@ class LanguageContextRule extends Base {
         return ($this->keyword == "other");
     }
 
-    function conditions() {
-        return ($this->definition["conditions"]);
-    }
-
     function conditionsExpression() {
-        if (!isset($this->definition["conditions_expression"])) {
-            $p = new \Tr8n\RulesEngine\Parser($this->conditions());
-            $this->definition["conditions_expression"] = $p->parse();
+        if (!isset($this->conditions_expression)) {
+            $p = new RulesEngine\Parser($this->conditions);
+            $this->conditions_expression = $p->parse();
         }
-        return $this->definition["conditions_expression"];
+        return $this->conditions_expression;
     }
 
     function evaluate($vars = array()) {
         if ($this->isFallback()) return true;
 
-        $e = new \Tr8n\RulesEngine\Evaluator();
+        $e = new RulesEngine\Evaluator();
         foreach($vars as $key => $value) {
             $e->evaluate(array("let", $key, $value));
         }

@@ -33,7 +33,7 @@ class ChdbStream {
     private $started_at;
 
     function log($msg) {
-        \Tr8n\Cache\Generators\ChdbGenerator::instance()->log($msg);
+        ChdbGenerator::instance()->log($msg);
     }
 
     function stream_open($path, $mode, $options, &$opened_path) {
@@ -63,7 +63,7 @@ class ChdbStream {
 
         $this->log("Closing stream...");
 
-        \Tr8n\Cache\Generators\ChdbGenerator::instance()->translations = $this->translations;
+        ChdbGenerator::instance()->cache($this->translations);
     }
 
     public function stream_write($data) {
@@ -79,8 +79,6 @@ class ChdbStream {
         $nb_lines = count($lines);
         $this->buffer = $lines[$nb_lines-1];
         unset($lines[$nb_lines-1]);
-
-        // Here, do your work with the lines you have in the buffer
 
         foreach($lines as $line) {
             $this->key_count += 1;
@@ -117,7 +115,7 @@ class ChdbStream {
                         }
                     }
 
-                    print_r($key . "\n");
+//                    print_r($key . "\n");
 //                    print_r($translations_data . "\n\n");
                     $this->translations[$key] = json_encode($translations_data);
                 }

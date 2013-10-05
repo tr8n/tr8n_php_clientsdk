@@ -33,44 +33,86 @@ class Language extends Base {
      * @var Application
      */
     public $application;
-	public $locale, $name, $english_name, $native_name, $right_to_left, $enabled;
-    public $google_key, $facebook_key, $myheritage_key;
+
+    /**
+     * @var string
+     */
+    public $locale;
+
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * @var string
+     */
+    public $english_name;
+
+    /**
+     * @var string
+     */
+    public $native_name;
+
+    /**
+     * @var boolean
+     */
+    public $right_to_left;
 
     /**
      * @var LanguageContext[]
      */
     public $contexts;
 
+    /**
+     * @var LanguageCase[]
+     */
     public $cases;
 
+
+    /**
+     * @param array $attributes
+     */
     function __construct($attributes=array()) {
         parent::__construct($attributes);
 
         $this->contexts = array();
         if (isset($attributes['contexts'])) {
             foreach($attributes['contexts'] as $key => $context) {
-                $this->contexts[$key] = new \Tr8n\LanguageContext(array_merge($context, array("language" => $this)));
+                $this->contexts[$key] = new LanguageContext(array_merge($context, array("language" => $this)));
             }
         }
 
         $this->cases = array();
         if (isset($attributes['cases'])) {
             foreach($attributes['cases'] as $key => $case) {
-                $this->cases[$key] = new \Tr8n\LanguageCase(array_merge($case, array("language" => $this)));
+                $this->cases[$key] = new LanguageCase(array_merge($case, array("language" => $this)));
             }
         }
     }
 
+    /**
+     * @param string $locale
+     * @return string
+     */
     public static function cacheKey($locale) {
         return "l@_[" . $locale . "]";
     }
 
+    /**
+     * @param string $keyword
+     * @return null|LanguageContext
+     */
     public function contextByKeyword($keyword) {
         if (isset($this->contexts[$keyword]))
             return $this->contexts[$keyword];
         return null;
     }
 
+    /**
+     * @param string $token_name
+     * @return null|LanguageContext
+     */
     public function contextByTokenName($token_name) {
         foreach($this->contexts as $key => $ctx) {
             if ($ctx->isAppliedToToken($token_name))
@@ -80,6 +122,10 @@ class Language extends Base {
         return null;
     }
 
+    /**
+     * @param string $key
+     * @return null|LanguageCase
+     */
     public function languageCase($key) {
         if (!array_key_exists($key, $this->cases))
             return null;
@@ -87,30 +133,56 @@ class Language extends Base {
         return $this->cases[$key];
     }
 
+    /**
+     * @return string
+     */
+    public function flagUrl() {
+        return $this->application->host . '/assets/tr8n/flags/' . $this->locale . '.png';
+    }
+
     /*
-    By default, application fetches only the basic information about language,
-    so it can be displayed in the language selector. When languages are used for translation,
-    they must fetch full definition, including context and case rules.
-    */
+     * By default, application fetches only the basic information about language,
+     * so it can be displayed in the language selector. When languages are used for translation,
+     * they must fetch full definition, including context and case rules.
+     *
+     * @return bool
+     */
     public function hasDefinition() {
         return (count($this->contexts)>0);
     }
 
+    /**
+     * @return bool
+     */
     public function isDefault() {
         if ($this->application == null) return true;
         return (Config::instance()->default_locale == $this->locale);
     }
 
+    /**
+     * @return string
+     */
     public function direction() {
         return $this->right_to_left ? "rtl" : "ltr";
     }
 
+    /**
+     * @param $default
+     * @return string
+     */
     public function alignment($default) {
         if ($this->right_to_left) return $default;
         return $this->right_to_left ? "right" : "left";
     }
 
-	public function translate($label, $description = "", $token_values = array(), $options = array()) {
+    /**
+     * @param string $label
+     * @param string $description
+     * @param array $token_values
+     * @param array $options
+     * @return string
+     */
+    public function translate($label, $description = "", $token_values = array(), $options = array()) {
         $locale = isset($options["locale"]) ? $options["locale"] : Config::instance()->blockOption("locale");
         if ($locale == null) $locale = Config::instance()->default_locale;
 
@@ -154,7 +226,4 @@ class Language extends Base {
         return $cached_key->translate($this, array_merge($token_values, array("viewing_user" => Config::instance()->current_user)), $options);
 	}
 
-    public function flagUrl() {
-        return $this->application->host . '/assets/tr8n/flags/' . $this->locale . '.png';
-    }
 }

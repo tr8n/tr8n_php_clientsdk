@@ -26,15 +26,50 @@ namespace Tr8n;
 
 class Source extends Base {
 
-    public $application, $source, $url, $name, $description;
+    /**
+     * @var Application
+     */
+    public $application;
+
+    /**
+     * @var string
+     */
+    public $source;
+
+    /**
+     * @var string
+     */
+    public $url;
+
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var TranslationKey[]
+     */
     public $translation_keys;  // hashed by key
 
-	function __construct($attributes=array()) {
+    /**
+     * @param array $attributes
+     */
+    function __construct($attributes=array()) {
         parent::__construct($attributes);
 
         $this->translation_keys = null;
 	}
 
+    /**
+     * @param Language $language
+     * @param array $options
+     * @return array|null
+     */
     public function fetchTranslationsForLanguage($language, $options = array()) {
         # for current translators who use inline mode - always fetch translations
         if (\Tr8n\Config::instance()->current_translator && \Tr8n\Config::instance()->current_translator->isInlineModeEnabled()) {

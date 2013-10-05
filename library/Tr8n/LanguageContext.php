@@ -26,45 +26,71 @@ namespace Tr8n;
 
 class LanguageContext extends Base {
 
-    public $keyword, $description, $definition;
-    public $language, $rules;
+    /**
+     * @var Language
+     */
+    public $language;
+
+    /**
+     * @var string
+     */
+    public $keyword;
+
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var string[]
+     */
+    public $keys;
+
+    /**
+     * @var string
+     */
+    public $default_key;
+
+    /**
+     * @var string
+     */
+    public $token_expression;
+
+    /**
+     * @var string[]
+     */
+    public $variables;
+
+    /**
+     * @var string[]
+     */
+    public $token_mapping;
+
+    /**
+     * @var LanguageContextRule[]
+     */
+    public $rules;
 
     function __construct($attributes=array()) {
         parent::__construct($attributes);
 
         $this->rules = array();
-        if (array_key_exists('rules', $attributes)) {
+        if (isset($attributes['rules'])) {
             foreach($attributes['rules'] as $key => $rule) {
-                $this->rules[$key] = new \Tr8n\LanguageContextRule(array_merge($rule, array("language_context" => $this)));
+                $this->rules[$key] = new LanguageContextRule(array_merge($rule, array("language_context" => $this)));
             }
         }
     }
 
     function config() {
-        $context_rules = \Tr8n\Config::instance()->contextRules();
+        $context_rules = Config::instance()->contextRules();
         if ($context_rules && isset($context_rules[$this->keyword]))
             return $context_rules[$this->keyword];
         return array();
     }
 
-    function tokenMapping() {
-        return $this->definition["token_mapping"];
-    }
-
-    function defaultRule() {
-        return $this->definition["default_rule"];
-    }
-
-    function tokenExpression() {
-        return $this->definition["token_expression"];
-    }
-
-    function variables() {
-        return $this->definition["variables"];
-    }
-
     function isAppliedToToken($token) {
-        return (1==preg_match($this->tokenExpression(), $token));
+        return (1==preg_match($this->token_expression, $token));
     }
 
     /**
@@ -86,7 +112,7 @@ class LanguageContext extends Base {
     function vars($obj) {
         $vars = array();
         $config = $this->config();
-        foreach($this->variables() as $key) {
+        foreach($this->variables as $key) {
             if (!isset($config["variables"]) || !isset($config["variables"][$key])) {
                 $vars[$key] = $obj;
                 continue;

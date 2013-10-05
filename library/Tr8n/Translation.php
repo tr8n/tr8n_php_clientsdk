@@ -51,6 +51,9 @@ class Translation extends Base {
      */
     public $context;
 
+    /**
+     * @param array $attributes
+     */
     public function __construct($attributes=array()) {
         parent::__construct($attributes);
 
@@ -59,24 +62,31 @@ class Translation extends Base {
         }
     }
 
+    /**
+     * @param $translation_key
+     */
     public function setTranslationKey($translation_key) {
         $this->translation_key = $translation_key;
         $this->language = $translation_key->application->language($this->locale);
     }
 
+    /**
+     * @return bool
+     */
     public function hasContextRules() {
         return ($this->context != null and count($this->context) > 0);
     }
 
     /**
-     * For translation to be valid, it must match all rules, or have no rules.
+     * @param $token_values
+     * @return bool
      */
     public function isValidTranslation($token_values) {
        if (!$this->hasContextRules())
            return true;
 
         foreach($this->context as $token_name=>$rules) {
-            $token_object = \Tr8n\Tokens\Base::tokenObject($token_values, $token_name);
+            $token_object = \Tr8n\Tokens\DataToken::tokenObject($token_values, $token_name);
 
             if ($token_object === null)
                 return false;

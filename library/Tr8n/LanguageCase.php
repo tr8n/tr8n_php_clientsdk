@@ -26,16 +26,53 @@ namespace Tr8n;
 
 class LanguageCase extends Base {
 
-    public $keyword, $latin_name, $native_name, $description, $application;
-    public $language, $rules;
+    /**
+     * @var Application
+     */
+    public $application;
+
+    /**
+     * @var Language
+     */
+    public $language;
+
+    /**
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $keyword;
+
+    /**
+     * @var string
+     */
+    public $latin_name;
+
+    /**
+     * @var string;
+     */
+    public $native_name;
+
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var LanguageCaseRule[]
+     */
+    public $rules;
 
     function __construct($attributes=array()) {
         parent::__construct($attributes);
 
         $this->rules = array();
-        if (array_key_exists('rules', $attributes)) {
+        if (isset($attributes['rules'])) {
             foreach($attributes['rules'] as $rule) {
-                array_push($this->rules, new \Tr8n\LanguageCaseRule(array_merge($rule, array("language_case" => $this))));
+                array_push($this->rules, new LanguageCaseRule(array_merge($rule, array("language_case" => $this))));
             }
         }
     }
@@ -59,7 +96,6 @@ class LanguageCase extends Base {
         $tags = array_unique($tags[0]);
         $sanitized_value = preg_replace($this->substitutionExpression(), '', $value);
 
-        $elements = array();
         if ($this->application == 'phrase') {
             $elements = array($sanitized_value);
         } else {
@@ -100,7 +136,7 @@ class LanguageCase extends Base {
         if (isset($options["skip_decoration"])) return $value;
         if ($this->language->isDefault()) return $value;
 
-        $config = \Tr8n\Config::instance();
+        $config = Config::instance();
         if ($config->current_translator == null) return $value;
         if (!$config->current_translator->isInlineModeEnabled()) return $value;
 

@@ -35,5 +35,12 @@ abstract class Base {
         return new $class();
     }
 
+    /**
+     * @param \Tr8n\TranslationKey $translation_key
+     * @param \Tr8n\Language $language
+     * @param string $label
+     * @param array $options
+     * @return string
+     */
     public abstract function decorate($translation_key, $language, $label, $options);
 }

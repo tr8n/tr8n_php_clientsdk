@@ -46,6 +46,9 @@ class DataTokenizer {
      */
     public $tokens;
 
+    /**
+     * @return array
+     */
     public static function supportedTokens() {
         return array(
             '\Tr8n\Tokens\DataToken',
@@ -53,6 +56,11 @@ class DataTokenizer {
             '\Tr8n\Tokens\TransformToken');
     }
 
+    /**
+     * @param string $text
+     * @param array $context
+     * @param array $opts
+     */
     function __construct($text, $context = array(), $opts = array()) {
         $this->text = $text;
         $this->context = $context;
@@ -60,6 +68,9 @@ class DataTokenizer {
         $this->tokenize();
     }
 
+    /**
+     *
+     */
     public function tokenize() {
         $this->tokens = array();
         foreach(self::supportedTokens() as $class) {
@@ -71,12 +82,21 @@ class DataTokenizer {
         }
     }
 
+    /**
+     * @param string $token
+     * @return bool
+     */
     function isTokenAllowed($token) {
         if (!isset($this->opts["allowed_tokens"]))
             return true;
         return in_array($token, $this->opts["allowed_tokens"]);
     }
 
+    /**
+     * @param \Tr8n\Language $language
+     * @param array $options
+     * @return string
+     */
     public function substitute($language, $options = array()) {
         $label = $this->text;
         foreach($this->tokens as $token) {

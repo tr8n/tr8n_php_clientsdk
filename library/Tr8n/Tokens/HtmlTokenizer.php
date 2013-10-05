@@ -27,8 +27,36 @@ namespace Tr8n\Tokens;
 
 class HtmlTokenizer {
 
-    public $text, $context, $options, $doc, $tml;
+    /**
+     * @var string
+     */
+    public $text;
 
+    /**
+     * @var mixed[]
+     */
+    public $context;
+
+    /**
+     * @var mixed[]
+     */
+    public $options;
+
+    /**
+     * @var \DOMDocument
+     */
+    public $doc;
+
+    /**
+     * @var string
+     */
+    public $tml;
+
+    /**
+     * @param string $html
+     * @param array $context
+     * @param array $options
+     */
     function __construct($html, $context = array(), $options = array()) {
         $this->html = $html;
         $this->context = $context;
@@ -37,11 +65,18 @@ class HtmlTokenizer {
         $this->tokenize();
     }
 
+    /**
+     *
+     */
     private function parse() {
         $this->doc = new \DOMDocument();
         $this->doc->loadHTML($this->html);
     }
 
+    /**
+     * @param string $html
+     * @return array
+     */
     public function tokenize($html = null) {
         if ($html!=null) $this->html = $html;
 
@@ -59,6 +94,11 @@ class HtmlTokenizer {
         return array($this->tml, $this->context);
     }
 
+    /**
+     * @param $node
+     * @param $value
+     * @return string
+     */
     private function apply($node, $value) {
         if (!isset($node->tagName)) return $value;
 
@@ -81,11 +121,19 @@ class HtmlTokenizer {
         return '['.$token.']'.$value.'[/'.$token.']'.$break;
     }
 
+    /**
+     * @param string $value
+     * @return string
+     */
     private function sanitizeValue($value) {
         $value = ltrim($value);
         return $value;
     }
 
+    /**
+     * @param string $text
+     * @return mixed
+     */
     private function generateDataTokens($text) {
         if (isset($this->options["data_tokens"]) && $this->options["data_tokens"]) {
             preg_match_all('/(\d+)/', $text, $matches);
@@ -101,6 +149,10 @@ class HtmlTokenizer {
         return $text;
     }
 
+    /**
+     * @param $node
+     * @return mixed|string
+     */
     private function tokenizeTree($node) {
         if (get_class($node) == 'DOMText') {
             return $this->generateDataTokens($node->wholeText);
@@ -117,6 +169,11 @@ class HtmlTokenizer {
         return $this->apply($node, $value);
     }
 
+    /**
+     * @param string $name
+     * @param $attributes
+     * @return string
+     */
     private function generateContext($name, $attributes) {
         $attributes_array = array();
         foreach($attributes as $attr) {
@@ -139,6 +196,10 @@ class HtmlTokenizer {
         return '<'.$name.' '.$attr.'>{$0}</'.$name.'>';
     }
 
+    /**
+     * @param string $name
+     * @return string
+     */
     private function adjustName($name) {
         $map = array(
             'b' => 'bold',
@@ -149,6 +210,11 @@ class HtmlTokenizer {
        return (isset($map[$name]) ? $map[$name] : $name);
     }
 
+    /**
+     * @param string $name
+     * @param string $context
+     * @return string
+     */
     private function contextize($name, $context) {
         if (isset($this->context[$name])) {
             if ($this->context[$name] != $context) {
@@ -166,18 +232,31 @@ class HtmlTokenizer {
         return $name;
     }
 
+    /**
+     * @param $node
+     * @return bool
+     */
     private function needsLineBreak($node) {
         if (!isset($node->tagName)) return false;
         return (in_array($node->tagName, array('p', 'h1', 'h2', 'h3', 'h4', 'h5', 'div')));
 
     }
 
+    /**
+     * @param string $token
+     * @param string $value
+     * @return bool
+     */
     private function isShortToken($token, $value) {
         if (in_array($token, array('b', 'i'))) return true;
         if (strlen($value) < 10) return true;
         return false;
     }
 
+    /**
+     * @param string $token
+     * @return bool
+     */
     private function isTokenAllowed($token) {
         if (in_array($token, array('html', 'body'))) return false;
         return true;

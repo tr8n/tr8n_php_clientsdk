@@ -26,17 +26,25 @@ namespace Tr8n;
 
 class Cache {
 
+    /**
+     * @return mixed
+     */
     public static function instance() {
         static $inst = null;
         if ($inst === null) {
-            $class = \Tr8n\Config::instance()->cacheAdapterClass();
+            $class = Config::instance()->cacheAdapterClass();
             $inst = new $class();
         }
         return $inst;
     }
 
+    /**
+     * @param string $key
+     * @param null $default
+     * @return null
+     */
     public static function fetch($key, $default = null) {
-        if (!\Tr8n\Config::instance()->isCachingEnabled()) {
+        if (!Config::instance()->isCachingEnabled()) {
             if (is_callable($default)) {
                 return $default();
             }
@@ -45,22 +53,35 @@ class Cache {
         return self::instance()->fetch($key, $default);
     }
 
+    /**
+     * @param $key
+     * @param $value
+     * @return bool
+     */
     public static function store($key, $value) {
-        if (!\Tr8n\Config::instance()->isCachingEnabled()) {
+        if (!Config::instance()->isCachingEnabled()) {
             return false;
         }
         return self::instance()->store($key, $value);
     }
 
+    /**
+     * @param $key
+     * @return bool
+     */
     public static function delete($key) {
-        if (!\Tr8n\Config::instance()->isCachingEnabled()) {
+        if (!Config::instance()->isCachingEnabled()) {
             return false;
         }
         return self::instance()->delete($key);
     }
 
+    /**
+     * @param $key
+     * @return bool
+     */
     public static function exists($key) {
-        if (!\Tr8n\Config::instance()->isCachingEnabled()) {
+        if (!Config::instance()->isCachingEnabled()) {
             return false;
         }
         return self::instance()->exists($key);

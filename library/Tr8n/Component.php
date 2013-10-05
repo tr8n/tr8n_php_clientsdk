@@ -26,12 +26,41 @@ namespace Tr8n;
 
 class Component extends Base {
 
-    public $application, $key, $name, $description, $state;
+    /**
+     * @var Application
+     */
+    public $application;
 
+    /**
+     * @var string
+     */
+    public $key;
+
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var string
+     */
+    public $state;
+
+    /**
+     * @param array $attributes
+     */
     function __construct($attributes=array()) {
         parent::__construct($attributes);
     }
 
+    /**
+     * @return bool
+     */
     public function isLive() {
         return ($this->state == 'live');
     }

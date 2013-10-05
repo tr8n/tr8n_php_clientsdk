@@ -25,13 +25,22 @@
 
 namespace Tr8n\Decorators;
 
+use Tr8n\Config;
+
 class HtmlDecorator extends Base {
 
+    /**
+     * @param \Tr8n\TranslationKey $translation_key
+     * @param \Tr8n\Language $language
+     * @param string $label
+     * @param array $options
+     * @return string
+     */
     public function decorate($translation_key, $language, $label, $options) {
         if (array_key_exists("skip_decorations", $options)) return $label;
 //        if ($translation_key->locale == $language->locale) return $label;
 
-        $config = \Tr8n\Config::instance();
+        $config = Config::instance();
         if ($config->current_translator == null) return $label;
         if (!$config->current_translator->isInlineModeEnabled()) return $label;
         if ($translation_key->isLocked() && !$config->current_translator->isManager()) return $label;

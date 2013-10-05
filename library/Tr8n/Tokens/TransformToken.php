@@ -47,14 +47,30 @@
 
 namespace Tr8n\Tokens;
 
+use Tr8n\Tr8nException;
+
 class TransformToken extends DataToken {
 
-    protected $pipe_separator, $piped_parameters;
+    /**
+     * @var string
+     */
+    protected $pipe_separator;
 
+    /**
+     * @var string[]
+     */
+    protected $piped_parameters;
+
+    /**
+     * @return string
+     */
     public static function  expression() {
         return '/(\{[^_:|][\w]*(:[\w]+)*(::[\w]+)*\s*\|\|?[^{^}]+\})/';
     }
 
+    /**
+     * Parses token elements
+     */
     public function parse() {
         $name_without_parens = preg_replace('/[{}\[\]]/', '', $this->full_name);
 
@@ -96,31 +112,39 @@ class TransformToken extends DataToken {
         }
     }
 
+    /**
+     * @return bool
+     */
     public function isAllowedInTranslation() {
         return ($this->pipe_separator == '||');
     }
 
     /**
-    * token:      {count|| one: message, many: messages}
-    * results in: {"one": "message", "many": "messages"}
-    *
-    * token:      {count|| message}
-    * transform:  [{"one": "{$0}", "other": "{$0::plural}"}, {"one": "{$0}", "other": "{$1}"}]
-    * results in: {"one": "message", "other": "messages"}
-    *
-    * token:      {count|| message, messages}
-    * transform:  [{"one": "{$0}", "other": "{$0::plural}"}, {"one": "{$0}", "other": "{$1}"}]
-    * results in: {"one": "message", "other": "messages"}
-    *
-    * token:      {user| Dorogoi, Dorogaya}
-    * transform:  ["unsupported", {"male": "{$0}", "female": "{$1}", "other": "{$0}/{$1}"}]
-    * results in: {"male": "Dorogoi", "female": "Dorogaya", "other": "Dorogoi/Dorogaya"}
-    *
-    * token:      {actors:|| likes, like}
-    * transform:  ["unsupported", {"one": "{$0}", "other": "{$1}"}]
-    * results in: {"one": "likes", "other": "like"}    
-    */
-    
+     * token:      {count|| one: message, many: messages}
+     * results in: {"one": "message", "many": "messages"}
+     *
+     * token:      {count|| message}
+     * transform:  [{"one": "{$0}", "other": "{$0::plural}"}, {"one": "{$0}", "other": "{$1}"}]
+     * results in: {"one": "message", "other": "messages"}
+     *
+     * token:      {count|| message, messages}
+     * transform:  [{"one": "{$0}", "other": "{$0::plural}"}, {"one": "{$0}", "other": "{$1}"}]
+     * results in: {"one": "message", "other": "messages"}
+     *
+     * token:      {user| Dorogoi, Dorogaya}
+     * transform:  ["unsupported", {"male": "{$0}", "female": "{$1}", "other": "{$0}/{$1}"}]
+     * results in: {"male": "Dorogoi", "female": "Dorogaya", "other": "Dorogoi/Dorogaya"}
+     *
+     * token:      {actors:|| likes, like}
+     * transform:  ["unsupported", {"one": "{$0}", "other": "{$1}"}]
+     * results in: {"one": "likes", "other": "like"}
+     *
+     *
+     * @param string[] $params
+     * @param \Tr8n\LanguageContext $context
+     * @return array
+     * @throws Tr8nException
+     */
     function generateValueMap($params, $context) {
         $values = array();
 
@@ -132,26 +156,26 @@ class TransformToken extends DataToken {
             return $values;
         }
 
-        $token_mapping = $context->tokenMapping();
+        $token_mapping = $context->token_mapping;
 
         if ($token_mapping == null) {
-            throw new \Tr8n\Tr8nException("The token context ". $context->keyword . " does not support transformation for unnamed params: " . $this->full_name);
+            throw new Tr8nException("The token context ". $context->keyword . " does not support transformation for unnamed params: " . $this->full_name);
         }
 
         // "unsupported"
         if (is_string($token_mapping)) {
-            throw new \Tr8n\Tr8nException("The token mapping ". $token_mapping . " does not support " . count($params) . " params: " . $this->full_name);
+            throw new Tr8nException("The token mapping $token_mapping does not support " . count($params) . " params: " . $this->full_name);
         }
 
         // ["unsupported", {}]
         if (is_array($token_mapping) && !\Tr8n\Utils\ArrayUtils::isHash($token_mapping)) {
             if (count($params) > count($token_mapping)) {
-                throw new \Tr8n\Tr8nException("The token mapping ". $token_mapping . " does not support " . count($params) . " params: " . $this->full_name);
+                throw new Tr8nException("The token mapping $token_mapping does not support " . count($params) . " params: " . $this->full_name);
             }
 
             $token_mapping = $token_mapping[count($params)-1];
             if (is_string($token_mapping)) {
-                throw new \Tr8n\Tr8nException("The token mapping ". $token_mapping . " does not support " . count($params) . " params: " . $this->full_name);
+                throw new Tr8nException("The token mapping $token_mapping does not support " . count($params) . " params: " . $this->full_name);
             }
         }
 
@@ -171,7 +195,7 @@ class TransformToken extends DataToken {
                 $index = preg_replace('/[$]/', '', $parts[0]);
 
                 if (count($params) < $index) {
-                    throw new \Tr8n\Tr8nException("The index inside " . $token_mapping . " is out of bound: " . $this->full_name);
+                    throw new Tr8nException("The index inside " . $token_mapping . " is out of bound: " . $this->full_name);
                 }
 
                 $val = $params[$index];
@@ -180,7 +204,7 @@ class TransformToken extends DataToken {
                 foreach(array_slice($parts, 1) as $case_key) {
                     $lcase = $context->language->languageCase($case_key);
                     if ($lcase == null) {
-                        throw new \Tr8n\Tr8nException("Language case " . $case_key . " for context " . $context->keyword . "  mapping " . $key . " is not defined: " . $this->full_name);
+                        throw new Tr8nException("Language case " . $case_key . " for context " . $context->keyword . "  mapping " . $key . " is not defined: " . $this->full_name);
                     }
 
                     $val = $lcase->apply($val);
@@ -192,16 +216,24 @@ class TransformToken extends DataToken {
 
         return $values;
     }
-    
+
+    /**
+     * @param string $label
+     * @param \mixed[] $token_values
+     * @param \Tr8n\Language $language
+     * @param array $options
+     * @return mixed|string
+     * @throws Tr8nException
+     */
     public function substitute($label, $token_values, $language, $options = array()) {
         if (!array_key_exists($this->name(), $token_values)) {
-            throw new \Tr8n\Tr8nException("Missing value for token: " . $this->full_name);
+            throw new Tr8nException("Missing value for token: " . $this->full_name);
         }
 
         $object = $token_values[$this->name()];
 
         if (count($this->piped_parameters) == 0) {
-            throw new \Tr8n\Tr8nException("Piped params may not be empty for token: " . $this->full_name);
+            throw new Tr8nException("Piped params may not be empty for token: " . $this->full_name);
         }
 
         $context = $this->contextForLanguage($language);

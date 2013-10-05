@@ -101,6 +101,9 @@ class Logger {
      */
     private static $instances           = array();
 
+    /**
+     * @return Logger
+     */
     public static function instance() {
         static $inst = null;
         if ($inst === null) {
@@ -109,6 +112,9 @@ class Logger {
         return $inst;
     }
 
+    /**
+     *
+     */
     function __construct() {
         if (Config::instance()->loggerSeverity() === self::OFF) {
             return;
@@ -134,32 +140,60 @@ class Logger {
         }
 	}
 
+    /**
+     *
+     */
     public function __destruct() {
         if ($this->_fileHandle) {
             fclose($this->_fileHandle);
         }
     }
 
+    /**
+     * @param $msg
+     * @param string $args
+     */
     public function debug($msg, $args = self::NO_ARGUMENTS) {
         $this->log($msg, self::DEBUG);
     }
 
+    /**
+     * @param $msg
+     * @param string $args
+     */
     public function info($msg, $args = self::NO_ARGUMENTS) {
         $this->log($msg, self::INFO, $args);
     }
 
+    /**
+     * @param $msg
+     * @param string $args
+     */
     public function notice($msg, $args = self::NO_ARGUMENTS) {
         $this->log($msg, self::NOTICE, $args);
     }
 
+    /**
+     * @param $msg
+     * @param string $args
+     */
     public function warn($msg, $args = self::NO_ARGUMENTS) {
         $this->log($msg, self::WARNING, $args);
     }
 
+    /**
+     * @param $msg
+     * @param string $args
+     */
     public function error($msg, $args = self::NO_ARGUMENTS) {
         $this->log($msg, self::ERROR, $args);
     }
 
+    /**
+     * @param $line
+     * @param $severity
+     * @param string $args
+     */
     public function log($line, $severity, $args = self::NO_ARGUMENTS) {
         if ($this->_severityThreshold >= $severity) {
             if($args !== self::NO_ARGUMENTS) {
@@ -173,6 +207,9 @@ class Logger {
         }
     }
 
+    /**
+     * @param $line
+     */
     public function write($line) {
         if ($this->_logStatus == self::STATUS_LOG_OPEN
             && $this->_severityThreshold != self::OFF) {
@@ -182,9 +219,15 @@ class Logger {
         }
     }
 
+    /**
+     * @param $msg
+     * @param $severity
+     * @return string
+     */
     private function formatMessage($msg, $severity) {
 //        date_default_timezone_set('America/Los_Angeles');
         $time = date(self::$_dateFormat);
         return "$time: $msg";
     }
+
 }

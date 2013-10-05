@@ -83,7 +83,11 @@ class Config {
      */
     public $current_translation_keys;
 
+    /**
+     * @var array
+     */
     private $block_options;
+
     private $rules_engine;
     private $token_classes;
 
@@ -147,8 +151,8 @@ class Config {
 
     public function initRequest($options = array()) {
         $locale = (array_key_exists('locale', $options) ? $options['locale'] : $this->default_locale);
-        $source = (array_key_exists('source', $options) ? $options['source'] : null);
-        $component = (array_key_exists('component', $options) ? $options['component'] : null);
+//        $source = (array_key_exists('source', $options) ? $options['source'] : null);
+//        $component = (array_key_exists('component', $options) ? $options['component'] : null);
         $this->current_translator = (array_key_exists('translator', $options) ? $options['translator'] : null);
         $this->current_language = $this->application->language($locale, true);
     }
@@ -187,7 +191,6 @@ class Config {
     }
 
     public function loggerFilePath() {
-//        return "/Users/michael/Projects/Tr8n/tr8n_php_clientsdk/log/tr8n.log";
         return __DIR__."/../../log/tr8n.log";
     }
 
@@ -200,11 +203,15 @@ class Config {
     }
 
     public function isCachingEnabled() {
-        return false;
+        return true;
+    }
+
+    public function chdbPath() {
+        return $this->cachePath() . "chdb/current.chdb";
     }
 
     public function cacheAdapterClass() {
-        return '\Tr8n\Cache\ApcAdapter';
+        return '\Tr8n\Cache\ChdbAdapter';
     }
 
     public function decoratorClass() {
@@ -215,7 +222,7 @@ class Config {
         return __DIR__."/../../config/" . $file_name;
     }
 
-    // TODO: must be cached
+    // TODO: should be cached
     public function defaultToken($key, $type = 'data', $format = 'html') {
         if ($this->default_tokens == null) {
             $data = file_get_contents($this->configFilePath('tokens.json'));

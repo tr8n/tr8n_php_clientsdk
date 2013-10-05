@@ -35,12 +35,22 @@ class Base {
         CURLOPT_USERAGENT      => 'tr8n-php-clientsdk',
     );
 
+    /**
+     * @param array $attributes
+     */
     function __construct($attributes=array()) {
         foreach($attributes as $key => $value) {
             $this->$key = $value;
         }
     }
 
+    /**
+     * @param string $path
+     * @param array $params
+     * @param array $options
+     * @return array
+     * @throws Tr8nException
+     */
     public static function executeRequest($path, $params = array(), $options = array()) {
         $ch = curl_init();
 
@@ -82,6 +92,11 @@ class Base {
         return self::processResponse($data, $options);
     }
 
+    /**
+     * @param string $data
+     * @param array $options
+     * @return array
+     */
     public static function processResponse($data, $options = array()) {
         if (isset($data['results'])) {
             Logger::instance()->info("received " . count($data["results"]) ." result(s)");
@@ -99,6 +114,11 @@ class Base {
         return self::createObject($data, $options);
     }
 
+    /**
+     * @param $data
+     * @param $options
+     * @return mixed
+     */
     public static function createObject($data, $options) {
         if ($options != null && array_key_exists('attributes', $options)) {
             $data = array_merge($data, $options['attributes']);

@@ -78,6 +78,11 @@ class DecorationTokenizer {
      */
     public $opts;
 
+    /**
+     * @param string $text
+     * @param array $context
+     * @param array $opts
+     */
     function __construct($text, $context = array(), $opts = array()) {
         $this->text = "[".self::RESERVED_TOKEN."]".$text."[/".self::RESERVED_TOKEN."]";
         $this->context = $context;
@@ -100,16 +105,25 @@ class DecorationTokenizer {
         $this->tokens = array();
     }
 
+    /**
+     * @return null|string
+     */
     function peek() {
         if (count($this->fragments) == 0) return null;
         return $this->fragments[0];
     }
 
+    /**
+     * @return mixed|null
+     */
     function nextFragment() {
         if (count($this->fragments) == 0) return null;
         return array_shift($this->fragments);
     }
 
+    /**
+     * @return array|mixed|null
+     */
     function parse() {
         $token = $this->nextFragment();
 
@@ -124,6 +138,11 @@ class DecorationTokenizer {
         return $token;
     }
 
+    /**
+     * @param string $name
+     * @param string $type
+     * @return array
+     */
     function parseTree($name, $type = 'short') {
         $tree = array($name);
         if (!in_array($name, $this->tokens) && $name != self::RESERVED_TOKEN) {
@@ -151,16 +170,30 @@ class DecorationTokenizer {
         return $tree;
     }
 
+    /**
+     * @param string $token
+     * @return bool
+     */
     function isTokenAllowed($token) {
        if (!isset($this->opts["allowed_tokens"]))
            return true;
         return in_array($token, $this->opts["allowed_tokens"]);
     }
 
+    /**
+     * @param string $token
+     * @return bool
+     */
     function isDefaultDecoration($token) {
         return (Config::instance()->defaultToken($token, 'decoration') != null);
     }
 
+    /**
+     * @param string $token
+     * @param string $value
+     * @return string
+     * @throws \Tr8n\Tr8nException
+     */
     public function defaultDecoration($token, $value) {
         if (!$this->isDefaultDecoration($token)) {
             throw new Tr8nException("The token is neither default decoration, nor has a value");
@@ -204,6 +237,12 @@ class DecorationTokenizer {
         throw new Tr8nException("Not sure how to process default decoration: " . $token);
     }
 
+    /**
+     * @param string $token
+     * @param string $value
+     * @return string
+     * @throws \Tr8n\Tr8nException
+     */
     function apply($token, $value) {
         if ($token == self::RESERVED_TOKEN) return $value;
         if (!$this->isTokenAllowed($token)) return $value;
@@ -228,6 +267,10 @@ class DecorationTokenizer {
         return $this->defaultDecoration($token, $value);
     }
 
+    /**
+     * @param mixed[] $expr
+     * @return string
+     */
     function evaluate($expr) {
         if (!is_array($expr)) {
             return $expr;
@@ -240,6 +283,9 @@ class DecorationTokenizer {
         return $this->apply($token, $value);
     }
 
+    /**
+     * @return string
+     */
     function substitute() {
         return $this->evaluate($this->parse());
     }

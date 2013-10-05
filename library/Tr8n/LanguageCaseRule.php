@@ -25,35 +25,59 @@
 namespace Tr8n;
 
 use \Tr8n\Utils\ArrayUtils;
-use \Tr8n\Rules\GenderRule;
 
 class LanguageCaseRule extends Base {
 
+    /**
+     * @var LanguageCase
+     */
     public $language_case;
-    public $definition, $position, $description, $examples;
 
-    function conditions() {
-        return ($this->definition["conditions"]);
-    }
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var string
+     */
+    public $examples;
+
+    /**
+     * @var string
+     */
+    public $conditions;
+
+    /*
+     * string[]
+     */
+    public $conditions_expression;
+
+    /**
+     * @var string
+     */
+    public $operations;
+
+    /*
+     * string[]
+     */
+    public $operations_expression;
+
 
     function conditionsExpression() {
-        if (!isset($this->definition["conditions_expression"])) {
-            $p = new \Tr8n\RulesEngine\Parser($this->conditions());
-            $this->definition["conditions_expression"] = $p->parse();
+        if (!isset($this->conditions_expression)) {
+            $p = new RulesEngine\Parser($this->conditions);
+            $this->conditions_expression = $p->parse();
         }
-        return $this->definition["conditions_expression"];
-    }
-
-    function operations() {
-        return ($this->definition["operations"]);
+        return $this->conditions_expression;
     }
 
     function operationsExpression() {
-        if (!isset($this->definition["operations_expression"])) {
-            $p = new \Tr8n\RulesEngine\Parser($this->conditions());
-            $this->definition["operations_expression"] = $p->parse();
+        if (!isset($this->operations_expression)) {
+            $p = new RulesEngine\Parser($this->operations);
+            $this->operations_expression = $p->parse();
         }
-        return $this->definition["operations_expression"];
+        return $this->operations_expression;
     }
 
     /**
@@ -63,16 +87,16 @@ class LanguageCaseRule extends Base {
      * The language must support Gender Context.
      *
      * @param $object
+     * @return array
      */
     function genderVariables($object) {
-        if (strstr($this->conditions(), "@gender") == false)
+        if (strstr($this->conditions, "@gender") == false)
             return array();
 
         if ($object == null)
             return array("@gender" => "unknown");
 
-        // TODO: is there a better way to do this?
-        $context = $this->language_case->language->context("gender");
+        $context = $this->language_case->language->contextByKeyword("gender");
 
         if ($context == null)
             return array("@gender" => "unknown");
@@ -81,10 +105,10 @@ class LanguageCaseRule extends Base {
     }
 
     public function evaluate($value, $object = null) {
-        if ($this->conditions() == null)
+        if ($this->conditions == null)
             return false;
 
-        $re = new \Tr8n\RulesEngine\Evaluator();
+        $re = new RulesEngine\Evaluator();
         $re->evaluate(array("let", "@value", $value));
 
         $vars = $this->genderVariables($object);
@@ -96,10 +120,10 @@ class LanguageCaseRule extends Base {
     }
 
     public function apply($value) {
-        if ($this->operations() == null)
+        if ($this->operations == null)
             return $value;
 
-        $re = new \Tr8n\RulesEngine\Evaluator();
+        $re = new RulesEngine\Evaluator();
         $re->evaluate(array("let", "@value", $value));
 
         return $re->evaluate($this->operationsExpression());

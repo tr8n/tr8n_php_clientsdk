@@ -25,10 +25,23 @@
 
 namespace Tr8n\RulesEngine;
 
+use Tr8n\Tr8nException;
+
 class Evaluator {
 
-    public $env, $vars;
+    /**
+     * @var array
+     */
+    public $env;
 
+    /**
+     * @var array
+     */
+    public $vars;
+
+    /**
+     * Initializes evaluator
+     */
     function __construct() {
         $this->vars = array();
         $this->env = array(
@@ -146,22 +159,31 @@ class Evaluator {
         );
     }
 
-    function regexpFromString($str) {
-
-    }
-
+    /**
+     * Resets evaluator's variables
+     */
     function reset() {
         foreach ($this->vars as $key=>$val) {
-            unset($this->ctx[$key]);
+            unset($this->env[$key]);
         }
         $this->vars = array();
     }
 
+    /**
+     * @param $fn
+     * @return bool
+     */
     function isNestedExpression($fn) {
        return in_array($fn, array("quote", "car", "cdr", "cond", "if",
            "&&", "||", "and", "or", "true", "false", "let", "count", "all", "any"));
     }
 
+    /**
+     * @param string $fn
+     * @param array $args
+     * @return mixed
+     * @throws Tr8nException
+     */
     function apply($fn, $args) {
         if (!isset($this->env[$fn])) {
             throw (new Tr8nException("Undefined expression: " . $fn));
@@ -174,6 +196,10 @@ class Evaluator {
         return $this->env[$fn];
     }
 
+    /**
+     * @param $expr
+     * @return mixed
+     */
     function evaluate($expr) {
         if ($this->env["atom"]($this, array($expr))) {
             return (array_key_exists("" . $expr, $this->env) ? $this->env[$expr] : $expr);

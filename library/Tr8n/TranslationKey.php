@@ -24,7 +24,8 @@
 
 namespace Tr8n;
 
-use Tr8n\Tokens\Base as TokenBase;
+use Tr8n\Tokens\DataTokenizer;
+use Tr8n\Tokens\DecorationTokenizer;
 
 class TranslationKey extends Base {
     /**
@@ -42,7 +43,44 @@ class TranslationKey extends Base {
      */
     public $translations;
 
-    public $id, $key, $label, $description, $locale, $level, $locked;
+    /**
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $key;
+
+    /**
+     * @var string
+     */
+    public $label;
+
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var string
+     */
+    public $locale;
+
+    /**
+     * @var int
+     */
+    public $level;
+
+    /**
+     * @var bool
+     */
+    public $locked;
+
+    /**
+     * @var Tokens\DataToken[]
+     */
     public $tokens;
 
     /**
@@ -55,7 +93,10 @@ class TranslationKey extends Base {
      */
     private $data_tokens;
 
-	public function __construct($attributes=array()) {
+    /**
+     * @param array $attributes
+     */
+    public function __construct($attributes=array()) {
         parent::__construct($attributes);
 
 		$this->key = $this->generateKey($this->label, $this->description);
@@ -66,11 +107,10 @@ class TranslationKey extends Base {
 
         if ($this->language == null) {
             $this->language = $this->application->language($this->locale);
-//            \Tr8n\Logger::instance()->debug("Loading key: " . $this->locale . " " . $this->language->locale);
         }
 
         $this->translations = array();
-        if (array_key_exists('translations', $attributes)) {
+        if (isset($attributes['translations'])) {
             foreach($attributes["translations"] as $locale => $translations) {
                 $language = $this->application->language($locale);
 
@@ -85,22 +125,45 @@ class TranslationKey extends Base {
         }
     }
 
+    /**
+     * @param string $label
+     * @param string $description
+     * @param string $locale
+     * @return string
+     */
     public static function cacheKey($label, $description, $locale) {
         return "t@_[" . $locale . "]_[" . $label . "]_[" . $description . "]";
     }
 
+    /**
+     * @param string $label
+     * @param string $description
+     * @return string
+     */
     public function generateKey($label, $description) {
 		return md5($label . ";;;" . $description);
 	}
 
+    /**
+     * @return bool
+     */
     public function isLocked() {
         return ($this->locked == true);
     }
 
+    /**
+     * @param Language $language
+     * @return bool
+     */
     public function hasTranslations($language) {
-        return count($this->translations($language->locale)) > 0;
+        return count($this->translations($language)) > 0;
     }
 
+    /**
+     * @param Language $language
+     * @param array $options
+     * @return $this|null|TranslationKey
+     */
     public function fetchTranslations($language, $options = array()) {
         if ($this->id && $this->hasTranslations($language))
             return $this;
@@ -116,6 +179,9 @@ class TranslationKey extends Base {
         return $this->application->cacheTranslationKey($translation_key);
     }
 
+    /**
+     * @return mixed[]
+     */
     public function toArray() {
         return array(   "label"         => $this->label,
                         "description"   => $this->description,
@@ -125,12 +191,14 @@ class TranslationKey extends Base {
 
     /*
      * Re-assigns the ownership of the application and translation key
+     *
+     * @param Application $application
      */
     public function setApplication($application) {
         $this->application = $application;
         foreach($this->translations as $locale => $translations) {
             foreach($translations as $translation) {
-                $translation->setTranslationKey($this);
+                $translation->translation_key = $this;
             }
         }
     }
@@ -149,11 +217,8 @@ class TranslationKey extends Base {
         $this->translations[$language->locale] = $translations;
     }
 
-    ###############################################################
-    ## Translations Rules Evaluation
-    ###############################################################
     /**
-     * @param $language
+     * @param Language $language
      * @return Translation[]
      */
     public function translations($language) {
@@ -162,6 +227,11 @@ class TranslationKey extends Base {
         return $this->translations[$language->locale];
     }
 
+    /**
+     * @param Language $language
+     * @param mixed[] $token_values
+     * @return null|Translation
+     */
     protected function findFirstValidTranslation($language, $token_values) {
         foreach($this->translations($language) as $translation) {
             if ($translation->isValidTranslation($token_values)) {
@@ -172,13 +242,19 @@ class TranslationKey extends Base {
         return null;
     }
 
+    /**
+     * @param Language $language
+     * @param mixed[] $token_values
+     * @param array $options
+     * @return string
+     */
     public function translate($language, $token_values = array(), $options = array()) {
         if (Config::instance()->isDisabled() || ($language->locale == $this->language->locale)) {
             return $this->substituteTokens($this->label, $token_values, $this->language, $options);
         }
 
         $translation = $this->findFirstValidTranslation($language, $token_values);
-        $decorator = \Tr8n\Decorators\Base::decorator();
+        $decorator = Decorators\Base::decorator();
 
         if ($translation != null) {
             $processed_label = $this->substituteTokens($translation->label, $token_values, $translation->language, $options);
@@ -189,16 +265,13 @@ class TranslationKey extends Base {
         return $decorator->decorate($this, $this->language, $processed_label, array_merge($options, array("translated" => false)));
 	}
 
-    ###############################################################
-    ## Token Substitution
-    ###############################################################
     /**
      * Returns an array of decoration tokens from the translation key
      * @return \string[]
      */
     public function decorationTokens() {
         if ($this->decoration_tokens == null) {
-            $dt = new \Tr8n\Tokens\DecorationTokenizer($this->label);
+            $dt = new DecorationTokenizer($this->label);
             $dt->parse();
             $this->decoration_tokens = $dt->tokens;
         }
@@ -208,25 +281,33 @@ class TranslationKey extends Base {
 
     /**
      * Returns an array of data tokens from the translation key
-     * @return \object[]
+     *
+     * @return \mixed[]
      */
     public function dataTokens() {
         if ($this->data_tokens == null) {
-            $dt = new \Tr8n\Tokens\DataTokenizer($this->label);
+            $dt = new DataTokenizer($this->label);
             $this->data_tokens = $dt->tokens;
         }
 
         return $this->data_tokens;
     }
 
+    /**
+     * @param string $label
+     * @param mixed[] $token_values
+     * @param Language $language
+     * @param array $options
+     * @return string
+     */
     public function substituteTokens($label, $token_values, $language, $options = array()) {
         if (strpos($label, '{') !== FALSE) {
-            $dt = new \Tr8n\Tokens\DataTokenizer($label, $token_values, array("allowed_tokens" => $this->dataTokens()));
+            $dt = new DataTokenizer($label, $token_values, array("allowed_tokens" => $this->dataTokens()));
             $label = $dt->substitute($language, $options);
         }
 
         if (strpos($label, '[') === FALSE) return $label;
-        $dt = new \Tr8n\Tokens\DecorationTokenizer($label, $token_values, array("allowed_tokens" => $this->decorationTokens()));
+        $dt = new Tokens\DecorationTokenizer($label, $token_values, array("allowed_tokens" => $this->decorationTokens()));
         return $dt->substitute();
     }
 
@@ -234,7 +315,7 @@ class TranslationKey extends Base {
      * @param Language $language
      * @param Translation[] $translations
      */
-    public function setLanguageTranslations(Language $language, $translations) {
+    public function setLanguageTranslations($language, $translations) {
         foreach($translations as $translation) {
             $translation->setTranslationKey($this);
         }

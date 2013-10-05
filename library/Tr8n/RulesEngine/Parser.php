@@ -27,22 +27,37 @@ namespace Tr8n\RulesEngine;
 
 class Parser {
 
+    /**
+     * @var string[]
+     */
     public $tokens;
 
+    /**
+     * @param string $expression
+     */
     function __construct($expression) {
         $this->tokens = array();
         preg_match_all('/[()]|\w+|@\w+|[\+\-\!\|\=>&<\*\/%]+|".*?"|\'.*?\'/', $expression, $matches);
         $this->tokens = $matches[0];
     }
 
+    /**
+     * @return string
+     */
     function peek() {
         return $this->tokens[0];
     }
 
+    /**
+     * @return string
+     */
     function nextToken() {
         return array_shift($this->tokens);
     }
 
+    /**
+     * @return array|int|string
+     */
     function parse() {
         $token = $this->nextToken();
         if ($token == '(') {
@@ -57,6 +72,9 @@ class Parser {
         return $token;
     }
 
+    /**
+     * @return array
+     */
     function parseList() {
         $list = array();
         while ($this->peek() != ')') {

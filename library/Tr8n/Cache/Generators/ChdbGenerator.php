@@ -25,9 +25,13 @@
 
 namespace Tr8n\Cache\Generators;
 
+use Tr8n\Application;
+use Tr8n\Config;
+use Tr8n\Language;
+
 class ChdbGenerator extends Base {
 
-    public $languages;
+    public $cache;
     public $translations;
     private $chdb_path;
     private $started_at;
@@ -41,14 +45,13 @@ class ChdbGenerator extends Base {
         return $inst;
     }
 
-    /**
-     * @param $url
-     */
     public function run() {
         $this->started_at = new \DateTime();
 
-        $this->downloadLanguages();
-        $this->downloadTranslations();
+        $this->cache = array();
+        $this->cacheApplication();
+        $this->cacheLanguages();
+        $this->cacheTranslations();
         $this->generateDhcb();
 
 //        $cache = new \Tr8n\Cache\ChdbAdapter(\Tr8n\Config::instance()->cachePath() . 'chdb/current.chdb');
@@ -56,29 +59,47 @@ class ChdbGenerator extends Base {
 
     }
 
-    private function downloadLanguages() {
-        $this->log("Downloading languages...");
+    /**
+     * @param string|array $key
+     * @param string|null $data
+     */
+    public function cache($key, $data = null) {
+        if (is_array($key)) {
+            $this->cache = array_merge($this->cache, $key);
+        } else {
+            $this->cache[$key] = $data;
+        }
+    }
 
+    private function cacheApplication() {
+        $this->log("Downloading application...");
+        $app = Config::instance()->application->get("application", array("definition" => "true"));
+        $key = Application::cacheKey($app["key"]);
+        $this->cache($key, json_encode($app));
+        $this->log("Application has been cached.");
+    }
+
+    private function cacheLanguages() {
+        $this->log("Downloading languages...");
         $count = 0;
-        $this->languages = array();
-        $langs = \Tr8n\Config::instance()->application->get("application/languages", array("definition" => "true"));
-        foreach ($langs as $lang) {
-            $key = \Tr8n\Language::cacheKey($lang["locale"]);
-            $this->languages[$key] = json_encode($lang);
+        $languages = Config::instance()->application->get("application/languages", array("definition" => "true"));
+        foreach ($languages as $lang) {
+            $key = Language::cacheKey($lang["locale"]);
+            $this->cache($key, json_encode($lang));
             $count += 1;
         }
 
-        $this->log("Downloaded $count languages.");
+        $this->log("$count languages have been cached.");
     }
 
-    private function downloadTranslations() {
+    private function cacheTranslations() {
         $this->log("Downloading translations...");
 
         stream_wrapper_register("chdb", '\Tr8n\Cache\Generators\ChdbStream') or die("Failed to register Chdb protocol for streaming Tr8n translation keys");
         $fp = fopen("chdb://ChdbInMemory", "r+");
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, \Tr8n\Config::instance()->application->host . \Tr8n\Application::API_PATH . "application/translations?app_key=" . \Tr8n\Config::instance()->application->key);
+        curl_setopt($ch, CURLOPT_URL, Config::instance()->application->host . Application::API_PATH . "application/translations?client_id=" . Config::instance()->application->key);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_BUFFERSIZE, 256);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -90,18 +111,16 @@ class ChdbGenerator extends Base {
     }
 
     public function generateDhcb() {
-        $this->chdb_path = \Tr8n\Config::instance()->cachePath() . 'chdb/tr8n_' . \Tr8n\Config::instance()->application->key . '_' . count($this->translations) . '_@_' . $this->started_at->format('Y_m_d_H_i_s') . '.chdb';
+        $this->chdb_path = Config::instance()->cachePath() . 'chdb/tr8n_' . Config::instance()->application->key . '_' . count($this->translations) . '_@_' . $this->started_at->format('Y_m_d_H_i_s') . '.chdb';
         $this->extracted_at = new \DateTime();
 
         $this->log("Writing chdb file...");
         $this->log("File: " . $this->chdb_path);
 
-        $data = array_merge($this->languages, $this->translations);
+        $success = chdb_create($this->chdb_path, $this->cache);
 
-        $success = chdb_create($this->chdb_path, $data);
-
-        unlink(\Tr8n\Config::instance()->cachePath() . 'chdb/current.chdb');
-        symlink($this->chdb_path, \Tr8n\Config::instance()->cachePath() . 'chdb/current.chdb');
+        unlink(Config::instance()->cachePath() . 'chdb/current.chdb');
+        symlink($this->chdb_path, Config::instance()->cachePath() . 'chdb/current.chdb');
 
         if (!$success) {
             fprintf(STDERR, "Failed to create chdb file $this->chdb_path\n");

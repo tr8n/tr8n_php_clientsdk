@@ -54,16 +54,26 @@ class DataToken {
      */
     public $context_keys;
 
+    /**
+     * @return string
+     */
     public static function expression() {
         return '/(\{[^_:][\w]*(:[\w]+)*(::[\w]+)*\})/';
     }
 
+    /**
+     * @param string $label
+     * @param string $token
+     */
     function __construct($label, $token) {
         $this->label = $label;
         $this->full_name = $token;
         $this->parse();
     }
 
+    /**
+     * Parses token name elements
+     */
     function parse() {
         $name_without_parens = preg_replace('/[{}\[\]]/', '', $this->full_name);
         $parts = explode('::', $name_without_parens);
@@ -89,6 +99,10 @@ class DataToken {
         }
     }
 
+    /**
+     * @param array $opts
+     * @return string
+     */
     public function name($opts = array()) {
         $val = $this->short_name;
         if (isset($opts["context_keys"]) and count($this->context_keys) > 0)
@@ -116,8 +130,10 @@ class DataToken {
      *
      * {user:gender:value}   - just not with transform tokens
      *
-     * @param $language
+     * @param \Tr8n\Language $language
      * @param array $opts
+     * @return \Tr8n\LanguageContext|null
+     * @throws \Tr8n\Tr8nException
      */
     public function contextForLanguage($language, $opts = array()) {
         if (count($this->context_keys) > 0) {
@@ -134,15 +150,18 @@ class DataToken {
     }
 
     /**
-    #
-    # case is identified with ::
-    #
-    # examples:
-    #
-    # tr("Hello {user::nom}", "", :user => current_user)
-    # tr("{actor} gave {target::dat} a present", "", :actor => user1, :target => user2)
-    # tr("This is {user::pos} toy", "", :user => current_user)
-    #
+     * Applies a language case. The case is identified with ::
+     *
+     * tr("Hello {user::nom}", "", :user => current_user)
+     * tr("{actor} gave {target::dat} a present", "", :actor => user1, :target => user2)
+     * tr("This is {user::pos} toy", "", :user => current_user)
+     *
+     * @param \Tr8n\LanguageCase $case
+     * @param mixed $token_value
+     * @param mixed[] $token_values
+     * @param \Tr8n\Language $language
+     * @param array $options
+     * @return string
      */
     public function applyCase($case, $token_value, $token_values, $language, $options) {
         $case = $language->languageCase($case);
@@ -150,9 +169,12 @@ class DataToken {
         return $case->apply($token_value, self::tokenObject($token_values, $this->name()), $options);
     }
 
-
     /**
      * Returns an object from values hash.
+     *
+     * @param mixed[] $token_values
+     * @param string $token_name
+     * @return mixed
      */
     public static function tokenObject($token_values, $token_name) {
         if ($token_values == null)
@@ -203,12 +225,17 @@ class DataToken {
      *     tr("Hello {user}", array("user" => array("object" => array("gender"=>"male"), "value"=>"Michael")));
      *     tr("Hello {user}", array("user" => array("object" => array("gender"=>"male", "name"=>"Michael), "attribute"=>"name")));
      *
+     * @param mixed[] $token_values
+     * @param \Tr8n\Language $language
+     * @param array $options
+     * @return string
+     * @throws \Tr8n\Tr8nException
      */
     public function tokenValue($token_values, $language, $options) {
         if (array_key_exists($this->name(), $token_values)) {
             $token_data = $token_values[$this->name()];
         } else {
-            $token_data = $language->application->defaultTokens($this->name(), 'data');
+            $token_data = \Tr8n\Config::instance()->defaultToken($this->name(), 'data');
         }
 
         if ($token_data === null) {
@@ -292,7 +319,13 @@ class DataToken {
         return $this->sanitize($token_data, $token_values, $language, $options);
     }
 
-
+    /**
+     * @param mixed $token_object
+     * @param mixed[] $token_values
+     * @param \Tr8n\Language $language
+     * @param mixed[] $options
+     * @return string
+     */
     public function sanitize($token_object, $token_values, $language, $options) {
         $token_value = "" . $token_object;
 
@@ -309,12 +342,21 @@ class DataToken {
 
     /**
      * Main substitution function
+     *
+     * @param string $label
+     * @param mixed[] $token_values
+     * @param \Tr8n\Language $language
+     * @param mixed[] $options
+     * @return mixed
      */
     public function substitute($label, $token_values, $language, $options = array()) {
         $token_value = $this->tokenValue($token_values, $language, $options);
         return str_replace($this->full_name, $token_value, $label);
     }
 
+    /**
+     * @return string
+     */
     function __toString() {
         return $this->full_name;
     }
