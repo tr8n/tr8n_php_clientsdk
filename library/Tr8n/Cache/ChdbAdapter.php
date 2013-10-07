@@ -25,21 +25,26 @@
 
 namespace Tr8n\Cache;
 
+use Tr8n\Application;
+use Tr8n\Component;
+use Tr8n\Config;
 use Tr8n\Logger;
+use Tr8n\Source;
+use Tr8n\Translation;
 
 class ChdbAdapter extends Base {
 
     private $chdb;
 
     function __construct() {
-        $this->chdb = new \chdb(\Tr8n\Config::instance()->chdbPath());
+        $this->chdb = new \chdb(Config::instance()->chdbPath());
     }
 
     public function fetch($key, $default = null) {
         $value = $this->chdb->get($key);
         if ($value) {
             Logger::instance()->info("Cache hit " . $key);
-            return $this->constructObject($key, $value);;
+            return $this->constructObject($key, $value);
         }
 
         Logger::instance()->info("Cache miss " . $key);
@@ -58,14 +63,16 @@ class ChdbAdapter extends Base {
 
     private function constructObject($key, $data) {
         if (substr($key, 0, 2) == 't@') {
+//            Logger::instance()->info("Got translations", $data);
+
             if (strstr($data, '},{') === false) {
-                return new \Tr8n\Translation(array("label" => $data));
+                return new Translation(array("label" => $data));
             }
 
             $translations_json = json_decode($data, true);
             $translations = array();
             foreach($translations_json as $json) {
-                $t =  new \Tr8n\Translation(array("label" => $json["label"]));
+                $t =  new Translation(array("label" => $json["label"]));
                 if (isset($json["context"]))
                     $t->context = $json["context"];
                 array_push($translations, $t);
@@ -74,8 +81,7 @@ class ChdbAdapter extends Base {
         }
 
         if (substr($key, 0, 2) == 'a@') {
-//            Logger::instance()->info("Constructing application", $data);
-            return new \Tr8n\Application(json_decode($data, true));
+            return new Application(json_decode($data, true));
         }
 
         if (substr($key, 0, 2) == 'l@') {
@@ -83,27 +89,31 @@ class ChdbAdapter extends Base {
         }
 
         if (substr($key, 0, 2) == 'c@') {
-            return new \Tr8n\Component(json_decode($data, true));
+            return new Component(json_decode($data, true));
         }
 
         if (substr($key, 0, 2) == 's@') {
-            return new \Tr8n\Source(json_decode($data, true));
+            return new Source(json_decode($data, true));
         }
 
         return $data;
     }
 
     public function store($key, $value) {
-        throw new \Tr8n\Tr8nException("Chdb is a readonly cache");
+        Logger::instance()->warn("Chdb is a readonly cache");
     }
 
     public function delete($key) {
-        throw new \Tr8n\Tr8nException("Chdb is a readonly cache");
+        Logger::instance()->warn("Chdb is a readonly cache");
     }
 
     public function exists($key) {
         $value = $this->chdb->get($key);
         return ($value!=null);
+    }
+
+    public function isCachedBySource() {
+        return false;
     }
 
 }

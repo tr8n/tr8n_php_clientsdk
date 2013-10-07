@@ -66,16 +66,20 @@ class Source extends Base {
 	}
 
     /**
+     * @param string $source_key
+     * @param string $locale
+     * @return string
+     */
+    public static function cacheKey($source_key, $locale) {
+        return "s@_[" . $locale . "]_[" . $source_key . "]";
+    }
+
+    /**
      * @param Language $language
      * @param array $options
      * @return array|null
      */
     public function fetchTranslationsForLanguage($language, $options = array()) {
-        # for current translators who use inline mode - always fetch translations
-        if (\Tr8n\Config::instance()->current_translator && \Tr8n\Config::instance()->current_translator->isInlineModeEnabled()) {
-
-        }
-
         if ($this->translation_keys !== null) {
             return $this->translation_keys;
         }
@@ -91,5 +95,6 @@ class Source extends Base {
 
         return $this->translation_keys;
     }
+
 
 }

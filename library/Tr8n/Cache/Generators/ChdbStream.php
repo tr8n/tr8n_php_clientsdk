@@ -113,11 +113,15 @@ class ChdbStream {
                             $this->translation_count += 1;
                             array_push($translations_data, $t);
                         }
+                        $translations_data = json_encode($translations_data);
                     }
 
 //                    print_r($key . "\n");
-//                    print_r($translations_data . "\n\n");
-                    $this->translations[$key] = json_encode($translations_data);
+//                    print_r("------------------------------------------------------------------------------------------\n");
+//                    print_r($key . "\n");
+//                    print_r($translations_data . "\n\n\n");
+
+                    $this->translations[$key] = $translations_data;
                 }
             }
 

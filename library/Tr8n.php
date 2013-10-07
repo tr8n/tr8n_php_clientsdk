@@ -33,6 +33,9 @@ foreach($files as $dir) {
 }
 
 function tr8n_init_client_sdk($host = null, $key = null, $secret = null) {
+    global $tr8n_page_t0;
+    $tr8n_page_t0 = microtime(true);
+
     \Tr8n\Config::instance()->initApplication($host, $key, $secret);
 
     if (\Tr8n\Config::instance()->isDisabled()) {
@@ -67,6 +70,9 @@ function tr8n_init_client_sdk($host = null, $key = null, $secret = null) {
 
 function tr8n_complete_request($options = array()) {
     \Tr8n\Config::instance()->completeRequest($options);
+    global $tr8n_page_t0;
+    $milliseconds = round(microtime(true) - $tr8n_page_t0,3)*1000;
+    \Tr8n\Logger::instance()->info("Page loaded in " . $milliseconds . " milliseconds");
 }
 
 function tr8n_application() {

@@ -44,7 +44,7 @@ class Cache {
      * @return null
      */
     public static function fetch($key, $default = null) {
-        if (!Config::instance()->isCachingEnabled()) {
+        if (!Config::instance()->isCacheEnabled()) {
             if (is_callable($default)) {
                 return $default();
             }
@@ -59,7 +59,7 @@ class Cache {
      * @return bool
      */
     public static function store($key, $value) {
-        if (!Config::instance()->isCachingEnabled()) {
+        if (!Config::instance()->isCacheEnabled()) {
             return false;
         }
         return self::instance()->store($key, $value);
@@ -70,7 +70,7 @@ class Cache {
      * @return bool
      */
     public static function delete($key) {
-        if (!Config::instance()->isCachingEnabled()) {
+        if (!Config::instance()->isCacheEnabled()) {
             return false;
         }
         return self::instance()->delete($key);
@@ -81,10 +81,24 @@ class Cache {
      * @return bool
      */
     public static function exists($key) {
-        if (!Config::instance()->isCachingEnabled()) {
+        if (!Config::instance()->isCacheEnabled()) {
             return false;
         }
         return self::instance()->exists($key);
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isCachedBySource() {
+        return self::instance()->isCachedBySource();
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isReadOnly() {
+        return self::instance()->isReadOnly();
     }
 
 }

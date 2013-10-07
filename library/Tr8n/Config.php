@@ -202,7 +202,9 @@ class Config {
         return Logger::DEBUG;
     }
 
-    public function isCachingEnabled() {
+    public function isCacheEnabled() {
+        if ($this->current_translator && $this->current_translator->isInlineModeEnabled())
+            return false;
         return true;
     }
 

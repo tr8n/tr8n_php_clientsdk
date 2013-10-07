@@ -199,31 +199,130 @@ class Language extends Base {
             "locale"        => $locale,
             "level"         => $level,
             "translations"  => array()
-         ));
+        ));
 
         if (Config::instance()->isDisabled() || $this->isDefault()) {
             return $temp_key->substituteTokens($label, $token_values, $this, $options);
         }
 
-        $cached_key = null;
-        if ($source_key != null) {
-            $source = $this->application->source($source_key);
-            $source_translation_keys = $source->fetchTranslationsForLanguage($this, $options);
+        $token_values = array_merge($token_values, array("viewing_user" => Config::instance()->current_user));
 
-            if (isset($source_translation_keys[$temp_key->key])) {
-                $cached_key = $source_translation_keys[$temp_key->key];
-            } else {
-                $this->application->registerMissingKey($temp_key, $source);
-                $cached_key = $temp_key;
-            }
-        } else {
-            $cached_key = $this->application->translationKey($temp_key->key);
-            if ($cached_key == null) {
-                $cached_key = $temp_key->fetchTranslations($this, $options);
-            }
+        // always check request cache first - a page can have the same key appearing multiple times
+        // we don't want to hit a remote cache unnecessarily
+        $translation_key = $this->application->translationKey($temp_key->key);
+        if ($translation_key) {
+            return $translation_key->translate($this, $token_values, $options);
         }
 
-        return $cached_key->translate($this, array_merge($token_values, array("viewing_user" => Config::instance()->current_user)), $options);
+        // When translator hasn't enabled inline translations, use cache
+        if (Config::instance()->isCacheEnabled()) {
+            return $this->translateFromCache($temp_key, $token_values, $options);
+        }
+
+        return $this->translateFromService($temp_key, $token_values, $options);
 	}
 
+    /**
+     * @param array $options
+     * @return null|Source
+     */
+    public function currentSource($options = array()) {
+        $source_key = isset($options['source']) ? $options["source"] : Config::instance()->blockOption('source');
+        if ($source_key == null) $source_key = Config::instance()->current_source;
+        return $source_key;
+    }
+
+    /**
+     * @param TranslationKey $translation_key
+     * @param array $token_values
+     * @param array $options
+     * @return string
+     */
+    public function translateFromService($translation_key, $token_values = array(), $options = array()) {
+        $source_key = $this->currentSource($options);
+
+        if ($source_key) {
+            $source = $this->application->source($source_key);
+
+            $source_translation_keys = $source->fetchTranslationsForLanguage($this, $options);
+
+            if (isset($source_translation_keys[$translation_key->key])) {
+                $translation_key = $source_translation_keys[$translation_key->key];
+            } else {
+                $this->application->registerMissingKey($translation_key, $source);
+            }
+            return $translation_key->translate($this, $token_values, $options);
+        }
+
+        $translation_key = $this->application->translationKey($translation_key->key);
+        if ($translation_key == null) {
+            $translation_key = $translation_key->fetchTranslations($this, $options);
+        }
+        return $translation_key->translate($this, $token_values, $options);
+    }
+
+    /**
+     * @param TranslationKey $translation_key
+     * @param array $token_values
+     * @param array $options
+     * @return string
+     */
+    public function translateFromCache($translation_key, $token_values = array(), $options = array()) {
+        if (Cache::isCachedBySource()) {
+            $source_key = $this->currentSource($options);
+            $cacheKey = Source::cacheKey($source_key, $this->locale);
+
+            // get cached translation keys for source key
+            $translation_keys = Cache::fetch($cacheKey);
+
+            if ($translation_keys == null) {
+                // if nothing was cached and the cache is read only, cache  empty key and get out
+                if (Cache::isReadOnly()) {
+                    $translation_key->translations = array($this->locale => array());
+                    $this->application->cacheTranslationKey($translation_key);
+                    return $translation_key->translate($this, $token_values, $options);
+                }
+
+                // otherwise, fetch translation keys from service and cache it for the key
+                $source = $this->application->source($source_key);
+                $translation_keys = $source->fetchTranslationsForLanguage($this, $options);
+                Cache::store($cacheKey, $translation_keys);
+            }
+
+            if (isset($translation_keys[$translation_key->key])) {
+                $translation_key = $translation_keys[$translation_key->key];
+                return $translation_key->translate($this, $token_values, $options);
+            }
+
+            $translation_key->translations = array($this->locale => array());
+            $this->application->cacheTranslationKey($translation_key);
+            return $translation_key->translate($this, $token_values, $options);
+        }
+
+        $cacheKey = TranslationKey::cacheKey($translation_key->label, $translation_key->description, $this->locale);
+        $translations = Cache::fetch($cacheKey);
+
+        // cache miss
+        if ($translations == null) {
+            if (Cache::isReadOnly()) {
+                $translation_key->translations = array($this->locale => array());
+                $this->application->cacheTranslationKey($translation_key);
+                return $translation_key->translate($this, $token_values, $options);
+            }
+
+            // fetch and cache key
+            $translation_key = $translation_key->fetchTranslations($this, $options);
+            $translations = $translation_key->translations($this);
+            Cache::store($cacheKey, $translations);
+            return $translation_key->translate($this, $token_values, $options);
+        }
+
+        // cache hit
+        if (!is_array($translations)) {
+            $translations = array($translations);
+        }
+        $translation_key->translations = array($this->locale => $translations);
+        $this->application->cacheTranslationKey($translation_key);
+        return $translation_key->translate($this, $token_values, $options);
+    }
 }

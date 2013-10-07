@@ -99,7 +99,9 @@ class TranslationKey extends Base {
     public function __construct($attributes=array()) {
         parent::__construct($attributes);
 
-		$this->key = $this->generateKey($this->label, $this->description);
+        if ($this->key == null) {
+		    $this->key = self::generateKey($this->label, $this->description);
+        }
 
         if ($this->locale == null) {
             $this->locale = Config::instance()->default_locale;
@@ -132,7 +134,7 @@ class TranslationKey extends Base {
      * @return string
      */
     public static function cacheKey($label, $description, $locale) {
-        return "t@_[" . $locale . "]_[" . $label . "]_[" . $description . "]";
+        return "t@_[" . $locale . "]_[" . self::generateKey($label, $description) . "]";
     }
 
     /**
@@ -140,7 +142,7 @@ class TranslationKey extends Base {
      * @param string $description
      * @return string
      */
-    public function generateKey($label, $description) {
+    public static function generateKey($label, $description) {
 		return md5($label . ";;;" . $description);
 	}
 

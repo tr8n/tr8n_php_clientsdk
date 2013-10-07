@@ -52,6 +52,8 @@ class Base {
      * @throws Tr8nException
      */
     public static function executeRequest($path, $params = array(), $options = array()) {
+        $t0 = microtime(true);
+
         $ch = curl_init();
 
         $opts = self::$CURL_OPTS;
@@ -89,6 +91,9 @@ class Base {
             throw (new Tr8nException("Error: " . $data['error']));
         }
 
+        $t1 = microtime(true);
+        $milliseconds = round($t1 - $t0,3)*1000;
+        \Tr8n\Logger::instance()->info("Received " . strlen($result) . " chars in " . $milliseconds . " milliseconds");
         return self::processResponse($data, $options);
     }
 

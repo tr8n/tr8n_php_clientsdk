@@ -32,4 +32,12 @@ abstract class Base {
     public abstract function delete($key);
     public abstract function exists($key);
 
+    public function isCachedBySource() {
+        return true;
+    }
+
+    public function isReadOnly() {
+        return true;
+    }
+
 }
