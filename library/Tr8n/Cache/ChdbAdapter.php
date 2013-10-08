@@ -44,6 +44,10 @@ class ChdbAdapter extends Base {
         $this->chdb = new \chdb(self::chdbPath());
     }
 
+    public function key() {
+        return "chdb";
+    }
+
     public static function chdbPath() {
         return Config::instance()->cachePath() . "chdb/current.chdb";
     }

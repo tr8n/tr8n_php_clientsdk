@@ -31,6 +31,10 @@ use Tr8n\Logger;
 
 class FileAdapter extends Base {
 
+    public function key() {
+        return "file";
+    }
+
     public function fetch($key, $default = null) {
         $file_path = self::filePath($key);
 

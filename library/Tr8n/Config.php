@@ -24,6 +24,8 @@
 
 namespace Tr8n;
 
+use Tr8n\Utils\StringUtils;
+
 require_once "Logger.php";
 require_once "Application.php";
 
@@ -204,9 +206,15 @@ class Config {
         return $this->config["cache"]["version"];
     }
 
+    public function cacheTimeout() {
+        if (!isset($this->config["cache"]["timeout"]))
+            return 3600;
+        return $this->config["cache"]["timeout"];
+    }
+
     public function incrementCache() {
         $this->config["cache"]["version"] =  $this->cacheVersion() + 1;
-        file_put_contents($this->configFilePath('config.json'), json_encode($this->config));
+        file_put_contents($this->configFilePath('config.json'), StringUtils::prettyPrint(json_encode($this->config)));
     }
 
     public function loggerSeverity() {

@@ -33,7 +33,6 @@ use Tr8n\Language;
 use Tr8n\Source;
 
 abstract class Base {
-
     public abstract function fetch($key, $default = null);
     public abstract function store($key, $value);
     public abstract function delete($key);
@@ -54,21 +53,29 @@ abstract class Base {
     }
 
     /**
+     * @return string
+     */
+    public function key() {
+        $parts = explode('\\', get_class($this));
+        return $parts[2];
+    }
+
+    /**
      * @param string $msg
      */
     function warn($msg) {
-        Logger::instance()->warn($msg);
+        Logger::instance()->warn($this->key() . " - " . $msg);
     }
 
     /**
      * @param string $msg
      */
     function info($msg) {
-        Logger::instance()->info($msg);
+        Logger::instance()->info($this->key() . " - " . $msg);
     }
 
     function versionedKey($key) {
-        return Config::instance()->cacheVersion() . "_" . $key;
+        return "tr8n_v" . Config::instance()->cacheVersion() . "_" . $key;
     }
 
     /**

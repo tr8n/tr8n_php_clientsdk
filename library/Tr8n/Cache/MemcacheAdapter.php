@@ -25,52 +25,32 @@
 
 namespace Tr8n\Cache;
 
-use Zend\Cache\Storage\Adapter\Memcached;
+use \Memcache;
+use Tr8n\Config;
 
 class MemcacheAdapter extends Base {
 	
-	private $_memcached;
-	protected $_memcached_conf = array(
-			'default_host' => '127.0.0.1',
-			'default_port' => 11211,
-			'default_weight' => 1,
-	);
+	private $cache;
 
 	public function __construct() {
-		parent::__construct ();
-		$this->_memcached = new Memcached();
-		$this->_memcached->connect($this->_memcached_conf['default_host'], $this->_memcached_conf['default_port']) or die ("Could not connect");
+		$this->cache = new Memcache();
+		$this->cache->connect('localhost', 11211) or die ("Could not connect");
 	}
 
-//	// Save data into Cache
-//	public function save($key, $data, $ttl = 3600) {
-//		if (get_class($this->_memcached) == 'Memcached') {
-//			return $this->_memcached->set($key, array($data, time(), $ttl), $ttl);
-//		} else if (get_class($this->_memcached) == 'Memcache') {
-//			return $this->_memcached->set($key, array($data, time(), $ttl), 0, $ttl);
-//		}
-//
-//		return false;
-//	}
-//
-//	// Fetch data from Cache
-//	public function get($key) {
-//		$data = $this->_memcached->get($key);
-//		return (is_array($data)) ? $data[0] : false;
-//	}
-//
-//
-//	//  // clean will marks all the items as expired, so occupied memory will be overwritten by new items.
-//	public function clean() {
-//		return $this->_memcached->flush();
-//	}
+    public function key() {
+        return "memcache";
+    }
 
     public function fetch($key, $default = null) {
-        $success = false;
-        $data = apc_fetch($key, $success);
-        if ($success === TRUE) return $data;
+        $value = $this->cache->get($this->versionedKey($key));
+        if ($value) {
+            $this->info("Cache hit " . $key);
+            return $this->deserializeObject($key, $value);
+        }
 
-        if ($default === null)
+        $this->info("Cache miss " . $key);
+
+        if ($default == null)
             return null;
 
         if (is_callable($default)) {
@@ -78,23 +58,30 @@ class MemcacheAdapter extends Base {
         } else {
             $value = $default;
         }
-        apc_store($key, $value, 3600);
+
+        $this->cache->add($this->versionedKey($key), $this->serializeObject($key, $value), false, Config::instance()->cacheTimeout());
 
         return $value;
     }
 
     public function store($key, $value) {
-
+        $this->info("Cache store " . $key);
+        return $this->cache->add($this->versionedKey($key), $this->serializeObject($key, $value), false, Config::instance()->cacheTimeout());
     }
 
     public function delete($key) {
-		return $this->_memcached->delete($key);
+        $this->info("Cache delete " . $key);
+        return $this->cache->delete($this->versionedKey($key));
     }
 
     public function exists($key) {
-        return apc_exists($key);
+        $this->info("Cache exists " . $key);
+        return $this->cache->get($this->versionedKey($key));
     }
 
+    public function isReadOnly() {
+        return false;
+    }
 
 }
 

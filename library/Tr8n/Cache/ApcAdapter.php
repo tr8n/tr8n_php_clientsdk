@@ -25,9 +25,13 @@
 
 namespace Tr8n\Cache;
 
+use Tr8n\Config;
+
 class ApcAdapter extends Base {
 
-    const CACHE_TIMEOUT = 3600;
+    public function key() {
+        return "apc";
+    }
 
     public function fetch($key, $default = null) {
         $success = false;
@@ -47,7 +51,7 @@ class ApcAdapter extends Base {
         } else {
             $value = $default;
         }
-        apc_store($key, $value, ApcAdapter::CACHE_TIMEOUT);
+        apc_store($this->versionedKey($key), $this->serializeObject($key, $value), Config::instance()->cacheTimeout());
 
         return $value;
     }
@@ -55,7 +59,7 @@ class ApcAdapter extends Base {
 
     public function store($key, $value) {
         $this->info("Cache store " . $key);
-        return apc_store($this->versionedKey($key), $this->serializeObject($key, $value));
+        return apc_store($this->versionedKey($key), $this->serializeObject($key, $value), Config::instance()->cacheTimeout());
     }
 
     public function delete($key) {
