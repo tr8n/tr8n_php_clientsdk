@@ -315,6 +315,48 @@ tr("{user| He, She} likes this movie. ", array("user" => $female))
             </div>
 
 
+            <h2><?php tre("HTML to TML Converter") ?></h2>
+            <pre><code class="language-php">trh("
+    &lt;p>Tr8n can even &lt;b>convert HTML to TML&lt;/b>, &lt;i>translate TML&lt;/i> and &lt;u>substitute it back into HTML&lt;/u>.&lt;/p>
+")</code></pre>
+
+            <p>
+                Behind the scene, this HTML will result in the following TML:
+            </p>
+
+            <div class="example">
+                <div class="title"><?php tre("results in") ?></div>
+                <div class="content">
+                    [p]Tr8n can even [bold]convert HTML to TML[/bold], [italic]translate TML[/italic] and [u]substitute it back into HTML[/u].[/p]
+                </div>
+            </div>
+
+            <br>
+            <p>
+                Try translating the following example, and see what you get:
+            </p>
+
+            <div class="example">
+                <div class="title"><?php tre("results in") ?></div>
+                <div class="content">
+                    <?php trh("<p>Tr8n can even <b>convert HTML to TML</b>, <i>translate TML</i> and <u>substitute it back into HTML</u>.</p>") ?>
+                </div>
+            </div>
+
+            <br>
+            <p>Notice, that if you change the styling of any of the HTML components, it will not affect the translations.</p>
+
+            <pre><code class="language-php">trh("
+    &lt;p>Tr8n can even &lt;b style='font-size:20px;'>convert HTML to TML&lt;/b>, &lt;i style='color:blue'>translate TML&lt;/i> and &lt;u>substitute it back into HTML&lt;/u>.&lt;/p>
+")</code></pre>
+
+            <div class="example">
+                <div class="title"><?php tre("results in") ?></div>
+                <div class="content">
+                    <?php trh("<p>Tr8n can even <b style='font-size:20px;'>convert HTML to TML</b>, <i style='color:blue'>translate TML</i> and <u>substitute it back into HTML</u>.</p>") ?>
+                </div>
+            </div>
+
             <h1><?php tre("Context Rules") ?></h1>
 
             <h2><?php tre("Numbers") ?></h2>
@@ -353,7 +395,63 @@ tre("{actor} tagged {target} in a photo {target|he, she} just uploaded.", array(
                 </div>
             </div>
 
+            <h1><?php tre("Caching") ?></h1>
+            <p>
+                Since pages may contain numerous translation keys, it is crucial that Tr8n is backed by a caching mechanism.
+                The caching mechanism provides a local cache of the Tr8n objects retrieved from the service. When users view the pages in non-translation mode, the translations will be served from the cache.
+                For translators, who enable inline translation mode, the SDK will always request the Tr8n service to get the most recent translations.
+            </p>
+            <p>
+                Tr8n supports 4 types of Cache adapters:
+                <ul>
+                    <li>File based</li>
+                    <li>APC</li>
+                    <li>Memcache</li>
+                    <li>CHDB</li>
+                </ul>
+            </p>
+            <p>
+                To change cache settings, modify config/config.json file.
+            </p>
+            <pre><code class="language-javascript">"cache": {
+    "enabled": true,
+    "adapter": "memcache",
+    "version": 1,
+    "timeout": 3600
+}</code></pre>
+
+            <h2><?php tre("File Based Caching") ?></h2>
+            <p>This is a readonly cache that must be externally generated to take effect.</p>
+            <p>
+                To generate the cache files, run the following script:
+            </p>
+            <pre><code class="language-bash">$ bin/generate_files</code></pre>
+            <p>
+                The files will be stored in the cache/files folder.
+            </p>
+
+            <h2><?php tre("CHDB") ?></h2>
+            <p>This is a readonly cache that must be externally generated to take effect.</p>
+            <p>
+                To generate the cache files, run the following script:
+            </p>
+            <pre><code class="language-bash">$ bin/generate_chdb</code></pre>
+            <p>
+                The files will be stored in the cache/chdb folder.
+            </p>
+
+            <h2><?php tre("APC") ?></h2>
+            <p>
+                APC is a self-building cache that lazily warms up by retrieving data from the Tr8n service and
+                storing it in the APC store.
+            </p>
+            <h2><?php tre("Memcache") ?></h2>
+            <p>
+                Memcache is a self-building cache that lazily warms up by retrieving data from the Tr8n service and
+                storing it in the APC store.
+            </p>
         </div>
+
     </div>
 </div>
 
