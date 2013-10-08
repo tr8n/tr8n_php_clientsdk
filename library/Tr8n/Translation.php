@@ -104,4 +104,9 @@ class Translation extends Base {
 
         return true;
     }
+
+    public function toArray($keys=array()) {
+        return parent::toArray(array("label", "context"));
+    }
+
 }

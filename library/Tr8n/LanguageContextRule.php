@@ -83,4 +83,12 @@ class LanguageContextRule extends Base {
         return $e->evaluate($this->conditionsExpression());
     }
 
+    /**
+     * @param array $keys
+     * @return array
+     */
+    public function toArray($keys=array()) {
+        return parent::toArray(array("keyword", "description", "examples", "conditions", "conditions_expression"));
+    }
+
 }

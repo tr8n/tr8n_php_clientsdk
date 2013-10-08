@@ -181,15 +181,6 @@ class TranslationKey extends Base {
         return $this->application->cacheTranslationKey($translation_key);
     }
 
-    /**
-     * @return mixed[]
-     */
-    public function toArray() {
-        return array(   "label"         => $this->label,
-                        "description"   => $this->description,
-                        "locale"        => $this->locale,
-                        "level"         => $this->level);
-    }
 
     /*
      * Re-assigns the ownership of the application and translation key
@@ -322,6 +313,24 @@ class TranslationKey extends Base {
             $translation->setTranslationKey($this);
         }
         $this->translations[$language->locale] = $translations;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function toArray($keys=array()) {
+        $info = parent::toArray(array("id", "key", "label", "description", "locale", "level"));
+        if (count($this->translations) > 0) {
+            $info["translations"] = array();
+            foreach($this->translations as $locale=>$locale_translations) {
+                $info["translations"][$locale] = array();
+                foreach($locale_translations as $translation) {
+                    /**  @var Translation $translation */
+                    array_push($info["translations"][$locale], $translation->toArray());
+                }
+            }
+        }
+        return $info;
     }
 
 }

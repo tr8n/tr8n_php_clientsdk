@@ -1,7 +1,1 @@
-{
-    "application": {
-        "host": "http://localhost:3000",
-        "key": "ef3b46ff206601230",
-        "secret": "5674e17db152b7fbc"
-    }
-}
+{"application":{"host":"http:\/\/localhost:3000","key":"ef3b46ff206601230","secret":"5674e17db152b7fbc"},"cache":{"enabled":true,"adapter":"apc","version":15}}

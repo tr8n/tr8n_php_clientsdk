@@ -198,22 +198,45 @@ class Config {
         return __DIR__."/../../cache/";
     }
 
+    public function cacheVersion() {
+        if (!isset($this->config["cache"]["version"]))
+            return 0;
+        return $this->config["cache"]["version"];
+    }
+
+    public function incrementCache() {
+        $this->config["cache"]["version"] =  $this->cacheVersion() + 1;
+        file_put_contents($this->configFilePath('config.json'), json_encode($this->config));
+    }
+
     public function loggerSeverity() {
         return Logger::DEBUG;
     }
 
     public function isCacheEnabled() {
+        if (!isset($this->config["cache"]["enabled"]) || $this->config["cache"]["enabled"] == false)
+            return false;
+
         if ($this->current_translator && $this->current_translator->isInlineModeEnabled())
             return false;
+
         return true;
     }
 
-    public function chdbPath() {
-        return $this->cachePath() . "chdb/current.chdb";
-    }
-
     public function cacheAdapterClass() {
-        return '\Tr8n\Cache\ChdbAdapter';
+        if (!isset($this->config["cache"]["adapter"]))
+            $adapter = 'chdb';
+        else
+            $adapter = $this->config["cache"]["adapter"];
+
+        switch($adapter) {
+            case "chdb": return '\Tr8n\Cache\ChdbAdapter';
+            case "file": return '\Tr8n\Cache\FileAdapter';
+            case "apc": return '\Tr8n\Cache\ApcAdapter';
+            case "memcache": return '\Tr8n\Cache\MemcacheAdapter';
+        }
+
+        return null;
     }
 
     public function decoratorClass() {

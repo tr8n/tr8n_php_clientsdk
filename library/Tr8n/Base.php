@@ -131,4 +131,26 @@ class Base {
         return new $options["class"]($data);
     }
 
+    public function toArray($keys=array()) {
+        $vars = get_object_vars($this);
+//        print_r($vars);
+
+        $results = array();
+        if (count($keys) == 0) {
+            foreach($vars as $name=>$value) {
+                if (is_string($value) || is_numeric($value) || is_bool($value)) {
+                    $results[$name] = $value;
+                }
+            }
+
+            return $results;
+        }
+
+        foreach($keys as $key) {
+            if (!isset($vars[$key])) continue;
+            $results[$key] = $vars[$key];
+        }
+        return $results;
+    }
+
 }

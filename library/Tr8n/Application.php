@@ -203,6 +203,11 @@ class Application extends Base {
         if ($fetch == false) return null;
 
         $this->languages_by_locale[$locale] = $this->get("language", array("locale" => $locale), array("class" => '\Tr8n\Language', "attributes" => array("application" => $this)));
+
+        if (Config::instance()->isCacheEnabled() && !Cache::isReadOnly()) {
+            Cache::store(Language::cacheKey($locale), $this->languages_by_locale[$locale]);
+        }
+
         return $this->languages_by_locale[$locale];
     }
 
@@ -268,8 +273,6 @@ class Application extends Base {
     }
 
     /**
-     * TODO: cache this method
-     *
      * @param string $key
      * @return null|TranslationKey
      */
@@ -380,5 +383,9 @@ class Application extends Base {
      */
     public function jsBootUrl() {
         return $this->host . "/tr8n/api/proxy/boot.js?client_id=" . $this->key;
+    }
+
+    public function toArray($keys=array()) {
+        return parent::toArray(array("host"));
     }
 }

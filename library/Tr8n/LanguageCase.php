@@ -145,4 +145,13 @@ class LanguageCase extends Base {
                "' data-case_key='" . str_replace("'", "\'", $element) . "'>" . $value . "</span>";
     }
 
+    public function toArray($keys=array()) {
+        $info = parent::toArray(array("id", "keyword", "description", "latin_name", "native_name"));
+        $info["rules"] = array();
+        foreach($this->rules as $value) {
+            array_push($info["rules"], $value->toArray());
+        }
+        return $info;
+    }
+
 }

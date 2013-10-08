@@ -104,6 +104,11 @@ class LanguageCaseRule extends Base {
         return $context->vars($object);
     }
 
+    /**
+     * @param mixed $value
+     * @param null $object
+     * @return bool|mixed
+     */
     public function evaluate($value, $object = null) {
         if ($this->conditions == null)
             return false;
@@ -119,6 +124,10 @@ class LanguageCaseRule extends Base {
         return $re->evaluate($this->conditionsExpression());
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     public function apply($value) {
         if ($this->operations == null)
             return $value;
@@ -127,6 +136,14 @@ class LanguageCaseRule extends Base {
         $re->evaluate(array("let", "@value", $value));
 
         return $re->evaluate($this->operationsExpression());
+    }
+
+    /**
+     * @param array $keys
+     * @return array
+     */
+    public function toArray($keys=array()) {
+        return parent::toArray(array("description", "examples", "conditions", "conditions_expression", "operations", "operations_expression"));
     }
 
 }

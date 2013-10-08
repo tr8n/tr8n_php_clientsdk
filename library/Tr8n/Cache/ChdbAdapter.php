@@ -1,33 +1,34 @@
 <?php
 
-#--
-# Copyright (c) 2013 Michael Berkovich, tr8nhub.com
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
+/**
+ * Copyright (c) 2013 Michael Berkovich, tr8nhub.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 namespace Tr8n\Cache;
 
 use Tr8n\Application;
 use Tr8n\Component;
 use Tr8n\Config;
+use Tr8n\Language;
 use Tr8n\Logger;
 use Tr8n\Source;
 use Tr8n\Translation;
@@ -36,18 +37,30 @@ class ChdbAdapter extends Base {
 
     private $chdb;
 
+    /**
+     *
+     */
     function __construct() {
-        $this->chdb = new \chdb(Config::instance()->chdbPath());
+        $this->chdb = new \chdb(self::chdbPath());
     }
 
+    public static function chdbPath() {
+        return Config::instance()->cachePath() . "chdb/current.chdb";
+    }
+
+    /**
+     * @param string $key
+     * @param null $default
+     * @return array|null|Application|Component|Language|Source|Translation
+     */
     public function fetch($key, $default = null) {
         $value = $this->chdb->get($key);
         if ($value) {
-            Logger::instance()->info("Cache hit " . $key);
-            return $this->constructObject($key, $value);
+            $this->info("Cache hit " . $key);
+            return $this->deserializeObject($key, $value);
         }
 
-        Logger::instance()->info("Cache miss " . $key);
+        $this->info("Cache miss " . $key);
 
         if ($default == null)
             return null;
@@ -61,8 +74,15 @@ class ChdbAdapter extends Base {
         return $value;
     }
 
-    private function constructObject($key, $data) {
-        if (substr($key, 0, 2) == 't@') {
+    /**
+     * @param string $key
+     * @param $data
+     * @return array|Application|Component|Language|Source|Translation
+     */
+    function deserializeObject($key, $data) {
+        $prefix = substr($key, 0, 2);
+
+        if ($prefix == 't@') {
 //            Logger::instance()->info("Got translations", $data);
 
             if (strstr($data, '},{') === false) {
@@ -80,38 +100,37 @@ class ChdbAdapter extends Base {
             return $translations;
         }
 
-        if (substr($key, 0, 2) == 'a@') {
-            return new Application(json_decode($data, true));
-        }
 
-        if (substr($key, 0, 2) == 'l@') {
-            return new \Tr8n\Language(json_decode($data, true));
-        }
-
-        if (substr($key, 0, 2) == 'c@') {
-            return new Component(json_decode($data, true));
-        }
-
-        if (substr($key, 0, 2) == 's@') {
-            return new Source(json_decode($data, true));
-        }
-
-        return $data;
+        return parent::deserializeObject($key, $data);
     }
 
+    /**
+     * @param string $key
+     * @param mixed $value
+     */
     public function store($key, $value) {
-        Logger::instance()->warn("Chdb is a readonly cache");
+        $this->warn("This is a readonly cache");
     }
 
+    /**
+     * @param string $key
+     */
     public function delete($key) {
-        Logger::instance()->warn("Chdb is a readonly cache");
+        $this->warn("This is a readonly cache");
     }
 
+    /**
+     * @param string $key
+     * @return bool
+     */
     public function exists($key) {
         $value = $this->chdb->get($key);
         return ($value!=null);
     }
 
+    /**
+     * @return bool
+     */
     public function isCachedBySource() {
         return false;
     }

@@ -26,7 +26,7 @@ function tr8n_link_to($dest, $title = null, $opts = array()) {
             if ($title == null) $title = "Assignments";
             $path = "/tr8n/translator/assignments";
             break;
-        case 'assignments':
+        case 'notifications':
             if ($title == null) $title = "Notifications";
             $path = "/tr8n/translator/notifications";
             break;

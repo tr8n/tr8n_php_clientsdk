@@ -273,9 +273,9 @@ class Language extends Base {
             $cacheKey = Source::cacheKey($source_key, $this->locale);
 
             // get cached translation keys for source key
-            $translation_keys = Cache::fetch($cacheKey);
+            $source = Cache::fetch($cacheKey);
 
-            if ($translation_keys == null) {
+            if ($source == null) {
                 // if nothing was cached and the cache is read only, cache  empty key and get out
                 if (Cache::isReadOnly()) {
                     $translation_key->translations = array($this->locale => array());
@@ -286,7 +286,9 @@ class Language extends Base {
                 // otherwise, fetch translation keys from service and cache it for the key
                 $source = $this->application->source($source_key);
                 $translation_keys = $source->fetchTranslationsForLanguage($this, $options);
-                Cache::store($cacheKey, $translation_keys);
+                Cache::store($cacheKey, $source);
+            } else {
+                $translation_keys = $source->translation_keys;
             }
 
             if (isset($translation_keys[$translation_key->key])) {
@@ -325,4 +327,22 @@ class Language extends Base {
         $this->application->cacheTranslationKey($translation_key);
         return $translation_key->translate($this, $token_values, $options);
     }
+
+    /**
+     * @param array $keys
+     * @return array
+     */
+    public function toArray($keys=array()) {
+        $info = parent::toArray(array("locale", "name", "english_name", "native_name", "right_to_left"));
+        $info["contexts"] = array();
+        foreach($this->contexts as $name=>$value) {
+            $info["contexts"][$name] = $value->toArray();
+        }
+        $info["cases"] = array();
+        foreach($this->cases as $name=>$value) {
+            $info["cases"][$name] = $value->toArray();
+        }
+        return $info;
+    }
+
 }

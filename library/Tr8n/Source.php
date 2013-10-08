@@ -63,6 +63,13 @@ class Source extends Base {
         parent::__construct($attributes);
 
         $this->translation_keys = null;
+        if (isset($attributes['translation_keys'])) {
+            $this->translation_keys = array();
+            foreach($attributes['translation_keys'] as $tk) {
+                $translation_key = new TranslationKey(array_merge($tk, array("application" => $this->application)));
+                $this->translation_keys[$translation_key->key] = $this->application->cacheTranslationKey($translation_key);
+            }
+        }
 	}
 
     /**
@@ -96,5 +103,16 @@ class Source extends Base {
         return $this->translation_keys;
     }
 
+    public function toArray($keys=array()) {
+        $info = parent::toArray(array("source", "url", "name", "description"));
+        if ($this->translation_keys) {
+            $info["translation_keys"] = array();
+            foreach(array_values($this->translation_keys) as $tkey) {
+                /** @var TranslationKey $tkey */
+                array_push($info["translation_keys"], $tkey->toArray());
+            }
+        }
+        return $info;
+    }
 
 }

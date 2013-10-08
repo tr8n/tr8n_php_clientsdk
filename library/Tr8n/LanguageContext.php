@@ -153,4 +153,19 @@ class LanguageContext extends Base {
 
         return $this->fallbackRule();
     }
+
+    /**
+     * @param array $keys
+     * @return array
+     */
+    public function toArray($keys=array()) {
+        $info = parent::toArray(array("keyword", "description", "keys", "default_key", "token_expression", "variables", "token_mapping"));
+        $info["rules"] = array();
+        foreach($this->rules as $name=>$value) {
+            $info["rules"][$name] = $value->toArray();
+        }
+        return $info;
+    }
+
 }
+

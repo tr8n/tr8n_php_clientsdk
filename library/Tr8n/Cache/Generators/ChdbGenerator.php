@@ -1,42 +1,55 @@
 <?php
 
-#--
-# Copyright (c) 2013 Michael Berkovich, tr8nhub.com
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
+/**
+ * Copyright (c) 2013 Michael Berkovich, tr8nhub.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 namespace Tr8n\Cache\Generators;
 
 use Tr8n\Application;
+use Tr8n\Cache\ChdbAdapter;
 use Tr8n\Config;
 use Tr8n\Language;
 
 class ChdbGenerator extends Base {
 
+    /**
+     * @var mixed[]
+     */
     public $cache;
-    public $translations;
-    private $chdb_path;
-    private $started_at;
-    private $extracted_at;
 
+    /**
+     * @var array[]
+     */
+    public $translations;
+
+    /**
+     * @var string
+     */
+    private $chdb_path;
+
+    /**
+     * @return ChdbGenerator
+     */
     public static function instance() {
         static $inst = null;
         if ($inst === null) {
@@ -45,18 +58,24 @@ class ChdbGenerator extends Base {
         return $inst;
     }
 
+    /**
+     *
+     */
     public function run() {
         $this->started_at = new \DateTime();
+        $this->cache_path = Config::instance()->cachePath() . '/chdb/';
 
         $this->cache = array();
         $this->cacheApplication();
         $this->cacheLanguages();
         $this->cacheTranslations();
-        $this->generateDhcb();
 
-//        $cache = new \Tr8n\Cache\ChdbAdapter(\Tr8n\Config::instance()->cachePath() . 'chdb/current.chdb');
-//        print_r($cache->fetch(\Tr8n\Language::cacheKey('ru')));
+        $this->generateChdb();
 
+        $this->cache_path = $this->chdb_path;
+
+        $this->generateSymlink();
+        $this->finalize();
     }
 
     /**
@@ -71,27 +90,9 @@ class ChdbGenerator extends Base {
         }
     }
 
-    private function cacheApplication() {
-        $this->log("Downloading application...");
-        $app = Config::instance()->application->get("application", array("definition" => "true"));
-        $key = Application::cacheKey($app["key"]);
-        $this->cache($key, json_encode($app));
-        $this->log("Application has been cached.");
-    }
-
-    private function cacheLanguages() {
-        $this->log("Downloading languages...");
-        $count = 0;
-        $languages = Config::instance()->application->get("application/languages", array("definition" => "true"));
-        foreach ($languages as $lang) {
-            $key = Language::cacheKey($lang["locale"]);
-            $this->cache($key, json_encode($lang));
-            $count += 1;
-        }
-
-        $this->log("$count languages have been cached.");
-    }
-
+    /**
+     * Caches translation keys
+     */
     private function cacheTranslations() {
         $this->log("Downloading translations...");
 
@@ -110,8 +111,11 @@ class ChdbGenerator extends Base {
         fclose($fp);
     }
 
-    public function generateDhcb() {
-        $this->chdb_path = Config::instance()->cachePath() . 'chdb/tr8n_' . Config::instance()->application->key . '_' . count($this->translations) . '_@_' . $this->started_at->format('Y_m_d_H_i_s') . '.chdb';
+    /**
+     * Generates chdb database
+     */
+    public function generateChdb() {
+        $this->chdb_path = $this->cache_path . 'tr8n_' . Config::instance()->application->key . '_' . count($this->translations) . '_@_' . $this->started_at->format('Y_m_d_H_i_s') . '.chdb';
         $this->extracted_at = new \DateTime();
 
         $this->log("Writing chdb file...");
@@ -119,24 +123,17 @@ class ChdbGenerator extends Base {
 
         $success = chdb_create($this->chdb_path, $this->cache);
 
-        unlink(Config::instance()->cachePath() . 'chdb/current.chdb');
-        symlink($this->chdb_path, Config::instance()->cachePath() . 'chdb/current.chdb');
-
         if (!$success) {
             fprintf(STDERR, "Failed to create chdb file $this->chdb_path\n");
+            return;
         }
-
-        $finished_at = new \DateTime();
-        $since_start = $this->extracted_at->diff($finished_at);
-        $minutes = $since_start->days * 24 * 60;
-        $minutes += $since_start->h * 60;
-        $minutes += $since_start->i;
-
-        if ($minutes > 0)
-            $this->log("Database generation took " . $minutes .  " minutes");
-        else
-            $this->log("Database generation took " . $since_start->s . " seconds");
-
-        $this->log("Done.");
     }
+
+    /**
+     * @return string
+     */
+    function symlinkPath() {
+        return ChdbAdapter::chdbPath();
+    }
+
 }
