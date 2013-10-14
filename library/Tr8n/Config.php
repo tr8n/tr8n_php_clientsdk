@@ -143,7 +143,7 @@ class Config {
 
         if ($this->application == null) {
             try {
-                $this->application = \Tr8n\Application::init($host, $client_id, $client_secret);
+                $this->application = Application::init($host, $client_id, $client_secret);
             } catch (Tr8nException $e) {
                 $this->application = null;
             }
@@ -152,11 +152,10 @@ class Config {
     }
 
     public function initRequest($options = array()) {
-        $locale = (array_key_exists('locale', $options) ? $options['locale'] : $this->default_locale);
-//        $source = (array_key_exists('source', $options) ? $options['source'] : null);
-//        $component = (array_key_exists('component', $options) ? $options['component'] : null);
-        $this->current_translator = (array_key_exists('translator', $options) ? $options['translator'] : null);
-        $this->current_language = $this->application->language($locale, true);
+        $this->current_language = $this->application->language((isset($options['locale']) ? $options['locale'] : $this->default_locale), true);
+        $this->current_translator = (isset($options['translator']) ? $options['translator'] : null);
+        $this->current_source = (isset($options['source']) ? $options['source'] : null);
+        $this->current_component = (isset($options['component']) ? $options['component'] : null);
     }
 
     public function completeRequest($options = array()) {
@@ -249,6 +248,10 @@ class Config {
 
     public function decoratorClass() {
         return '\Tr8n\Decorators\HtmlDecorator';
+    }
+
+    public function defaultSource() {
+        return $_SERVER["REQUEST_URI"];
     }
 
     public function configFilePath($file_name) {

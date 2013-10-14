@@ -6,8 +6,8 @@
 	},
 	"cache": {
 		"enabled": true,
-		"adapter": "chdb",
-		"version": 2,
+		"adapter": "apc",
+		"version": 29,
 		"timeout": 3600
 	}
 }

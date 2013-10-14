@@ -94,6 +94,11 @@ class TranslationKey extends Base {
     private $data_tokens;
 
     /**
+     * @var string[]
+     */
+    private $data_token_names;
+
+    /**
      * @param array $attributes
      */
     public function __construct($attributes=array()) {
@@ -286,6 +291,17 @@ class TranslationKey extends Base {
         return $this->data_tokens;
     }
 
+    public function dataTokenNamesMap() {
+        if ($this->data_token_names == null) {
+            $this->data_token_names = array();
+            foreach($this->dataTokens() as $token) {
+                $this->data_token_names[$token->name()] = true;
+            }
+        }
+
+        return $this->data_token_names;
+    }
+
     /**
      * @param string $label
      * @param mixed[] $token_values
@@ -295,7 +311,7 @@ class TranslationKey extends Base {
      */
     public function substituteTokens($label, $token_values, $language, $options = array()) {
         if (strpos($label, '{') !== FALSE) {
-            $dt = new DataTokenizer($label, $token_values, array("allowed_tokens" => $this->dataTokens()));
+            $dt = new DataTokenizer($label, $token_values, array("allowed_tokens" => $this->dataTokenNamesMap()));
             $label = $dt->substitute($language, $options);
         }
 

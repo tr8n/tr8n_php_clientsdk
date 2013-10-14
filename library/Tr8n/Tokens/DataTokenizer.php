@@ -89,7 +89,7 @@ class DataTokenizer {
     function isTokenAllowed($token) {
         if (!isset($this->opts["allowed_tokens"]))
             return true;
-        return in_array($token, $this->opts["allowed_tokens"]);
+        return isset($this->opts["allowed_tokens"][$token]);
     }
 
     /**
@@ -100,7 +100,7 @@ class DataTokenizer {
     public function substitute($language, $options = array()) {
         $label = $this->text;
         foreach($this->tokens as $token) {
-            if (!$this->isTokenAllowed($token)) continue;
+            if (!$this->isTokenAllowed($token->name())) continue;
             $label = $token->substitute($label, $this->context, $language, $options);
         }
         return $label;

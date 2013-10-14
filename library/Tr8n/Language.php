@@ -254,9 +254,11 @@ class Language extends Base {
             return $translation_key->translate($this, $token_values, $options);
         }
 
-        $translation_key = $this->application->translationKey($translation_key->key);
-        if ($translation_key == null) {
+        $cached_translation_key = $this->application->translationKey($translation_key->key);
+        if ($cached_translation_key == null) {
             $translation_key = $translation_key->fetchTranslations($this, $options);
+        } else {
+            $translation_key = $cached_translation_key;
         }
         return $translation_key->translate($this, $token_values, $options);
     }
