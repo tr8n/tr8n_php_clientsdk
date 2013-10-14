@@ -28,6 +28,10 @@
         echo '<a href="' . url_for($path) . '" ' . \Tr8n\Utils\ArrayUtils::toHTMLAttributes($opts) . ' >' . $label . '</a>';
     }
 
+    function link_to_function($label, $func, $opts = array()) {
+        echo '<a href="javascript:void(0);" onClick="' . $func . '" ' . \Tr8n\Utils\ArrayUtils::toHTMLAttributes($opts) . ' >' . $label . '</a>';
+    }
+
     function active_link($path, $except = null) {
         if ($except != null && strpos($_SERVER['REQUEST_URI'], $except) !== FALSE) {
             return;

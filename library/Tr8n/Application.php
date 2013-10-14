@@ -343,6 +343,14 @@ class Application extends Base {
         $this->missing_keys_by_sources = null;
     }
 
+
+    /**
+     * @return \Tr8n\EmailTemplate[]
+     */
+    public function emailTemplates() {
+        return $this->get("email/templates", array(), array("class" => '\Tr8n\EmailTemplate', "attributes" => array("application" => $this)));
+    }
+
     /*
      * @param string $path
      * @param array $params

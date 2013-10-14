@@ -3,7 +3,7 @@
 \Tr8n\Config::instance()->incrementCache();
 ?>
 
-<h4>Incrementing cache version...</h4>
+<h4><?php tre("Incrementing cache version...") ?></h4>
 
 
 <script>
