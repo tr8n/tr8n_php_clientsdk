@@ -1,4 +1,4 @@
-tr8n_php_clientsdk
+Tr8n PHP Client SDK
 ==================
 
 PHP Client SDK for Tr8n Translation Engine
