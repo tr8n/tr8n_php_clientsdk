@@ -1,0 +1,13 @@
+{
+    "application": {
+        "host": "http:\/\/sandbox.tr8nhub.com",
+        "key": "0cac05786fac58b79",
+        "secret": "8ffb9bf4a05db8d02"
+    },
+    "cache": {
+        "enabled": false,
+        "adapter": "apc",
+        "version": 30,
+        "timeout": 3600
+    }
+}

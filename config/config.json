@@ -1,13 +1,13 @@
 {
-	"application": {
-		"host": "http:\/\/localhost:3000",
-		"key": "2ea82863fdebcd089",
-		"secret": "4a9e8315ef03c4b8a"
-	},
-	"cache": {
-		"enabled": true,
-		"adapter": "apc",
-		"version": 29,
-		"timeout": 3600
-	}
+    "application": {
+        "host": "http:\/\/localhost:3000",
+        "key": "default",
+        "secret": "n/a"
+    },
+    "cache": {
+        "enabled": true,
+        "adapter": "apc",
+        "version": 1,
+        "timeout": 3600
+    }
 }

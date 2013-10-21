@@ -1,3 +1,4 @@
-log
+/log
 .idea
 /cache
+/config/config.json

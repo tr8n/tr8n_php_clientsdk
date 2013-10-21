@@ -1,0 +1,13 @@
+{
+	"application": {
+		"host": "http:\/\/localhost:3000",
+		"key": "default",
+		"secret": "n/a"
+	},
+	"cache": {
+		"enabled": true,
+		"adapter": "apc",
+		"version": 30,
+		"timeout": 3600
+	}
+}

@@ -63,7 +63,7 @@ function tr8n_init_client_sdk($host = null, $key = null, $secret = null) {
         \Tr8n\Logger::instance()->info("Cookie file $cookie_name not found!");
     }
 
-    \Tr8n\Config::instance()->initRequest(array('locale' => $locale, 'translator' => $translator, 'source' => $_SERVER["REQUEST_URI"]));
+    \Tr8n\Config::instance()->initRequest(array('locale' => $locale, 'translator' => $translator, 'source' => isset($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : null));
 
     return true;
 }

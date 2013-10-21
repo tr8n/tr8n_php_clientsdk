@@ -226,12 +226,25 @@ class TranslationKey extends Base {
     }
 
     /**
+     * @param Translation $a
+     * @param Translation $b
+     * @return bool
+     */
+    public function compareTranslations($a, $b) {
+        return $a->precedence >= $b->precedence;
+    }
+
+    /**
      * @param Language $language
      * @param mixed[] $token_values
      * @return null|Translation
      */
     protected function findFirstValidTranslation($language, $token_values) {
-        foreach($this->translations($language) as $translation) {
+        $translations = $this->translations($language);
+
+        usort($translations, array($this, 'compareTranslations'));
+
+        foreach($translations as $translation) {
             if ($translation->isValidTranslation($token_values)) {
                 return $translation;
             }

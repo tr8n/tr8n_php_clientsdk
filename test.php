@@ -43,6 +43,8 @@ $female = new User("Anna", "female");
     )
 ) ?>
 
+<br><br>
+<?php tre("{user|Joined on}:", array("user" => $male)); ?>
 
 <?php tr8n_finish_block_with_options() ?>
 </div>

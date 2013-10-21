@@ -52,6 +52,11 @@ class Translation extends Base {
     public $context;
 
     /**
+     * @var integer
+     */
+    public $precedence;
+
+    /**
      * @param array $attributes
      */
     public function __construct($attributes=array()) {
@@ -60,6 +65,8 @@ class Translation extends Base {
         if (isset($this->locale)) {
             $this->language = $this->translation_key->application->language($this->locale);
         }
+
+        $this->calculatePrecedence();
     }
 
     /**
@@ -78,6 +85,28 @@ class Translation extends Base {
     }
 
     /**
+     * the precedence is based on the number of fallback rules in the context.
+     * a fallback rule is indicated by the keyword "other"
+     * the more "others" are used the lower the precedence will be
+     *
+     * 0 indicates the highest precedence
+     */
+    public function calculatePrecedence() {
+        $this->precedence = 0;
+
+        if (!$this->hasContextRules()) {
+            return;
+        }
+
+        foreach($this->context as $token_name=>$rules) {
+            foreach($rules as $context_key=>$rule_key) {
+                if ($rule_key == "other")
+                    $this->precedence += 1;
+            }
+        }
+    }
+
+    /**
      * @param $token_values
      * @return bool
      */
@@ -91,8 +120,8 @@ class Translation extends Base {
             if ($token_object === null)
                 return false;
 
-            foreach($rules as $context_key => $rule_key) {
-                if ($rule_key == "other") continue; // why?
+            foreach($rules as $context_key=>$rule_key) {
+                if ($rule_key == "other") continue;
 
                 $context = $this->language->contextByKeyword($context_key);
                 if ($context == null) return false; // unsupported context type
