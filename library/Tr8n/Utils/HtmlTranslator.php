@@ -23,9 +23,9 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Tr8n\Tokens;
+namespace Tr8n\Utils;
 
-class HtmlTokenizer {
+class HtmlTranslator {
 
     /**
      * @var string
@@ -33,9 +33,16 @@ class HtmlTokenizer {
     public $text;
 
     /**
+     * Original context
      * @var mixed[]
      */
     public $context;
+
+    /**
+     * Dynamic tokens built at parse time
+     * @var mixed[]
+     */
+    public $tokens;
 
     /**
      * @var mixed[]
@@ -48,37 +55,27 @@ class HtmlTokenizer {
     public $doc;
 
     /**
-     * @var string
-     */
-    public $tml;
-
-    /**
      * @param string $html
      * @param array $context
      * @param array $options
      */
-    function __construct($html, $context = array(), $options = array()) {
+    function __construct($html="", $context = array(), $options = array()) {
         $this->html = $html;
         $this->context = $context;
+        $this->tokens = array_merge(array(), $this->context);
         $this->options = $options;
         $this->tml = null;
-        $this->tokenize();
-    }
-
-    /**
-     *
-     */
-    private function parse() {
-        $this->doc = new \DOMDocument();
-        $this->doc->loadHTML($this->html);
     }
 
     /**
      * @param string $html
      * @return array
      */
-    public function tokenize($html = null) {
+    public function translate($html = null) {
         if ($html!=null) $this->html = $html;
+
+        $this->doc = new \DOMDocument();
+        $this->doc->loadHTML($this->html);
 
         // remove all tabs and new lines - as they mean nothing in HTML
         $this->html = trim(preg_replace('/\t\n/', '', $this->html));
@@ -86,12 +83,105 @@ class HtmlTokenizer {
         // normalize multiple spaces to one space
         $this->html = preg_replace('/\s+/', ' ', $this->html);
 
-        $this->parse();
-        $this->tml = $this->tokenizeTree($this->doc);
+        return $this->translateTree($this->doc);
+    }
 
-//        print_r($this->tml);
-//        print_r($this->context);
-        return array($this->tml, $this->context);
+    private function sanitizeNodeValue($node) {
+        $value = $node->wholeText;
+        $value = str_replace("\n", "", $value);
+        return $value;
+    }
+
+    /**
+     * @param $node
+     * @return mixed|string
+     */
+    private function translateTree($node) {
+        if ($node->nodeType == 3) {
+            return $this->generateDataTokens($node->wholeText);
+        }
+
+        $has_text_nodes = false;
+        $has_separator_nodes = false;
+        $values = array();
+        if (isset($node->childNodes)) {
+            foreach($node->childNodes as $child) {
+                $add_as_node = false;
+                if ($child->nodeType == 3) {
+                    if ($has_text_nodes==false && $this->sanitizeNodeValue($child) != "")
+                        $has_text_nodes=true;
+                } else if ($child->nodeType == 1) {
+                    if ($this->isWhitelistedToken($child))
+                        $has_text_nodes=true;
+                    else if ($this->isSeparatorNode($child)) {
+                        $has_separator_nodes = true;
+                        $add_as_node = true;
+                    }
+                }
+                array_push($values, $add_as_node ? $child : $this->translateTree($child));
+            }
+        }
+
+        if ($has_separator_nodes) {
+            $value = "";
+            $temp = "";
+            foreach($values as $val) {
+                if (is_string($val)) {
+                    $temp = $temp.$val;
+                } else {
+                    if ($temp!="") $value = $value.$this->translateTml($temp);
+                    $value = $value.$this->generateHtmlToken($val);
+                    $temp = "";
+                }
+            }
+            if ($temp!="") $value = $value.$this->translateTml($temp);
+        } else {
+            $value = implode('', $values);
+            if ($has_text_nodes && $this->isBreakingToken($node)) {
+                $value = $this->translateTml($value);
+            }
+        }
+
+        return $this->apply($node, $value);
+    }
+
+    private function translateTml($tml) {
+        if (isset($this->options["debug"]) && $this->options["debug"])
+            $translation =  "{{ ".$tml." }}";
+        else
+            $translation = \Tr8n\Config::instance()->current_language->translate($tml, null, $this->tokens, $this->options);
+
+        $this->tokens = array_merge(array(), $this->context);
+
+        return $translation;
+    }
+
+    private function isWhitelistedToken($node) {
+        if ($node->nodeType != 1) return false;
+        // TODO: move to options
+        return in_array($node->tagName, array("a", "span", "i", "b", "img"));
+    }
+
+    private function isBreakingToken($node) {
+        return !$this->isWhitelistedToken($node);
+    }
+
+    private function isSeparatorNode($node) {
+        return ($node->nodeType == 1 && in_array($node->tagName, array("br", "hr")));
+    }
+
+    private function isSelfClosingNode($node) {
+        return ($node->nodeType == 1 && in_array($node->tagName, array("br", "hr", "img")));
+    }
+
+    private function isGeneralToken($node) {
+        if ($node->nodeType != 1) return true;
+        return in_array($node->tagName, array("html", "body"));
+    }
+
+    private function prepareHtmlNode($node, $value) {
+        if ($this->isGeneralToken($node)) return $value;
+        return $this->generateHtmlToken($node, $value);
     }
 
     /**
@@ -100,25 +190,24 @@ class HtmlTokenizer {
      * @return string
      */
     private function apply($node, $value) {
-        if (!isset($node->tagName)) return $value;
+        if ($node->nodeType!=1) return $value;
 
-        if (!$this->isTokenAllowed($node->tagName)) return $value;
+        if ($this->isBreakingToken($node))
+            return $this->prepareHtmlNode($node, $value);
 
-        $context = $this->generateContext($node->tagName, $node->attributes);
-        $token = $this->adjustName($node->tagName);
-        $token = $this->contextize($token, $context);
-
-        $break = '';
-        if ($this->needsLineBreak($node)) {
-            $break = "\n\n";
-        }
+        $token_context = $this->generateHtmlToken($node);
+        $token = $this->adjustName($node);
+        $token = $this->contextualize($token, $token_context);
 
         $value = $this->sanitizeValue($value);
 
-        if ($this->isShortToken($token, $value))
-            return '['.$token.': '.$value.']'.$break;
+        if ($this->isSelfClosingNode($node))
+            return '{'.$token.'}';
 
-        return '['.$token.']'.$value.'[/'.$token.']'.$break;
+        if ($this->isShortToken($token, $value))
+            return '['.$token.': '.$value.']';
+
+        return '['.$token.']'.$value.'[/'.$token.']';
     }
 
     /**
@@ -142,7 +231,7 @@ class HtmlTokenizer {
             $token_name = (isset($this->options["token_name"]) ? $this->options["token_name"] : 'num');
 
             foreach ($matches as $match) {
-                $token = $this->contextize($token_name, $match);
+                $token = $this->contextualize($token_name, $match);
                 $text = str_replace($match, "{" . $token . "}", $text);
             }
         }
@@ -150,37 +239,23 @@ class HtmlTokenizer {
     }
 
     /**
-     * @param $node
-     * @return mixed|string
-     */
-    private function tokenizeTree($node) {
-        if (get_class($node) == 'DOMText') {
-            return $this->generateDataTokens($node->wholeText);
-        }
-
-        $values = array();
-        if (isset($node->childNodes)) {
-            foreach($node->childNodes as $child) {
-                array_push($values, $this->tokenizeTree($child));
-            }
-        }
-
-        $value = implode('', $values);
-        return $this->apply($node, $value);
-    }
-
-    /**
      * @param string $name
      * @param $attributes
      * @return string
      */
-    private function generateContext($name, $attributes) {
+    private function generateHtmlToken($node, $value = null) {
+        $name = $node->tagName;
+        $attributes = $node->attributes;
         $attributes_array = array();
+        $value = $value ? $value : '{$0}';
         foreach($attributes as $attr) {
             $attributes_array[$attr->name] = $attr->value;
         }
-        if (count($attributes_array) == 0)
-            return '<'.$name.'>{$0}</'.$name.'>';
+        if (count($attributes_array) == 0) {
+            if ($this->isSelfClosingNode($node))
+                return '<'.$name.'/>';
+            return '<'.$name.'>' . $value . '</'.$name.'>';
+        }
 
         $keys = array_keys($attributes_array);
         arsort($keys);
@@ -193,21 +268,31 @@ class HtmlTokenizer {
             array_push($attr, $key.'='.$quote.$value.$quote);
         }
         $attr = implode(' ', $attr);
-        return '<'.$name.' '.$attr.'>{$0}</'.$name.'>';
+
+        if ($this->isSelfClosingNode($node))
+            return '<'.$name.' '.$attr.'/>';
+        return '<'.$name.' '.$attr.'>' . $value . '</'.$name.'>';
     }
 
     /**
      * @param string $name
      * @return string
      */
-    private function adjustName($name) {
+    private function adjustName($node) {
+        $name = $node->tagName;
+
         $map = array(
             'b' => 'bold',
             'i' => 'italic',
-            'a' => 'link'
+            'a' => 'link',
+            'img' => 'picture'
         );
 
-       return (isset($map[$name]) ? $map[$name] : $name);
+        $name = isset($map[$name]) ? $map[$name] : $name;
+
+        // TODO: adjust pictures to pic_id
+
+        return $name;
     }
 
     /**
@@ -215,20 +300,20 @@ class HtmlTokenizer {
      * @param string $context
      * @return string
      */
-    private function contextize($name, $context) {
-        if (isset($this->context[$name])) {
-            if ($this->context[$name] != $context) {
+    private function contextualize($name, $context) {
+        if (isset($this->tokens[$name])) {
+            if ($this->tokens[$name] != $context) {
                 $index = 0;
                 if (preg_match_all("/.*?(\d+)$/", $name, $matches)>0) {
                     $index = $matches[count($matches)-1][0];
                     $name = str_replace($index, '', $name);
                 }
                 $name = $name . ($index + 1);
-                return $this->contextize($name, $context);
+                return $this->contextualize($name, $context);
             }
         }
 
-        $this->context[$name] = $context;
+        $this->tokens[$name] = $context;
         return $name;
     }
 

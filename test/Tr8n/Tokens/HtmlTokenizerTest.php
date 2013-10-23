@@ -24,138 +24,33 @@
 
 namespace Tr8n\Tokens;
 
+use Tr8n\Utils\HtmlTranslator;
 use Tr8n\Utils\StringUtils;
 
 require_once(__DIR__ . "/../../BaseTest.php");
 
 class HtmlTokenizerTest extends \BaseTest {
 
-//    public function testConvertToTml() {
-//        $text = '<span>Hello <strong>World</strong></span>';
-//
-//        $p = new \Tr8n\Tokens\HtmlTokenizer($text);
-//
-//        $this->assertEquals(
-//            "[span: Hello World]",
-//            $p->evaluate(array("span", array(), "Hello World"))
-//        );
-//
-//        $this->assertEquals(
-//            array("<tr8n>", "<span>", "Hello ", "<strong>", "World", "</strong>", "</span>", "</tr8n>", ""),
-//            $p->tokenize()
-//        );
-//
-//        $this->assertEquals(
-//            array("tr8n", array(), array("span", array(), "Hello ", array("strong", array(), "World"))),
-//            $p->parse()
-//        );
-//
-//        $this->assertEquals(
-//            "[span: Hello [strong: World]]",
-//            $p->evaluate(array("tr8n", array(), array("span", array(), "Hello ", array("strong", array(), "World"))))
-//        );
-//
-//        $this->assertEquals(
-//            "[span: Hello [strong: World]]",
-//            $p->process()
-//        );
-//
-//        $this->assertEquals(
-//            "[span: Hello [strong: World]]",
-//            \Tr8n\Tokens\HtmlTokenizer::translate('<span>Hello <strong>World</strong></span>')
-//        );
-//
-//        $p = new \Tr8n\Tokens\HtmlTokenizer('The message is: <span>Hello <strong>World</strong></span>');
-//        $this->assertEquals(
-//            "The message is: [span: Hello [strong: World]]",
-//            $p->process()
-//        );
-//
-//        $p = new \Tr8n\Tokens\HtmlTokenizer('The message is: <span>Hello <strong>World</strong></span>');
-//        $this->assertEquals(
-//            "The message is: [span: Hello [strong: World]]",
-//            $p->process()
-//        );
-//
-//        $this->assertEquals(
-//            "The message is: [span: Hello [strong: World]]",
-//            \Tr8n\Tokens\HtmlTokenizer::translate('The message is: <span>Hello <strong>World</strong></span>')
-//        );
-//
-//        $this->assertEquals(
-//            "[link: Click here] to visit Google",
-//            \Tr8n\Tokens\HtmlTokenizer::translate("<a href='http://www.google.com'>Click here</a> to visit Google")
-//        );
-//
-//        $this->assertEquals(
-//            "[link: Click [strong: here]] to visit Google",
-//            \Tr8n\Tokens\HtmlTokenizer::translate("<a href='http://www.google.com'>Click <strong>here</strong></a> to visit Google")
-//        );
-//
-//        $this->assertEquals(
-//            "[span: Hello World]",
-//            \Tr8n\Tokens\HtmlTokenizer::translate("<span>Hello World</span>")
-//        );
-//
-//        $this->assertEquals(
-//            "[span: Hello [span: World]]",
-//            \Tr8n\Tokens\HtmlTokenizer::translate("<span>Hello <span>World</span></span>")
-//        );
-//
-//        $this->assertEquals(
-//            "[span1: Hello [span: World]]",
-//            \Tr8n\Tokens\HtmlTokenizer::translate("<span style='font-weight:bold;'>Hello <span>World</span></span>")
-//        );
-//
-//        $this->assertEquals(
-//            "[span2: Message = [span1: Hello [span: World]]]",
-//            \Tr8n\Tokens\HtmlTokenizer::translate("<span style='font-family:Arial'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span>")
-//        );
-//
-//        $this->assertEquals(
-//            "[span1: Message = [span1: Hello [span: World]]]",
-//            \Tr8n\Tokens\HtmlTokenizer::translate("<span style='font-weight:bold;'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span>")
-//        );
-//
-//        $this->assertEquals(
-//            "[p: [div: Message = [span1: Hello [span: World]]]]",
-//            \Tr8n\Tokens\HtmlTokenizer::translate("<p><div style='font-weight:bold;'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></div></p>")
-//        );
-//
-//        $this->assertEquals(
-//            "Hello {br} World",
-//            \Tr8n\Tokens\HtmlTokenizer::translate("Hello <br> World")
-//        );
-//
-//        $this->assertEquals(
-//            "[span: Hello {br} World]",
-//            \Tr8n\Tokens\HtmlTokenizer::translate("<span>Hello <br/> World</span>")
-//        );
-//
-//        $this->assertEquals(
-//            "[span: Hello {hr} World]",
-//            \Tr8n\Tokens\HtmlTokenizer::translate("<span>Hello <hr/> World</span>")
-//        );
-//
-//    }
-
-    public function testHTMLParsing() {
+    /**
+     * General Tokenizer
+     */
+    public function testHTMLParsingWithoutWhitelist() {
         $ht = new \Tr8n\Tokens\HtmlTokenizer("<p>Hello <a href='http://www.google.com'>World</a></p>");
-        $this->assertEquals('[p]Hello [link: World][/p]', $ht->tml);
+        $this->assertEquals("[p]Hello [link: World][/p]\n\n", $ht->tml);
         $this->assertEquals(array(
             'link'  => '<a href=\'http://www.google.com\'>{$0}</a>',
             'p'     => '<p>{$0}</p>'
         ), $ht->context);
 
         $ht->tokenize("<p> Hello <a href='http://www.google.com'>World</a></p>");
-        $this->assertEquals('[p] Hello [link: World][/p]', $ht->tml);
+        $this->assertEquals("[p]Hello [link: World][/p]\n\n", $ht->tml);
         $this->assertEquals(array(
             'link'  => '<a href=\'http://www.google.com\'>{$0}</a>',
             'p'     => '<p>{$0}</p>'
         ), $ht->context);
 
         $ht->tokenize("This is pretty <b>awesome</b>!");
-        $this->assertEquals('[p]This is pretty [bold: awesome]![/p]', $ht->tml);
+        $this->assertEquals("[p]This is pretty [bold: awesome]![/p]\n\n", $ht->tml);
 
         $ht->tokenize("<span style='font-family:Arial'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span>");
         $this->assertEquals('[span2]Message = [span1]Hello [span: World][/span1][/span2]', $ht->tml);
@@ -169,4 +64,79 @@ class HtmlTokenizerTest extends \BaseTest {
         ), $ht->context);
     }
 
+    /**
+     * HTML translator
+     */
+    public function testHTMLParsingWithWhitelist() {
+        $ht = new HtmlTranslator();
+        $ht->options = array("debug" => true);
+
+
+        // In the debug mode, {{ }} means translated as a separate key
+        // Anything outside of {{ }} is treated as normal HTML
+
+        foreach(
+            array(
+                "Hello World"                       // DOM will self correct text to a paragraph.
+                    => "<p>{{ Hello World }}</p>",
+
+                "<p>Hello World</p>"
+                    => "<p>{{ Hello World }}</p>",
+
+                "<div>Hello World</div>"
+                    => "<div>{{ Hello World }}</div>",
+
+//                "<div>Hello <div>World</div></div>"
+//                    => "<div>{{ Hello }}<div>{{ World }}</div></div>",
+
+                "Hello <p>World</p>"
+                    => "<p>{{ Hello  }}</p><p>{{ World }}</p>",
+
+                "Hello <b>World</b>"
+                    => "<p>{{ Hello [bold: World] }}</p>",
+
+                "<i>Hello <b>World</b></i>"
+                    => "{{ [italic]Hello [bold: World][/italic] }}",
+
+                "<div>Hello <br> World</div>"
+                    => "<div>{{ Hello  }}<br/>{{  World }}</div>",
+
+                "I give you <img src='thumbs_up.gif'> for this idea"
+                    => "<p>{{ I give you {picture} for this idea }}</p>",
+
+                "<p>Hello <span>World</span></p>\n\n<p>This is very cool</p>"
+                    => "<p>{{ Hello [span: World] }}</p>\n\n<p>{{ This is very cool }}</p>",
+
+                "<div><p>Hello <span>World</span></p></div><p>This is very cool</p>"
+                    => "<div><p>{{ Hello [span: World] }}</p></div><p>{{ This is very cool }}</p>",
+
+                "<span style='font-family:Arial'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span>"
+                    => "{{ [span2]Message = [span1]Hello [span: World][/span1][/span2] }}",
+
+                "<p><span style='font-family:Arial'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span></p>"
+                    => "<p>{{ [span2]Message = [span1]Hello [span: World][/span1][/span2] }}</p>",
+
+                "<p><span style='font-family:Arial'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span></p>\n\n<p>Another test</p>"
+                    => "<p>{{ [span2]Message = [span1]Hello [span: World][/span1][/span2] }}</p>\n\n<p>{{ Another test }}</p>",
+
+                "<p>Some sentence<br><br>Another sentence<br><br>Third sentence</p>"
+                    => "<p>{{ Some sentence }}<br/><br/>{{ Another sentence }}<br/><br/>{{ Third sentence }}</p>",
+
+                "<p>Some sentence<br><br>Another sentence<br><br>Third <b>sentence</b></p>"
+                    => "<p>{{ Some sentence }}<br/><br/>{{ Another sentence }}<br/><br/>{{ Third [bold: sentence] }}</p>",
+
+                "<p><i>Some</i> sentence<br><br>Another sentence<br><br>Third <b>sentence</b></p>"
+                    => "<p>{{ [italic: Some] sentence }}<br/><br/>{{ Another sentence }}<br/><br/>{{ Third [bold: sentence] }}</p>"
+
+
+        ) as $source => $target) {
+
+            $this->assertEquals($target, $ht->translate($source));
+
+        };
+
+//        $ht->debug();
+//        print_r($ht->translate());
+
+    }
 }
