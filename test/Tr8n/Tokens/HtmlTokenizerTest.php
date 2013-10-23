@@ -89,6 +89,18 @@ class HtmlTokenizerTest extends \BaseTest {
 //                "<div>Hello <div>World</div></div>"
 //                    => "<div>{{ Hello }}<div>{{ World }}</div></div>",
 
+                "<div><div>Hello</div><div>World</div></div>"
+                    => "<div><div>{{ Hello }}</div><div>{{ World }}</div></div>",
+
+                "<div> <div>Hello</div> <div>World</div> </div>"
+                    => "<div> <div>{{ Hello }}</div> <div>{{ World }}</div> </div>",
+
+                "<div> <div> Hello </div> <div> World </div> </div>"
+                    => "<div> <div>{{  Hello  }}</div> <div>{{  World  }}</div> </div>",
+
+                "<table><tr><td>Name</td><td>Value</td></tr></table>"
+                    => "<table><tr><td>{{ Name }}</td><td>{{ Value }}</td></tr></table>",
+
                 "Hello <p>World</p>"
                     => "<p>{{ Hello  }}</p><p>{{ World }}</p>",
 

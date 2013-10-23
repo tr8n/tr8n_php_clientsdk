@@ -89,6 +89,7 @@ class HtmlTranslator {
     private function sanitizeNodeValue($node) {
         $value = $node->wholeText;
         $value = str_replace("\n", "", $value);
+        $value = trim($value);
         return $value;
     }
 
@@ -101,6 +102,30 @@ class HtmlTranslator {
             return $this->generateDataTokens($node->wholeText);
         }
 
+//        $tml = "";
+//        $temp = "";
+//        foreach($node->childNodes as $child) {
+//            if ($child->nodeType == 3) {
+//                if ($this->sanitizeNodeValue($child) != "")
+//                    $temp = $temp.$child->wholeText;
+//            } else if ($child->nodeType == 1) {
+//                if ($this->isInlineNode($child)) {
+//                    $temp = $this->apply($child, $tml);
+//                } else if ($this->isSeparatorNode($child)) {
+//                    $tml = $tml.$this->translateTml($temp);
+//                    $tml = $tml.$this->generateHtmlToken($child);
+//                    $temp = "";
+//                } else {
+//                    $tml = $tml.$this->translateTml($temp);
+//                    $tml = $tml.$this->translateTree($child);
+//                    $temp = "";
+//                }
+//            }
+//        }
+//
+//        if ($temp!="") $tml = $tml.$this->translateTml($temp);
+//        return $tml;
+
         $has_text_nodes = false;
         $has_separator_nodes = false;
         $values = array();
@@ -111,16 +136,40 @@ class HtmlTranslator {
                     if ($has_text_nodes==false && $this->sanitizeNodeValue($child) != "")
                         $has_text_nodes=true;
                 } else if ($child->nodeType == 1) {
-                    if ($this->isWhitelistedToken($child))
+                    if ($this->isInlineNode($child))
                         $has_text_nodes=true;
                     else if ($this->isSeparatorNode($child)) {
                         $has_separator_nodes = true;
                         $add_as_node = true;
                     }
                 }
+//                array_push($values, array($child, $this->translateTree($child)));
                 array_push($values, $add_as_node ? $child : $this->translateTree($child));
             }
         }
+
+//        $value = "";
+//        $temp = "";
+//        foreach($values as $node_val) {
+//            $node = $node_val[0];
+//            $val = $node_val[1];
+//            if ($node->nodeType==3) {
+//                $temp = $temp.$val;
+//            } else if ($this->isInlineNode($node)) {
+//                $temp = $temp.$this->apply($node, $val);
+//            } else if ($this->isSeparatorNode($node)) {
+//                if ($temp!="") $value = $value.$this->translateTml($temp);
+//                $value = $value.$this->generateHtmlToken($node);
+//                $temp = "";
+//            } else {
+//                if ($temp!="") $value = $value.$this->translateTml($temp);
+//                $value = $value.$this->apply($node, $val);
+//                $temp = "";
+//            }
+//        }
+//        if ($temp!="") $value = $value.$this->translateTml($temp);
+//
+//        return $value;
 
         if ($has_separator_nodes) {
             $value = "";
@@ -137,15 +186,15 @@ class HtmlTranslator {
             if ($temp!="") $value = $value.$this->translateTml($temp);
         } else {
             $value = implode('', $values);
-            if ($has_text_nodes && $this->isBreakingToken($node)) {
+            if ($has_text_nodes && $this->isContainerNode($node)) {
                 $value = $this->translateTml($value);
             }
         }
-
         return $this->apply($node, $value);
     }
 
     private function translateTml($tml) {
+        if (trim($tml) == "") return $tml;
         if (isset($this->options["debug"]) && $this->options["debug"])
             $translation =  "{{ ".$tml." }}";
         else
@@ -156,14 +205,14 @@ class HtmlTranslator {
         return $translation;
     }
 
-    private function isWhitelistedToken($node) {
+    private function isInlineNode($node) {
         if ($node->nodeType != 1) return false;
         // TODO: move to options
         return in_array($node->tagName, array("a", "span", "i", "b", "img"));
     }
 
-    private function isBreakingToken($node) {
-        return !$this->isWhitelistedToken($node);
+    private function isContainerNode($node) {
+        return !$this->isInlineNode($node);
     }
 
     private function isSeparatorNode($node) {
@@ -192,7 +241,7 @@ class HtmlTranslator {
     private function apply($node, $value) {
         if ($node->nodeType!=1) return $value;
 
-        if ($this->isBreakingToken($node))
+        if ($this->isContainerNode($node))
             return $this->prepareHtmlNode($node, $value);
 
         $token_context = $this->generateHtmlToken($node);
