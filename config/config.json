@@ -11,16 +11,26 @@
         "timeout": 3600
     },
     "html_translator": {
-        "ignored_nodes": ["html", "body"],
-        "tml_nodes": ["a", "span", "i", "b", "img", "strong", "s"],
-        "tml_short_nodes": ["i", "b"],
-        "separator_nodes": ["br", "hr"],
-        "self_closing_nodes": ["br", "hr", "img"],
-        "tml_node_mapping": {
+        "debug": false,
+        "debug_format": "<span style='font-size:20px;color:red;'>{</span> {$0} <span style='font-size:20px;color:red;'>}</span>",
+        "split_sentences": false,
+        "nodes": {
+            "ignored":      ["html", "body"],
+            "inline":       ["a", "span", "i", "b", "img", "strong", "s", "em", "u", "sub", "sup"],
+            "short":        ["i", "b"],
+            "splitters":    ["br", "hr"],
+            "self_closing": ["br", "hr", "img"]
+        },
+        "name_mapping": {
             "b": "bold",
             "i": "italic",
             "a": "link",
             "img": "picture"
+        },
+        "data_tokens": {
+            "special": false,
+            "numeric": false,
+            "numeric_name": "num"
         }
     }
 }

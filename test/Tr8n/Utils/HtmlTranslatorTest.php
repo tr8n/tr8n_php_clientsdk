@@ -44,9 +44,12 @@ class HtmlTokenizerTest extends \BaseTest {
 
     public function testHTMLParsingWithWhitelist() {
         $ht = new HtmlTranslator();
-        $ht->options = array("debug" => true);
+        $ht->options = array("debug" => true, "debug_format" => '{{ {$0} }}', "data_tokens.numeric" => false, "data_tokens.special" => true);
 
-
+//        $ht = new HtmlTranslator("Hello &nbsp; World");
+//        $ht->debug();
+//
+//        return;
         // In the debug mode, {{ }} means translated as a separate key
         // Anything outside of {{ }} is treated as normal HTML
 
@@ -54,6 +57,9 @@ class HtmlTokenizerTest extends \BaseTest {
             array(
                 "Hello World"                       // DOM will self correct text to a paragraph.
                 => "<p>{{ Hello World }}</p>",
+
+                "Special characters: &nbsp; &frac34;"
+                => "<p>{{ Special characters: {nbsp} {frac34} }}</p>",
 
                 "<p>Hello World</p>"
                 => "<p>{{ Hello World }}</p>",
@@ -71,25 +77,25 @@ class HtmlTokenizerTest extends \BaseTest {
                 => "<div>{{ Hello World }}</div>",
 
                 "<div>Hello <div>World</div></div>"
-                => "<div>{{ Hello [div: World] }}</div>",
+                => "<div>{{ Hello }}<div>{{ World }}</div></div>",
 
                 "<div>Level 1 <div>Level 2 <div>Level 3</div></div></div>"
-                => "<div>{{ Level 1 [div]Level 2 [div: Level 3][/div] }}</div>",
+                => "<div>{{ Level 1 }}<div>{{ Level 2 }}<div>{{ Level 3 }}</div></div></div>",
 
                 "<div class='1'>Level 1 <div class='2'>Level 2 <div class='3'>Level 3</div></div></div>"
-                => "<div class='1'>{{ Level 1 [div1]Level 2 [div: Level 3][/div1] }}</div>",
+                => "<div class='1'>{{ Level 1 }}<div class='2'>{{ Level 2 }}<div class='3'>{{ Level 3 }}</div></div></div>",
 
                 "<div class='1'>Level 1 <div class='2'>Level 2 <div class='3'>Level 3</div></div></div><div>Another Level 1 div</div>"
-                => "<div class='1'>{{ Level 1 [div1]Level 2 [div: Level 3][/div1] }}</div><div>{{ Another Level 1 div }}</div>",
+                => "<div class='1'>{{ Level 1 }}<div class='2'>{{ Level 2 }}<div class='3'>{{ Level 3 }}</div></div></div><div>{{ Another Level 1 div }}</div>",
 
                 "<div class='1'>Level 1 <div class='2'>Level 2 <div class='3'>Level 3</div></div></div> \n<div>Another Level 1 div</div>"
-                => "<div class='1'>{{ Level 1 [div1]Level 2 [div: Level 3][/div1] }}</div> <div>{{ Another Level 1 div }}</div>",
+                => "<div class='1'>{{ Level 1 }}<div class='2'>{{ Level 2 }}<div class='3'>{{ Level 3 }}</div></div></div><div>{{ Another Level 1 div }}</div>",
 
-                "<div>Hello <b>My</b> <div class=''>World!</div> I love you!</div>"
-                => "<div>{{ Hello [bold: My] [div: World!] I love you! }}</div>",
+                "<div>Hello <b>My</b> <div class=''>World!</div> This is awesome!</div>"
+                => "<div>{{ Hello [bold: My] }}<div class=''>{{ World! }}</div>{{ This is awesome! }}</div>",
 
-                "<div>Hello <b>My</b> <div>World!</div> I love you!</div>"
-                => "<div>{{ Hello [bold: My] [div: World!] I love you! }}</div>",
+                "<div>Hello <b>My</b> <div>World!</div> This is awesome!</div>"
+                => "<div>{{ Hello [bold: My] }}<div>{{ World! }}</div>{{ This is awesome! }}</div>",
 
                 "<div>Hello <b>My</b> <span>World!</span> I love you!</div>"
                 => "<div>{{ Hello [bold: My] [span: World!] I love you! }}</div>",
@@ -98,10 +104,10 @@ class HtmlTokenizerTest extends \BaseTest {
                 => "<div><div>{{ Hello }}</div><div>{{ World }}</div></div>",
 
                 "<div> <div>Hello</div> <div>World</div> </div>"
-                => "<div> <div>{{ Hello }}</div> <div>{{ World }}</div> </div>",
+                => "<div><div>{{ Hello }}</div><div>{{ World }}</div></div>",
 
                 "<div> <div> Hello </div> <div> World </div> </div>"
-                => "<div> <div>{{ Hello }}</div> <div>{{ World }}</div> </div>",
+                => "<div><div>{{ Hello }}</div><div>{{ World }}</div></div>",
 
                 "<table><tr><td>Name</td><td>Value</td></tr></table>"
                 => "<table><tr><td>{{ Name }}</td><td>{{ Value }}</td></tr></table>",
@@ -122,7 +128,7 @@ class HtmlTokenizerTest extends \BaseTest {
                 => "<p>{{ I give you {picture} for this idea }}</p>",
 
                 "<p>Hello <span>World</span></p>\n\n<p>This is very cool</p>"
-                => "<p>{{ Hello [span: World] }}</p> <p>{{ This is very cool }}</p>",
+                => "<p>{{ Hello [span: World] }}</p><p>{{ This is very cool }}</p>",
 
                 "<div><p>Hello <span>World</span></p></div><p>This is very cool</p>"
                 => "<div><p>{{ Hello [span: World] }}</p></div><p>{{ This is very cool }}</p>",
@@ -134,7 +140,7 @@ class HtmlTokenizerTest extends \BaseTest {
                 => "<p>{{ [span2]Message = [span1]Hello [span: World][/span1][/span2] }}</p>",
 
                 "<p><span style='font-family:Arial'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span></p>\n\n<p>Another test</p>"
-                => "<p>{{ [span2]Message = [span1]Hello [span: World][/span1][/span2] }}</p> <p>{{ Another test }}</p>",
+                => "<p>{{ [span2]Message = [span1]Hello [span: World][/span1][/span2] }}</p><p>{{ Another test }}</p>",
 
                 "<p>Some sentence<br><br>Another sentence<br><br>Third sentence</p>"
                 => "<p>{{ Some sentence }}<br/><br/>{{ Another sentence }}<br/><br/>{{ Third sentence }}</p>",
@@ -152,8 +158,21 @@ class HtmlTokenizerTest extends \BaseTest {
 
         };
 
-//        $ht = new HtmlTranslator("<div>Hello <div>World</div> </div>");
-//        $ht->debug();
+        $ht->options = array("debug" => true, "debug_format" => '{{ {$0} }}', "data_tokens.numeric" => true, "data_tokens.numeric_name" => "count");
+
+        foreach(
+            array(
+                "You have 5 messages."
+                => "<p>{{ You have {count} messages. }}</p>",
+
+                "3 messages were sent."
+                => "<p>{{ {count} messages were sent. }}</p>",
+
+            ) as $source => $target) {
+
+            $this->assertEquals($target, $ht->translate($source));
+        };
+
 //
 //        $ht = new HtmlTranslator("<div>Hello </div><div>World</div>");
 //        $ht->debug();
