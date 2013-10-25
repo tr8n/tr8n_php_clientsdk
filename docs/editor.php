@@ -35,7 +35,7 @@
     if ($content == null) {
         $content = file_get_contents($selected_file_path);
     } else {
-        file_put_contents($selected_file_path, $content);
+//        file_put_contents($selected_file_path, $content);
     }
 
     $options = array();
