@@ -34,6 +34,14 @@ class HtmlTokenizerTest extends \BaseTest {
     /**
      * HTML translator
      */
+    public function untestHTMLParsingWithWhitelist() {
+        $ht = new HtmlTranslator("<p style='font-size:10px'>Hello <b>World</b></p>");
+        $ht->options = array("debug" => true);
+        $ht->debug();
+        print_r($ht->translate());
+
+    }
+
     public function testHTMLParsingWithWhitelist() {
         $ht = new HtmlTranslator();
         $ht->options = array("debug" => true);
@@ -50,11 +58,41 @@ class HtmlTokenizerTest extends \BaseTest {
                 "<p>Hello World</p>"
                 => "<p>{{ Hello World }}</p>",
 
+                "<p>Hello <b>World</b></p>"
+                => "<p>{{ Hello [bold: World] }}</p>",
+
+                "<p style='font-size:10px'>Hello <b>World</b></p>"
+                => "<p style='font-size:10px'>{{ Hello [bold: World] }}</p>",
+
+                "<p style=\"font-size:10px\">Hello <b>World</b></p>"
+                => "<p style='font-size:10px'>{{ Hello [bold: World] }}</p>",
+
                 "<div>Hello World</div>"
                 => "<div>{{ Hello World }}</div>",
 
-//                "<div>Hello <div>World</div></div>"
-//                    => "<div>{{ Hello }}<div>{{ World }}</div></div>",
+                "<div>Hello <div>World</div></div>"
+                => "<div>{{ Hello [div: World] }}</div>",
+
+                "<div>Level 1 <div>Level 2 <div>Level 3</div></div></div>"
+                => "<div>{{ Level 1 [div]Level 2 [div: Level 3][/div] }}</div>",
+
+                "<div class='1'>Level 1 <div class='2'>Level 2 <div class='3'>Level 3</div></div></div>"
+                => "<div class='1'>{{ Level 1 [div1]Level 2 [div: Level 3][/div1] }}</div>",
+
+                "<div class='1'>Level 1 <div class='2'>Level 2 <div class='3'>Level 3</div></div></div><div>Another Level 1 div</div>"
+                => "<div class='1'>{{ Level 1 [div1]Level 2 [div: Level 3][/div1] }}</div><div>{{ Another Level 1 div }}</div>",
+
+                "<div class='1'>Level 1 <div class='2'>Level 2 <div class='3'>Level 3</div></div></div> \n<div>Another Level 1 div</div>"
+                => "<div class='1'>{{ Level 1 [div1]Level 2 [div: Level 3][/div1] }}</div> <div>{{ Another Level 1 div }}</div>",
+
+                "<div>Hello <b>My</b> <div class=''>World!</div> I love you!</div>"
+                => "<div>{{ Hello [bold: My] [div: World!] I love you! }}</div>",
+
+                "<div>Hello <b>My</b> <div>World!</div> I love you!</div>"
+                => "<div>{{ Hello [bold: My] [div: World!] I love you! }}</div>",
+
+                "<div>Hello <b>My</b> <span>World!</span> I love you!</div>"
+                => "<div>{{ Hello [bold: My] [span: World!] I love you! }}</div>",
 
                 "<div><div>Hello</div><div>World</div></div>"
                 => "<div><div>{{ Hello }}</div><div>{{ World }}</div></div>",
@@ -114,8 +152,17 @@ class HtmlTokenizerTest extends \BaseTest {
 
         };
 
+//        $ht = new HtmlTranslator("<div>Hello <div>World</div> </div>");
 //        $ht->debug();
-//        print_r($ht->translate());
+//
+//        $ht = new HtmlTranslator("<div>Hello </div><div>World</div>");
+//        $ht->debug();
+//
+//        $ht = new HtmlTranslator("<div>Hello</div> <div>World</div>");
+//        $ht->debug();
+//
+//        $ht = new HtmlTranslator("<div>Hello</div><!-- Comment--><div>World</div>");
+//        $ht->debug();
 
     }
 }

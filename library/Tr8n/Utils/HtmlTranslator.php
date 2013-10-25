@@ -25,6 +25,8 @@
 
 namespace Tr8n\Utils;
 
+use Tr8n\Config;
+
 class HtmlTranslator {
 
     /**
@@ -65,6 +67,21 @@ class HtmlTranslator {
         $this->tokens = array_merge(array(), $this->context);
         $this->options = $options;
         $this->tml = null;
+        $this->parseDocument();
+    }
+
+    /**
+     * Parses the HTML document
+     */
+    function parseDocument() {
+        // remove all tabs and new lines - as they mean nothing in HTML
+        $this->html = trim(preg_replace('/\t\n/', '', $this->html));
+        // normalize multiple spaces to one space
+        $this->html = preg_replace('/\s+/', ' ', $this->html);
+
+        $this->doc = new \DOMDocument();
+        $this->doc->strictErrorChecking = false;
+        @$this->doc->loadHTML($this->html);
     }
 
     /**
@@ -72,22 +89,17 @@ class HtmlTranslator {
      * @return array
      */
     public function translate($html = null) {
-        if ($html!=null) $this->html = $html;
+        if ($html!=null)
+            $this->html = $html;
 
-        // remove all tabs and new lines - as they mean nothing in HTML
-        $this->html = trim(preg_replace('/\t\n/', '', $this->html));
-
-        // normalize multiple spaces to one space
-        $this->html = preg_replace('/\s+/', ' ', $this->html);
-
-        $this->doc = new \DOMDocument();
-        $this->doc->strictErrorChecking = false;
-
-        @$this->doc->loadHTML($this->html);
-
+        $this->parseDocument();
         return $this->translateTree($this->doc);
     }
 
+    /**
+     * @param $node
+     * @return string
+     */
     private function sanitizeNodeValue($node) {
         $value = $node->wholeText;
         $value = str_replace("\n", "", $value);
@@ -104,77 +116,29 @@ class HtmlTranslator {
             return $this->generateDataTokens($node->wholeText);
         }
 
-//        $tml = "";
-//        $temp = "";
-//        foreach($node->childNodes as $child) {
-//            if ($child->nodeType == 3) {
-//                if ($this->sanitizeNodeValue($child) != "")
-//                    $temp = $temp.$child->wholeText;
-//            } else if ($child->nodeType == 1) {
-//                if ($this->isInlineNode($child)) {
-//                    $temp = $this->apply($child, $tml);
-//                } else if ($this->isSeparatorNode($child)) {
-//                    $tml = $tml.$this->translateTml($temp);
-//                    $tml = $tml.$this->generateHtmlToken($child);
-//                    $temp = "";
-//                } else {
-//                    $tml = $tml.$this->translateTml($temp);
-//                    $tml = $tml.$this->translateTree($child);
-//                    $temp = "";
-//                }
-//            }
-//        }
-//
-//        if ($temp!="") $tml = $tml.$this->translateTml($temp);
-//        return $tml;
-
-        $has_text_nodes = false;
-        $has_separator_nodes = false;
         $values = array();
         if (isset($node->childNodes)) {
             foreach($node->childNodes as $child) {
-                $add_as_node = false;
-                if ($child->nodeType == 3) {
-                    if ($has_text_nodes==false && $this->sanitizeNodeValue($child) != "")
-                        $has_text_nodes=true;
-                } else if ($child->nodeType == 1) {
-                    if ($this->isInlineNode($child))
-                        $has_text_nodes=true;
-                    else if ($this->isSeparatorNode($child)) {
-                        $has_separator_nodes = true;
-                        $add_as_node = true;
-                    }
-                }
-//                array_push($values, array($child, $this->translateTree($child)));
-                array_push($values, $add_as_node ? $child : $this->translateTree($child));
+                array_push($values, $this->isSeparatorNode($child) ? $child : $this->translateTree($child));
             }
         }
 
-//        $value = "";
-//        $temp = "";
-//        foreach($values as $node_val) {
-//            $node = $node_val[0];
-//            $val = $node_val[1];
-//            if ($node->nodeType==3) {
-//                $temp = $temp.$val;
-//            } else if ($this->isInlineNode($node)) {
-//                $temp = $temp.$this->apply($node, $val);
-//            } else if ($this->isSeparatorNode($node)) {
-//                if ($temp!="") $value = $value.$this->translateTml($temp);
-//                $value = $value.$this->generateHtmlToken($node);
-//                $temp = "";
-//            } else {
-//                if ($temp!="") $value = $value.$this->translateTml($temp);
-//                $value = $value.$this->apply($node, $val);
-//                $temp = "";
-//            }
-//        }
-//        if ($temp!="") $value = $value.$this->translateTml($temp);
-//
-//        return $value;
+        return $this->apply($node, $values);
+    }
 
-        if ($has_separator_nodes) {
-            $value = "";
+    /**
+     * @param $node
+     * @param $values
+     * @return string
+     */
+    private function apply($node, $values) {
+        $value = "";
+        $node_is_a_container = $this->isContainerNode($node);
+        $node_has_text_children = $this->hasChildrenThatAreTextOrInlineNodes($node);
+        $node_has_text_or_inline_siblings = $this->hasChildrenThatAreTextOrInlineNodes($node->parentNode);
+        $node_has_separators = $this->hasChildrenThatAreSeparators($node);
+
+        if ($node_has_separators) {
             $temp = "";
             foreach($values as $val) {
                 if (is_string($val)) {
@@ -188,65 +152,18 @@ class HtmlTranslator {
             if ($temp!="") $value = $value.$this->translateTml($temp);
         } else {
             $value = implode('', $values);
-            if ($has_text_nodes && $this->isContainerNode($node)) {
+            if ($node_is_a_container && $node_has_text_children && !$node_has_text_or_inline_siblings) {
                 $value = $this->translateTml($value);
             }
         }
-        return $this->apply($node, $value);
-    }
 
-    private function translateTml($tml) {
-        if (trim($tml) == "") return "";
-        $tml = trim($tml, " \n\t");
+        if ($node->nodeType!=1)
+            return $value;
 
-        if (isset($this->options["debug"]) && $this->options["debug"])
-            $translation =  "{{ ".$tml." }}";
-        else
-            $translation = \Tr8n\Config::instance()->current_language->translate($tml, null, $this->tokens, $this->options);
-
-        $this->tokens = array_merge(array(), $this->context);
-
-        return $translation;
-    }
-
-    private function isInlineNode($node) {
-        if ($node->nodeType != 1) return false;
-        // TODO: move to options
-        return in_array($node->tagName, array("a", "span", "i", "b", "img"));
-    }
-
-    private function isContainerNode($node) {
-        return !$this->isInlineNode($node);
-    }
-
-    private function isSeparatorNode($node) {
-        return ($node->nodeType == 1 && in_array($node->tagName, array("br", "hr")));
-    }
-
-    private function isSelfClosingNode($node) {
-        return ($node->nodeType == 1 && in_array($node->tagName, array("br", "hr", "img")));
-    }
-
-    private function isGeneralToken($node) {
-        if ($node->nodeType != 1) return true;
-        return in_array($node->tagName, array("html", "body"));
-    }
-
-    private function prepareHtmlNode($node, $value) {
-        if ($this->isGeneralToken($node)) return $value;
-        return $this->generateHtmlToken($node, $value);
-    }
-
-    /**
-     * @param $node
-     * @param $value
-     * @return string
-     */
-    private function apply($node, $value) {
-        if ($node->nodeType!=1) return $value;
-
-        if ($this->isContainerNode($node))
+        // if div has text or inline nodes on the same level, treat it as an inline node
+        if ($node_is_a_container && !$node_has_text_or_inline_siblings) {
             return $this->prepareHtmlNode($node, $value);
+        }
 
         $token_context = $this->generateHtmlToken($node);
         $token = $this->adjustName($node);
@@ -261,6 +178,117 @@ class HtmlTranslator {
             return '['.$token.': '.$value.']';
 
         return '['.$token.']'.$value.'[/'.$token.']';
+    }
+
+    /**
+     * @param $tml
+     * @return string
+     */
+    private function translateTml($tml) {
+//        print_r('"'.trim($tml).'"');
+        $tml = trim($tml, " \n\t");
+        if (trim($tml) == "") return "";
+
+        if (isset($this->options["debug"]) && $this->options["debug"])
+            $translation =  "{{ ".$tml." }}";
+        else
+            $translation = Config::instance()->current_language->translate($tml, null, $this->tokens, $this->options);
+
+        $this->tokens = array_merge(array(), $this->context);
+
+        return $translation;
+    }
+
+    /**
+     * @param $node
+     * @return bool
+     */
+    private function isInlineNode($node) {
+        if ($node->nodeType != 1) return false;
+        return in_array($node->tagName, Config::instance()->configValue("html_translator.tml_nodes"));
+    }
+
+    /**
+     * @param $node
+     * @return bool
+     */
+    private function isContainerNode($node) {
+        return !$this->isInlineNode($node);
+    }
+
+    /**
+     * @param $node
+     * @return bool
+     */
+    private function isSelfClosingNode($node) {
+        return ($node->nodeType == 1 && in_array($node->tagName, Config::instance()->configValue("html_translator.self_closing_nodes")));
+    }
+
+    /**
+     * @param $node
+     * @return bool
+     */
+    private function isGeneralToken($node) {
+        if ($node->nodeType != 1) return true;
+        return in_array($node->tagName, Config::instance()->configValue("html_translator.ignored_nodes"));
+    }
+
+    /**
+     * @param $node
+     * @param $value
+     * @return string
+     */
+    private function prepareHtmlNode($node, $value) {
+        if ($this->isGeneralToken($node)) return $value;
+        return $this->generateHtmlToken($node, $value);
+    }
+
+    /**
+     * @param $node
+     * @return bool
+     */
+    private function isValidTextNode($node) {
+        return ($node->nodeType == 3 && $this->sanitizeNodeValue($node) != "");
+    }
+
+    /**
+     * @param $node
+     * @return bool
+     */
+    private function hasChildrenThatAreTextOrInlineNodes($node) {
+        if ($node == null) return false;
+        if (!isset($node->childNodes)) return false;
+
+        foreach($node->childNodes as $child) {
+            if ($this->isValidTextNode($child))
+                return true;
+            if ($this->isInlineNode($child))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param $node
+     * @return bool
+     */
+    private function isSeparatorNode($node) {
+        return ($node->nodeType == 1 && in_array($node->tagName, Config::instance()->configValue("html_translator.separator_nodes")));
+    }
+
+    /**
+     * @param $node
+     * @return bool
+     */
+    private function hasChildrenThatAreSeparators($node) {
+        if (!isset($node->childNodes)) return false;
+
+        foreach($node->childNodes as $child) {
+            if ($this->isSeparatorNode($child))
+                return true;
+        }
+
+        return false;
     }
 
     /**
@@ -292,15 +320,15 @@ class HtmlTranslator {
     }
 
     /**
-     * @param string $name
-     * @param $attributes
+     * @param $node
+     * @param null $value
      * @return string
      */
     private function generateHtmlToken($node, $value = null) {
         $name = $node->tagName;
         $attributes = $node->attributes;
         $attributes_array = array();
-        $value = $value ? $value : '{$0}';
+        $value = $value == null ? '{$0}' : $value;
         foreach($attributes as $attr) {
             $attributes_array[$attr->name] = $attr->value;
         }
@@ -315,36 +343,25 @@ class HtmlTranslator {
 
         $attr = array();
         foreach($keys as $key) {
-            $value = $attributes_array[$key];
-            $quote = "'";
-            if (strpos($value, $quote) !== FALSE) $quote = '"';
-            array_push($attr, $key.'='.$quote.$value.$quote);
+            $quote = (strpos($attributes_array[$key], "'") !== FALSE ? '"' : "'");
+            array_push($attr, $key.'='.$quote.$attributes_array[$key].$quote);
         }
         $attr = implode(' ', $attr);
 
         if ($this->isSelfClosingNode($node))
             return '<'.$name.' '.$attr.'/>';
+
         return '<'.$name.' '.$attr.'>' . $value . '</'.$name.'>';
     }
 
     /**
-     * @param string $name
-     * @return string
+     * @param $node
+     * @return mixed
      */
     private function adjustName($node) {
         $name = $node->tagName;
-
-        $map = array(
-            'b' => 'bold',
-            'i' => 'italic',
-            'a' => 'link',
-            'img' => 'picture'
-        );
-
+        $map = Config::instance()->configValue("html_translator.tml_node_mapping");
         $name = isset($map[$name]) ? $map[$name] : $name;
-
-        // TODO: adjust pictures to pic_id
-
         return $name;
     }
 
@@ -371,38 +388,24 @@ class HtmlTranslator {
     }
 
     /**
-     * @param $node
-     * @return bool
-     */
-    private function needsLineBreak($node) {
-        if (!isset($node->tagName)) return false;
-        return (in_array($node->tagName, array('p', 'h1', 'h2', 'h3', 'h4', 'h5', 'div')));
-
-    }
-
-    /**
      * @param string $token
      * @param string $value
      * @return bool
      */
     private function isShortToken($token, $value) {
-        if (in_array($token, array('b', 'i'))) return true;
-        if (strlen($value) < 10) return true;
+        if (in_array($token, Config::instance()->configValue("html_translator.tml_short_nodes")))
+            return true;
+
+        if (strlen($value) < 10)
+            return true;
+
         return false;
     }
 
-    /**
-     * @param string $token
-     * @return bool
-     */
-    private function isTokenAllowed($token) {
-        if (in_array($token, array('html', 'body'))) return false;
-        return true;
-    }
 
     public function debug() {
         print_r("\n\n");
-        $this->printTree($this->doc);
+        $this->debugTree($this->doc);
         print_r("\n\n");
     }
 
@@ -411,21 +414,21 @@ class HtmlTranslator {
             return $node->tagName;
 
         if ($node->nodeType == 3)
-            return $node->wholeText;
+            return '"'.$node->wholeText.'"';
 
         return $node->nodeType;
     }
 
-    private function printTree($node, $depth = 0) {
-        $padding = str_repeat(' ', $depth);
+    private function debugTree($node, $depth = 0) {
+        $padding = str_repeat('=', $depth);
 //        print($padding . ' ' . $node->tagName);
 
 //        print_r($node);
-        print_r($padding . " => " . get_class($node) . ": " . $this->nodeInfo($node) . "\n");
+        print_r($padding . "=> " . get_class($node) . ": " . $this->nodeInfo($node) . "\n");
 
         if (isset($node->childNodes)) {
             foreach($node->childNodes as $child) {
-                $this->printTree($child, $depth+1);
+                $this->debugTree($child, $depth+1);
             }
         }
     }

@@ -9,5 +9,18 @@
         "adapter": "apc",
         "version": 1,
         "timeout": 3600
+    },
+    "html_translator": {
+        "ignored_nodes": ["html", "body"],
+        "tml_nodes": ["a", "span", "i", "b", "img", "strong", "s"],
+        "tml_short_nodes": ["i", "b"],
+        "separator_nodes": ["br", "hr"],
+        "self_closing_nodes": ["br", "hr", "img"],
+        "tml_node_mapping": {
+            "b": "bold",
+            "i": "italic",
+            "a": "link",
+            "img": "picture"
+        }
     }
 }
