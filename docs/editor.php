@@ -22,7 +22,7 @@
     $content = isset($_POST["content"]) ? $_POST["content"] : null;
     if ($content == null) {
         $index = isset($_GET["example"]) ? $_GET["example"] : 0;
-        if ($index < 0 || $index > array_count_values($examples))
+        if ($index < 0 || $index > 1)
             $index = 0;
         $content = $examples[$index][1];
 
