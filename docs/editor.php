@@ -4,38 +4,46 @@
 <h1>HTML To TML Converter and Translator</h1>
 
 <?php
-
     $path = dirname(__FILE__)."/../test/fixtures/html/examples";
 
     $content = isset($_POST["content"]) ? $_POST["content"] : null;
+    $selected_sample = null;
 
-    $file_name = isset($_POST["file_name"]) ? $_POST["file_name"] : null;
-    if ($file_name) {
-        $file_name = $file_name.'.html';
-        $new_file_path = $path.'/'.$file_name;
-        file_put_contents($new_file_path, $content);
+    $file_action = isset($_POST["file_action"]) ? $_POST["file_action"] : null;
+
+    if ($file_action !=null && $file_action != "") {
+        $selected_sample = $_POST["file_name"];
+        $file_name = $path.'/'.$selected_sample.'.html';
+
+        if ($file_action == "rename") {
+            rename($path.'/'.$_POST["sample"].'.html', $file_name);
+        } else if ($file_action == "save_as") {
+            file_put_contents($file_name, $content);
+        } else if ($file_action == "delete") {
+            unlink($path.'/'.$_POST["sample"].'.html');
+            $selected_sample = null;
+        }
     }
 
     $samples = array();
-
-    $selected_sample = 0;
-    if (isset($_GET["sample"])) {
-        $selected_sample = intval($_GET["sample"]);
-    }
-
     $selected_file_path = "";
-    $i = 0;
     foreach (scandir($path) as $filename) {
         if (strstr($filename, '.html') === false) continue;
-        if ($i == $selected_sample) $selected_file_path = $path.'/'.$filename;
-        array_push($samples, $filename);
-        $i++;
+        array_push($samples, str_replace(".html", "", $filename));
     }
+
+    if ($selected_sample == null) {
+        $selected_sample = (isset($_GET["sample"]) ? $_GET["sample"] : (isset($_POST["sample"]) ? $_POST["sample"] : null));
+        if ($selected_sample == null)
+            $selected_sample = $samples[0];
+    }
+
+    $selected_file_path = $path.'/'.$selected_sample.'.html';
 
     if ($content == null) {
         $content = file_get_contents($selected_file_path);
     } else {
-//        file_put_contents($selected_file_path, $content);
+        file_put_contents($selected_file_path, $content);
     }
 
     $options = array();
@@ -49,7 +57,8 @@
 <h3>Input Text</h3>
 
 <div style="margin-top:20px;">
-    <form method="post" id="editor_form">
+    <form action="/tr8n/docs/editor.php" method="post" id="editor_form">
+        <input type="hidden" id="file_action" name="file_action">
         <input type="hidden" id="file_name" name="file_name">
 
         <div>
@@ -57,27 +66,10 @@
             <span style="font-size:18px; padding-right:5px;">HTML Samples:</span>
             <select id="sample" name="sample">
                 <?php
-                     $i = 0;
                      foreach($samples as $name) { ?>
-                        <option value="<?php echo $i ?>" <?php if ($selected_sample == $i) echo "selected"; ?>  ><?php echo $name ?></option>
-                        <?php $i++; ?>
+                        <option value="<?php echo $name ?>" <?php if ($selected_sample == $name) echo "selected"; ?>  ><?php echo $name ?></option>
                 <?php } ?>
             </select>
-
-            <script>
-                $("#sample").on("change", function() {
-                    var sel = $('#sample').find(":selected").val();
-                    if (sel == "") return;
-                    location.href = "/tr8n/docs/editor?sample=" + sel;
-                });
-
-                function saveAsNewSample() {
-                    var file_name = prompt("What would you like to call the new sample?");
-                    if (!file_name) return;
-                    $("#file_name").val(file_name);
-                    $("#editor_form").submit();
-                }
-            </script>
         </div>
 
         <textarea id="content" name="content"><?php echo $content ?></textarea>
@@ -87,7 +79,13 @@
                 <button type="submit" class="btn btn-primary">
                     Update & Translate
                 </button>
-                <button type="button" class="btn" onClick="saveAsNewSample()">
+                <button type="button" class="btn btn-warning" onClick="renameSample()">
+                    Rename
+                </button>
+                <button type="button" class="btn btn-danger" onClick="deleteSample()">
+                    Delete
+                </button>
+                <button type="button" class="btn btn-success" onClick="saveAsNewSample()">
                     Save As...
                 </button>
             </div>
@@ -112,7 +110,7 @@
 <h3>Output and Translations</h3>
 
 <div style="padding:10px; background:white; border: 1px solid #ccc;">
-    <?php echo trh(html_entity_decode($content), "", array(), $options) ?>
+    <?php echo trh($content, "", array(), $options) ?>
 </div>
 
 <?php javascript_tag('../ckeditor/ckeditor.js') ?>
@@ -121,7 +119,37 @@
 <script>
     $( document ).ready( function() {
         var editor = $('textarea#content').ckeditor();
+
+        $("#sample").on("change", function() {
+            var sel = $('#sample').find(":selected").val();
+            location.href = "/tr8n/docs/editor.php?sample=" + sel;
+        });
+
     } );
+
+    function renameSample() {
+        var sel = $('#sample').find(":selected").val()
+        var rename_to = prompt("What would you like to call the new sample?", sel);
+        if (!rename_to) return;
+        $("#file_action").val('rename');
+        $("#file_name").val(rename_to);
+        $("#editor_form").submit();
+    }
+
+    function saveAsNewSample() {
+        var save_as = prompt("What would you like to call the new sample?");
+        if (!save_as) return;
+        $("#file_action").val('save_as');
+        $("#file_name").val(save_as);
+        $("#editor_form").submit();
+    }
+
+    function deleteSample() {
+        if (!confirm("Are you sure you want to delete this sample?")) return;
+        $("#file_action").val('delete');
+        $("#editor_form").submit();
+    }
+
 </script>
 
 <?php tr8n_finish_block_with_options() ?>
