@@ -94,9 +94,20 @@ class HtmlTranslator {
     function parseDocument() {
         $this->prepareHtml();
 
-        $this->doc = new \DOMDocument();
+        $current = libxml_use_internal_errors(true);
+        $disableEntities = libxml_disable_entity_loader(true);
+
+        $charset = 'UTF-8';
+//        if (function_exists('mb_convert_encoding') && in_array(strtolower($charset), array_map('strtolower', mb_list_encodings()))) {
+//            $this->html = mb_convert_encoding($this->html, 'HTML-ENTITIES', $charset);
+//        }
+        $this->doc = new \DOMDocument('1.0', $charset);
         $this->doc->strictErrorChecking = false;
+
         @$this->doc->loadHTML($this->html);
+
+        libxml_use_internal_errors($current);
+        libxml_disable_entity_loader($disableEntities);
     }
 
     /**
@@ -201,14 +212,33 @@ class HtmlTranslator {
         return str_replace('{$0}', $translation, $this->getOption("debug_format"));
     }
 
+
+    private function isEmptyString($tml) {
+        if ($tml == "\xc2\xa0") return true;
+
+        $tml = trim($tml, " \n\t");
+        $tml = preg_replace('/\s+/u', ' ', $tml);
+        $tml = trim($tml, ' ');
+////        // no breaking spaces
+//        if (strlen($tml) == 2 && ord($tml[0]) == 194 && ord($tml[1]) == 160) {
+////            \Tr8n\Logger::instance()->debug("Length " . strlen($tml) . ": " . ord($tml[0]) . " " . ord($tml[1]));
+//            return true;
+//        }
+        return ($tml == '');
+    }
+
+    private function resetContext() {
+        $this->tokens = array_merge(array(), $this->context);
+    }
+
     /**
      * @param $tml
      * @return string
      */
     private function translateTml($tml) {
-//        print_r('"'.trim($tml).'"');
-        $tml = trim($tml, " \n\t");
-        if (trim($tml) == "") return "";
+        if ($this->isEmptyString($tml)) return $tml;
+
+        \Tr8n\Logger::instance()->debug("Translating: ##" . $tml . "##");
 
         if ($this->getOption("split_sentences")) {
             $sentences = StringUtils::splitSentences($tml);
@@ -217,12 +247,12 @@ class HtmlTranslator {
                 $sentence_translation = $this->getOption("debug") ? $this->debugTranslation($sentence) : Config::instance()->current_language->translate($sentence, null, $this->tokens, $this->options);
                 $translation = str_replace($sentence, $sentence_translation, $translation);
             }
-            $this->tokens = array_merge(array(), $this->context);
+            $this->resetContext();
             return $translation;
         }
 
         $translation =  $this->getOption("debug") ? $this->debugTranslation($tml) : Config::instance()->current_language->translate($tml, null, $this->tokens, $this->options);
-        $this->tokens = array_merge(array(), $this->context);
+        $this->resetContext();
 
         return $translation;
     }
@@ -232,7 +262,10 @@ class HtmlTranslator {
      * @return bool
      */
     private function isInlineNode($node) {
-        return ($node->nodeType == 1 && in_array($node->tagName, $this->getOption("nodes.inline")));
+        return ($node->nodeType == 1 &&
+                in_array($node->tagName, $this->getOption("nodes.inline")) &&
+                $this->hasChildrenThatAreTextNodes($node->parentNode)
+        );
     }
 
     /**
@@ -275,21 +308,19 @@ class HtmlTranslator {
      * @return bool
      */
     private function isValidTextNode($node) {
-        return ($node->nodeType == 3 && $this->sanitizeNodeValue($node) != "");
+        return ($node->nodeType == 3 && !$this->isEmptyString($node->wholeText));
     }
 
     /**
      * @param $node
      * @return bool
      */
-    private function hasChildrenThatAreTextOrInlineNodes($node) {
+    private function hasChildrenThatAreTextNodes($node) {
         if ($node == null) return false;
         if (!isset($node->childNodes)) return false;
 
         foreach($node->childNodes as $child) {
             if ($this->isValidTextNode($child))
-                return true;
-            if ($this->isInlineNode($child))
                 return true;
         }
         return false;

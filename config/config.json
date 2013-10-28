@@ -19,7 +19,7 @@
             "inline":       ["a", "span", "i", "b", "img", "strong", "s", "em", "u", "sub", "sup"],
             "short":        ["i", "b"],
             "splitters":    ["br", "hr"],
-            "self_closing": ["br", "hr", "img", "input"]
+            "self_closing": ["br", "hr", "img", "input", "meta"]
         },
         "name_mapping": {
             "b": "bold",

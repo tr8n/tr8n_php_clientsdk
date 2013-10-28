@@ -56,7 +56,7 @@
     }
 
     $options = array();
-    $options["debug"] = isset($_POST["debug"]);
+    $options["debug"] = isset($_POST["debug_tml"]);
     $options["split_sentences"] = isset($_POST["split"]);
     $options["data_tokens.special"] = isset($_POST["special_tokens"]);
     $options["data_tokens.numeric"] = isset($_POST["numeric_tokens"]);
@@ -103,10 +103,10 @@
                 </button>
             </div>
 
-            <span style="padding:10px; background:#eee; border: 1px solid #ccc; vertical-align: middle">
-                Options:
+            <span style="font-size:10px; padding:10px; background:#eee; border: 1px solid #ccc; vertical-align: middle">
+                <input type="checkbox" name="debug_tml" style="vertical-align:top" <?php if (isset($_POST["debug_tml"])) {echo "checked";} ?>> Debug TML
                 &nbsp;&nbsp;
-                <input type="checkbox" name="debug" style="vertical-align:top" <?php if (isset($_POST["debug"])) {echo "checked";} ?>> Debug TML
+                <input type="checkbox" name="debug_html" style="vertical-align:top" <?php if (isset($_POST["debug_html"])) {echo "checked";} ?>> Debug HTML
                 &nbsp;&nbsp;
                 <input type="checkbox" name="split" style="vertical-align:top" <?php if (isset($_POST["split"])) {echo "checked";} ?>> Split by sentence
                 &nbsp;&nbsp;
@@ -122,9 +122,15 @@
 
 <h3>Output and Translations</h3>
 
+
 <div style="padding:10px; background:white; border: 1px solid #ccc;">
-    <?php echo trh($content, "", array(), $options) ?>
+    <?php if (isset($_POST["debug_html"])) { ?>
+        <pre><?php echo htmlentities(trh($content, "", array(), $options)) ?></pre>
+    <?php } else { ?>
+        <?php echo trh($content, "", array(), $options) ?>
+    <?php } ?>
 </div>
+
 
 <?php javascript_tag('../ckeditor/ckeditor.js') ?>
 <?php javascript_tag('../ckeditor/adapters/jquery.js') ?>
