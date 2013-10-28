@@ -22,6 +22,9 @@
         } else if ($file_action == "delete") {
             unlink($path.'/'.$_POST["sample"].'.html');
             $selected_sample = null;
+        } else if ($file_action == "new") {
+            $selected_sample = null;
+            $content = "";
         }
     }
 
@@ -140,6 +143,8 @@
     function newSample() {
         var sel = $('#sample').find(":selected");
         sel.removeAttr("selected");
+        $("#file_action").val('new');
+        $("#editor_form").submit();
     }
 
     function renameSample() {
