@@ -26,7 +26,6 @@
     }
 
     $samples = array();
-    $selected_file_path = "";
     foreach (scandir($path) as $filename) {
         if (strstr($filename, '.html') === false) continue;
         array_push($samples, str_replace(".html", "", $filename));
@@ -34,16 +33,23 @@
 
     if ($selected_sample == null) {
         $selected_sample = (isset($_GET["sample"]) ? $_GET["sample"] : (isset($_POST["sample"]) ? $_POST["sample"] : null));
-        if ($selected_sample == null)
-            $selected_sample = $samples[0];
+//        if ($selected_sample == null) {
+//            $selected_sample = $samples[0];
+//            $selected_file_path = $path.'/'.$selected_sample.'.html';
+//        }
     }
 
-    $selected_file_path = $path.'/'.$selected_sample.'.html';
+    $selected_file_path = null;
+    if ($selected_sample != null) {
+        $selected_file_path = $path.'/'.$selected_sample.'.html';
+    }
 
-    if ($content == null) {
-        $content = file_get_contents($selected_file_path);
-    } else {
-        file_put_contents($selected_file_path, $content);
+    if ($selected_file_path!=null) {
+        if ($content == null) {
+            $content = file_get_contents($selected_file_path);
+        } else {
+            file_put_contents($selected_file_path, $content);
+        }
     }
 
     $options = array();
@@ -65,6 +71,7 @@
             <div style="color:#888;float:right;padding-top:10px;"><?php echo $selected_file_path ?></div>
             <span style="font-size:18px; padding-right:5px;">HTML Samples:</span>
             <select id="sample" name="sample">
+                <option value="">-- select --</option>
                 <?php
                      foreach($samples as $name) { ?>
                         <option value="<?php echo $name ?>" <?php if ($selected_sample == $name) echo "selected"; ?>  ><?php echo $name ?></option>
@@ -76,6 +83,9 @@
 
         <div style="padding-top:30px;">
             <div style="float:right">
+                <button type="button" class="btn" onClick="newSample()">
+                    New Sample
+                </button>
                 <button type="submit" class="btn btn-primary">
                     Update & Translate
                 </button>
@@ -118,7 +128,7 @@
 
 <script>
     $( document ).ready( function() {
-        var editor = $('textarea#content').ckeditor();
+         var editor = $('textarea#content').ckeditor();
 
         $("#sample").on("change", function() {
             var sel = $('#sample').find(":selected").val();
@@ -126,6 +136,11 @@
         });
 
     } );
+
+    function newSample() {
+        var sel = $('#sample').find(":selected");
+        sel.removeAttr("selected");
+    }
 
     function renameSample() {
         var sel = $('#sample').find(":selected").val()
