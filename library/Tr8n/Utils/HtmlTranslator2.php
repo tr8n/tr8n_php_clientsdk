@@ -149,8 +149,10 @@ class HtmlTranslator2 {
 
 
     private function isBetweenSeparators($node) {
-        if ($this->isSeparatorNode($node->previousSibling)) return true;
-        if ($this->isSeparatorNode($node->nextSibling)) return true;
+        if ($this->isSeparatorNode($node->previousSibling) && !$this->isValidTextNode($node->nextSibling))
+            return true;
+        if ($this->isSeparatorNode($node->nextSibling) && !$this->isValidTextNode($node->previousSibling))
+            return true;
         return false;
     }
 
@@ -363,6 +365,7 @@ class HtmlTranslator2 {
      * @return bool
      */
     private function isValidTextNode($node) {
+        if ($node == null) return false;
         return ($node->nodeType == 3 && !$this->isEmptyString($node->wholeText));
     }
 

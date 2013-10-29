@@ -204,6 +204,12 @@ class HtmlTranslator2Test extends \BaseTest {
                     "tokens"  => array()
               ),
 
+
+              array("html"    => "<span>Some text</span><br><strong>Please note</strong> that bla bla.<br>",
+                    "tml"     => "<span>{{ Some text }}</span><br/>{{ [strong: Please note] that bla bla. }}<br/>",
+                    "tokens"  => array('strong' => '<strong>{$0}</strong>')
+              ),
+
 //              "Special characters: &nbsp; &frac34;"
 //              => "<p>{{ Special characters: {nbsp} {frac34} }}</p>",
 //
