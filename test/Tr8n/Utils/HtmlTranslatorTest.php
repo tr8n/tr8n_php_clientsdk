@@ -29,7 +29,27 @@ use Tr8n\Utils\StringUtils;
 
 require_once(__DIR__ . "/../../BaseTest.php");
 
-class HtmlTranslatorTest extends \BaseTest {
+class HtmlTokenizerTest extends \BaseTest
+{
+    /**
+     * @var HtmlTranslator
+     */
+    protected $htmlTranslator;
+
+    /**
+     * @var HtmlTranslator
+     */
+    protected $htmlTranslatorNumeric;
+
+    public function setUp()
+    {
+        $this->htmlTranslator = new HtmlTranslator();
+        $this->htmlTranslator->options = array("debug" => true, "debug_format" => '{{ {$0} }}', "data_tokens.numeric" => false, "data_tokens.special" => true);
+
+        $this->htmlTranslatorNumeric = new HtmlTranslator();
+        $this->htmlTranslatorNumeric->options = array("debug" => true, "debug_format" => '{{ {$0} }}', "data_tokens.numeric" => true, "data_tokens.numeric_name" => "count");
+
+    }
 
     /**
      * HTML translator
@@ -42,146 +62,134 @@ class HtmlTranslatorTest extends \BaseTest {
 
     }
 
-    public function testHTMLParsingWithWhitelist() {
-        $ht = new HtmlTranslator();
-        $ht->options = array("debug" => true, "debug_format" => '{{ {$0} }}', "data_tokens.numeric" => false, "data_tokens.special" => true);
+    public function translationProvider()
+    {
+        return array(
+            array("Hello World", // DOM will self correct text to a paragraph.
+                "<p>{{ Hello World }}</p>"),
 
-//        $ht = new HtmlTranslator("Hello &nbsp; World");
-//        $ht->debug();
-//
-//        return;
-        // In the debug mode, {{ }} means translated as a separate key
-        // Anything outside of {{ }} is treated as normal HTML
+            array("Special characters: &nbsp; &frac34;",
+                "<p>{{ Special characters: {nbsp} {frac34} }}</p>"),
 
-        foreach(
-            array(
-                "Hello World"                       // DOM will self correct text to a paragraph.
-                => "<p>{{ Hello World }}</p>",
+            array("<p>Hello World</p>",
+                "<p>{{ Hello World }}</p>"),
 
-                "Special characters: &nbsp; &frac34;"
-                => "<p>{{ Special characters: {nbsp} {frac34} }}</p>",
+            array("<p>Hello <b>World</b></p>",
+                "<p>{{ Hello [bold: World] }}</p>"),
 
-                "<p>Hello World</p>"
-                => "<p>{{ Hello World }}</p>",
+            array("<p style='font-size:10px'>Hello <b>World</b></p>",
+                "<p style='font-size:10px'>{{ Hello [bold: World] }}</p>"),
 
-                "<p>Hello <b>World</b></p>"
-                => "<p>{{ Hello [bold: World] }}</p>",
+            array("<p style=\"font-size:10px\">Hello <b>World</b></p>",
+                "<p style='font-size:10px'>{{ Hello [bold: World] }}</p>"),
 
-                "<p style='font-size:10px'>Hello <b>World</b></p>"
-                => "<p style='font-size:10px'>{{ Hello [bold: World] }}</p>",
+            array("<div>Hello World</div>",
+                "<div>{{ Hello World }}</div>"),
 
-                "<p style=\"font-size:10px\">Hello <b>World</b></p>"
-                => "<p style='font-size:10px'>{{ Hello [bold: World] }}</p>",
+            array("<div>Hello <div>World</div></div>",
+                "<div>{{ Hello }}<div>{{ World }}</div></div>"),
 
-                "<div>Hello World</div>"
-                => "<div>{{ Hello World }}</div>",
+            array("<div>Level 1 <div>Level 2 <div>Level 3</div></div></div>",
+                "<div>{{ Level 1 }}<div>{{ Level 2 }}<div>{{ Level 3 }}</div></div></div>"),
 
-                "<div>Hello <div>World</div></div>"
-                => "<div>{{ Hello }}<div>{{ World }}</div></div>",
+            array("<div class='1'>Level 1 <div class='2'>Level 2 <div class='3'>Level 3</div></div></div>",
+                "<div class='1'>{{ Level 1 }}<div class='2'>{{ Level 2 }}<div class='3'>{{ Level 3 }}</div></div></div>"),
 
-                "<div>Level 1 <div>Level 2 <div>Level 3</div></div></div>"
-                => "<div>{{ Level 1 }}<div>{{ Level 2 }}<div>{{ Level 3 }}</div></div></div>",
+            array("<div class='1'>Level 1 <div class='2'>Level 2 <div class='3'>Level 3</div></div></div><div>Another Level 1 div</div>",
+                "<div class='1'>{{ Level 1 }}<div class='2'>{{ Level 2 }}<div class='3'>{{ Level 3 }}</div></div></div><div>{{ Another Level 1 div }}</div>"),
 
-                "<div class='1'>Level 1 <div class='2'>Level 2 <div class='3'>Level 3</div></div></div>"
-                => "<div class='1'>{{ Level 1 }}<div class='2'>{{ Level 2 }}<div class='3'>{{ Level 3 }}</div></div></div>",
+            array("<div class='1'>Level 1 <div class='2'>Level 2 <div class='3'>Level 3</div></div></div> \n<div>Another Level 1 div</div>",
+                "<div class='1'>{{ Level 1 }}<div class='2'>{{ Level 2 }}<div class='3'>{{ Level 3 }}</div></div></div><div>{{ Another Level 1 div }}</div>"),
 
-                "<div class='1'>Level 1 <div class='2'>Level 2 <div class='3'>Level 3</div></div></div><div>Another Level 1 div</div>"
-                => "<div class='1'>{{ Level 1 }}<div class='2'>{{ Level 2 }}<div class='3'>{{ Level 3 }}</div></div></div><div>{{ Another Level 1 div }}</div>",
+            array("<div>Hello <b>My</b> <div class=''>World!</div> This is awesome!</div>",
+                "<div>{{ Hello [bold: My] }}<div class=''>{{ World! }}</div>{{ This is awesome! }}</div>"),
 
-                "<div class='1'>Level 1 <div class='2'>Level 2 <div class='3'>Level 3</div></div></div> \n<div>Another Level 1 div</div>"
-                => "<div class='1'>{{ Level 1 }}<div class='2'>{{ Level 2 }}<div class='3'>{{ Level 3 }}</div></div></div><div>{{ Another Level 1 div }}</div>",
+            array("<div>Hello <b>My</b> <div>World!</div> This is awesome!</div>",
+                "<div>{{ Hello [bold: My] }}<div>{{ World! }}</div>{{ This is awesome! }}</div>"),
 
-                "<div>Hello <b>My</b> <div class=''>World!</div> This is awesome!</div>"
-                => "<div>{{ Hello [bold: My] }}<div class=''>{{ World! }}</div>{{ This is awesome! }}</div>",
+            array("<div>Hello <b>My</b> <span>World!</span> I love you!</div>",
+                "<div>{{ Hello [bold: My] [span: World!] I love you! }}</div>"),
 
-                "<div>Hello <b>My</b> <div>World!</div> This is awesome!</div>"
-                => "<div>{{ Hello [bold: My] }}<div>{{ World! }}</div>{{ This is awesome! }}</div>",
+            array("<div><div>Hello</div><div>World</div></div>",
+                "<div><div>{{ Hello }}</div><div>{{ World }}</div></div>"),
 
-                "<div>Hello <b>My</b> <span>World!</span> I love you!</div>"
-                => "<div>{{ Hello [bold: My] [span: World!] I love you! }}</div>",
+            array("<div> <div>Hello</div> <div>World</div> </div>",
+                "<div><div>{{ Hello }}</div><div>{{ World }}</div></div>"),
 
-                "<div><div>Hello</div><div>World</div></div>"
-                => "<div><div>{{ Hello }}</div><div>{{ World }}</div></div>",
+            array("<div> <div> Hello </div> <div> World </div> </div>",
+                "<div><div>{{ Hello }}</div><div>{{ World }}</div></div>"),
 
-                "<div> <div>Hello</div> <div>World</div> </div>"
-                => "<div><div>{{ Hello }}</div><div>{{ World }}</div></div>",
+            array("<table><tr><td>Name</td><td>Value</td></tr></table>",
+                "<table><tr><td>{{ Name }}</td><td>{{ Value }}</td></tr></table>"),
 
-                "<div> <div> Hello </div> <div> World </div> </div>"
-                => "<div><div>{{ Hello }}</div><div>{{ World }}</div></div>",
+            array("Hello <p>World</p>",
+                "<p>{{ Hello }}</p><p>{{ World }}</p>"),
 
-                "<table><tr><td>Name</td><td>Value</td></tr></table>"
-                => "<table><tr><td>{{ Name }}</td><td>{{ Value }}</td></tr></table>",
+            array("Hello <b>World</b>",
+                "<p>{{ Hello [bold: World] }}</p>"),
 
-                "Hello <p>World</p>"
-                => "<p>{{ Hello }}</p><p>{{ World }}</p>",
+            array("<i>Hello <b>World</b></i>",
+                "{{ [italic]Hello [bold: World][/italic] }}"),
 
-                "Hello <b>World</b>"
-                => "<p>{{ Hello [bold: World] }}</p>",
+            array("<div>Hello <br> World</div>",
+                "<div>{{ Hello }}<br/>{{ World }}</div>"),
 
-                "<i>Hello <b>World</b></i>"
-                => "{{ [italic]Hello [bold: World][/italic] }}",
+            array("I give you <img src='thumbs_up.gif'> for this idea",
+                "<p>{{ I give you {picture} for this idea }}</p>"),
 
-                "<div>Hello <br> World</div>"
-                => "<div>{{ Hello }}<br/>{{ World }}</div>",
+            array("<p>Hello <span>World</span></p>\n\n<p>This is very cool</p>",
+                "<p>{{ Hello [span: World] }}</p><p>{{ This is very cool }}</p>"),
 
-                "I give you <img src='thumbs_up.gif'> for this idea"
-                => "<p>{{ I give you {picture} for this idea }}</p>",
+            array("<div><p>Hello <span>World</span></p></div><p>This is very cool</p>",
+                "<div><p>{{ Hello [span: World] }}</p></div><p>{{ This is very cool }}</p>"),
 
-                "<p>Hello <span>World</span></p>\n\n<p>This is very cool</p>"
-                => "<p>{{ Hello [span: World] }}</p><p>{{ This is very cool }}</p>",
+            array("<span style='font-family:Arial'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span>",
+                "{{ [span2]Message = [span1]Hello [span: World][/span1][/span2] }}"),
 
-                "<div><p>Hello <span>World</span></p></div><p>This is very cool</p>"
-                => "<div><p>{{ Hello [span: World] }}</p></div><p>{{ This is very cool }}</p>",
+            array("<p><span style='font-family:Arial'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span></p>",
+                "<p>{{ [span2]Message = [span1]Hello [span: World][/span1][/span2] }}</p>"),
 
-                "<span style='font-family:Arial'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span>"
-                => "{{ [span2]Message = [span1]Hello [span: World][/span1][/span2] }}",
+            array("<p><span style='font-family:Arial'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span></p>\n\n<p>Another test</p>",
+                "<p>{{ [span2]Message = [span1]Hello [span: World][/span1][/span2] }}</p><p>{{ Another test }}</p>"),
 
-                "<p><span style='font-family:Arial'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span></p>"
-                => "<p>{{ [span2]Message = [span1]Hello [span: World][/span1][/span2] }}</p>",
+            array("<p>Some sentence<br><br>Another sentence<br><br>Third sentence</p>",
+                "<p>{{ Some sentence }}<br/><br/>{{ Another sentence }}<br/><br/>{{ Third sentence }}</p>"),
 
-                "<p><span style='font-family:Arial'>Message = <span style='font-weight:bold;'>Hello <span>World</span></span></span></p>\n\n<p>Another test</p>"
-                => "<p>{{ [span2]Message = [span1]Hello [span: World][/span1][/span2] }}</p><p>{{ Another test }}</p>",
+            array("<p>Some sentence<br><br>Another sentence<br><br>Third <b>sentence</b></p>",
+                "<p>{{ Some sentence }}<br/><br/>{{ Another sentence }}<br/><br/>{{ Third [bold: sentence] }}</p>"),
 
-                "<p>Some sentence<br><br>Another sentence<br><br>Third sentence</p>"
-                => "<p>{{ Some sentence }}<br/><br/>{{ Another sentence }}<br/><br/>{{ Third sentence }}</p>",
+            array("<p><i>Some</i> sentence<br><br>Another sentence<br><br>Third <b>sentence</b></p>",
+                "<p>{{ [italic: Some] sentence }}<br/><br/>{{ Another sentence }}<br/><br/>{{ Third [bold: sentence] }}</p>"),
 
-                "<p>Some sentence<br><br>Another sentence<br><br>Third <b>sentence</b></p>"
-                => "<p>{{ Some sentence }}<br/><br/>{{ Another sentence }}<br/><br/>{{ Third [bold: sentence] }}</p>",
-
-                "<p><i>Some</i> sentence<br><br>Another sentence<br><br>Third <b>sentence</b></p>"
-                => "<p>{{ [italic: Some] sentence }}<br/><br/>{{ Another sentence }}<br/><br/>{{ Third [bold: sentence] }}</p>"
+        );
+    }
 
 
-            ) as $source => $target) {
+    /**
+     * @dataProvider translationProvider
+     */
+    public function testTranslate($source, $target)
+    {
+        $this->assertEquals($target, $this->htmlTranslator->translate($source));
+    }
 
-            $this->assertEquals($target, $ht->translate($source));
+    public function numericTranslationProvider()
+    {
+        return array(
+            array("You have 5 messages.",
+                "<p>{{ You have {count} messages. }}</p>"),
 
-        };
+            array("3 messages were sent.",
+                "<p>{{ {count} messages were sent. }}</p>"),
+        );
+    }
 
-        $ht->options = array("debug" => true, "debug_format" => '{{ {$0} }}', "data_tokens.numeric" => true, "data_tokens.numeric_name" => "count");
-
-        foreach(
-            array(
-                "You have 5 messages."
-                => "<p>{{ You have {count} messages. }}</p>",
-
-                "3 messages were sent."
-                => "<p>{{ {count} messages were sent. }}</p>",
-
-            ) as $source => $target) {
-
-            $this->assertEquals($target, $ht->translate($source));
-        };
-
-//
-//        $ht = new HtmlTranslator("<div>Hello </div><div>World</div>");
-//        $ht->debug();
-//
-//        $ht = new HtmlTranslator("<div>Hello</div> <div>World</div>");
-//        $ht->debug();
-//
-//        $ht = new HtmlTranslator("<div>Hello</div><!-- Comment--><div>World</div>");
-//        $ht->debug();
-
+    /**
+     * @dataProvider numericTranslationProvider
+     */
+    public function testTranslateNumeric($pair)
+    {
+        list($source, $target) = $pair;
+        $this->htmlTranslatorNumeric->translate($source, $target);
     }
 }
