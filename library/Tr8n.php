@@ -200,7 +200,7 @@ function trh($label, $description = "", $tokens = array(), $options = array()) {
 //    $params["options"]["use_div"] = true;
 //    tr($params);
 
-    $ht = new \Tr8n\Utils\HtmlTranslator($html, array(), $params["options"]);
+    $ht = new \Tr8n\Utils\HtmlTranslator2($html, array(), $params["options"]);
     return $ht->translate();
 }
 

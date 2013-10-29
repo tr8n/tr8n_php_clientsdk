@@ -18,8 +18,10 @@
             "ignored":      ["html", "body"],
             "inline":       ["a", "span", "i", "b", "img", "strong", "s", "em", "u", "sub", "sup"],
             "short":        ["i", "b"],
-            "splitters":    ["br", "hr"],
-            "self_closing": ["br", "hr", "img", "input", "meta"]
+            "splitters":    ["br", "hr"]
+        },
+        "attributes": {
+            "labels":       ["title", "alt"]
         },
         "name_mapping": {
             "b": "bold",

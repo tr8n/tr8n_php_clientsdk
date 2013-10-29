@@ -29,7 +29,7 @@ use Tr8n\Utils\StringUtils;
 
 require_once(__DIR__ . "/../../BaseTest.php");
 
-class HtmlTokenizerTest extends \BaseTest {
+class HtmlTranslatorTest extends \BaseTest {
 
     /**
      * HTML translator

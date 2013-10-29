@@ -1,7 +1,8 @@
 <?php include('includes/header.php'); ?>
 <?php tr8n_begin_block_with_options(array("source" => "/html_translator")) ?>
 
-<h1>HTML To TML Converter and Translator</h1>
+<h1 style="text-align:center">HTML &#8594; TML Converter and Translator</h1>
+<br>
 
 <?php
     $path = dirname(__FILE__)."/../test/fixtures/html/examples";
@@ -11,7 +12,7 @@
 
     $file_action = isset($_POST["file_action"]) ? $_POST["file_action"] : null;
 
-    if ($file_action !=null && $file_action != "") {
+    if ($file_action!=null && $file_action!="") {
         $selected_sample = $_POST["file_name"];
         $file_name = $path.'/'.$selected_sample.'.html';
 
@@ -23,8 +24,8 @@
             unlink($path.'/'.$_POST["sample"].'.html');
             $selected_sample = null;
         } else if ($file_action == "new") {
-            $selected_sample = null;
             $content = "";
+            file_put_contents($file_name, "");
         }
     }
 
@@ -36,10 +37,10 @@
 
     if ($selected_sample == null) {
         $selected_sample = (isset($_GET["sample"]) ? $_GET["sample"] : (isset($_POST["sample"]) ? $_POST["sample"] : null));
-//        if ($selected_sample == null) {
-//            $selected_sample = $samples[0];
-//            $selected_file_path = $path.'/'.$selected_sample.'.html';
-//        }
+        if ($selected_sample == null) {
+            $selected_sample = $samples[0];
+            $selected_file_path = $path.'/'.$selected_sample.'.html';
+        }
     }
 
     $selected_file_path = null;
@@ -54,25 +55,16 @@
             file_put_contents($selected_file_path, $content);
         }
     }
-
-    $options = array();
-    $options["debug"] = isset($_POST["debug_tml"]);
-    $options["split_sentences"] = isset($_POST["split"]);
-    $options["data_tokens.special"] = isset($_POST["special_tokens"]);
-    $options["data_tokens.numeric"] = isset($_POST["numeric_tokens"]);
-
 ?>
 
-<h3>Input Text</h3>
+<form action="/tr8n/docs/editor.php" method="post" id="editor_form">
 
 <div style="margin-top:20px;">
-    <form action="/tr8n/docs/editor.php" method="post" id="editor_form">
         <input type="hidden" id="file_action" name="file_action">
         <input type="hidden" id="file_name" name="file_name">
 
         <div>
             <div style="color:#888;float:right;padding-top:10px;"><?php echo $selected_file_path ?></div>
-            <span style="font-size:18px; padding-right:5px;">HTML Samples:</span>
             <select id="sample" name="sample">
                 <option value="">-- select --</option>
                 <?php
@@ -84,13 +76,10 @@
 
         <textarea id="content" name="content"><?php echo $content ?></textarea>
 
-        <div style="padding-top:30px;">
+        <div style="padding-top:10px;">
             <div style="float:right">
-                <button type="button" class="btn" onClick="newSample()">
-                    New Sample
-                </button>
                 <button type="submit" class="btn btn-primary">
-                    Update & Translate
+                    Save & Translate
                 </button>
                 <button type="button" class="btn btn-warning" onClick="renameSample()">
                     Rename
@@ -102,35 +91,54 @@
                     Save As...
                 </button>
             </div>
-
-            <span style="font-size:10px; padding:10px; background:#eee; border: 1px solid #ccc; vertical-align: middle">
-                <input type="checkbox" name="debug_tml" style="vertical-align:top" <?php if (isset($_POST["debug_tml"])) {echo "checked";} ?>> Debug TML
-                &nbsp;&nbsp;
-                <input type="checkbox" name="debug_html" style="vertical-align:top" <?php if (isset($_POST["debug_html"])) {echo "checked";} ?>> Debug HTML
-                &nbsp;&nbsp;
-                <input type="checkbox" name="split" style="vertical-align:top" <?php if (isset($_POST["split"])) {echo "checked";} ?>> Split by sentence
-                &nbsp;&nbsp;
-                <input type="checkbox" name="special_tokens" style="vertical-align:top" <?php if (isset($_POST["special_tokens"])) {echo "checked";} ?>> Special char tokens
-                &nbsp;&nbsp;
-                <input type="checkbox" name="numeric_tokens" style="vertical-align:top" <?php if (isset($_POST["numeric_tokens"])) {echo "checked";} ?>> Numeric tokens
-            </span>
+            <div>
+                <button type="button" class="btn" onClick="newSample()">
+                    New Sample
+                </button>
+            </div>
         </div>
-    </form>
 </div>
 
 <hr>
-
-<h3>Output and Translations</h3>
-
-
-<div style="padding:10px; background:white; border: 1px solid #ccc;">
-    <?php if (isset($_POST["debug_html"])) { ?>
-        <pre><?php echo htmlentities(trh($content, "", array(), $options)) ?></pre>
-    <?php } else { ?>
-        <?php echo trh($content, "", array(), $options) ?>
-    <?php } ?>
+<div style="text-align:center;font-size:50px;color:#ccc;padding-bottom:30px;">
+    &#9660;
 </div>
 
+
+<h3>
+    <div style="float:right">
+        <span style="font-size:11px; padding:10px; background:#eee; border: 1px solid #ccc; vertical-align: middle; margin-right:20px;">
+            <input type="checkbox" id="debug_tml" name="debug_tml" style="vertical-align:middle;margin:0px;" <?php if (isset($_POST["debug_tml"])) {echo "checked";} ?>> Debug TML
+            &nbsp;&nbsp;
+            <input type="checkbox" id="split" name="split" style="vertical-align:middle;margin:0px;" <?php if (isset($_POST["split"])) {echo "checked";} ?>> Split by sentence
+            &nbsp;&nbsp;
+            <input type="checkbox" id="special_tokens" name="special_tokens" style="vertical-align:middle;margin:0px;" <?php if (isset($_POST["special_tokens"])) {echo "checked";} ?>> Special char tokens
+            &nbsp;&nbsp;
+            <input type="checkbox" id="numeric_tokens" name="numeric_tokens" style="vertical-align:middle;margin:0px;" <?php if (isset($_POST["numeric_tokens"])) {echo "checked";} ?>> Numeric tokens
+        </span>
+
+        <button type="button" class="btn" onClick="reloadTranslations()">
+            Update
+        </button>
+
+        <button type="button" class="btn" onClick="detachTranslations()">
+            Detach
+        </button>
+    </div>
+    Output and Translations
+</h3>
+
+</form>
+
+<?php
+    $params = array();
+    $params["sample"] = $selected_sample;
+    $params["debug_tml"] = isset($_POST["debug_tml"]);
+    $params["split"] = isset($_POST["split"]);
+    $params["special_tokens"] = isset($_POST["special_tokens"]);
+    $params["numeric_tokens"] = isset($_POST["numeric_tokens"]);
+?>
+<iframe id="translations" src="/tr8n/docs/editor_content.php?<?php echo http_build_query($params) ?>" name="results" style="width:100%;height:500px;background:white;"></iframe>
 
 <?php javascript_tag('../ckeditor/ckeditor.js') ?>
 <?php javascript_tag('../ckeditor/adapters/jquery.js') ?>
@@ -147,9 +155,12 @@
     } );
 
     function newSample() {
+        var new_name = prompt("What would you like to name the new sample?", sel);
+        if (!new_name) return;
         var sel = $('#sample').find(":selected");
         sel.removeAttr("selected");
         $("#file_action").val('new');
+        $("#file_name").val(new_name);
         $("#editor_form").submit();
     }
 
@@ -176,6 +187,31 @@
         $("#editor_form").submit();
     }
 
+    function asParam(key) {
+        return $('#' + key).is(':checked') ? "1" : "0";
+    }
+
+    function generateUrl() {
+        var params = {};
+        params["debug_tml"] = asParam('debug_tml');
+        params["split"] = asParam('split');
+        params["special_tokens"] = asParam('special_tokens');
+        params["numeric_tokens"] = asParam('numeric_tokens');
+
+        return "/tr8n/docs/editor_content.php?sample=<?php echo $selected_sample ?>&" + $.param(params);
+    }
+
+    function reloadTranslations() {
+        document.getElementById("translations").contentDocument.location = generateUrl();
+    }
+
+    function detachTranslations() {
+        var w = 800;
+        var h = 600;
+        var left = (screen.width/2)-(w/2);
+        var top = (screen.height/2)-(h/2);
+        return window.open(generateUrl(), "Tr8n Email Preview", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+    }
 </script>
 
 <?php tr8n_finish_block_with_options() ?>

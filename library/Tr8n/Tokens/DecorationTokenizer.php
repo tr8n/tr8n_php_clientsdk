@@ -251,7 +251,7 @@ class DecorationTokenizer {
             if ($this->isDefaultDecoration($token)) {
                 return $this->defaultDecoration($token, $value);
             }
-            throw new Tr8nException("The token is neither default decoration, nor has a value");
+            throw new Tr8nException("The token [" . $token . "] is neither default decoration, nor has a value: " . $this->text);
         }
 
         $method = $this->context[$token];
