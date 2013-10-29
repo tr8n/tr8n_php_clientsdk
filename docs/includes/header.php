@@ -14,9 +14,9 @@
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li <?php active_link("index.php", "docs/index.php")?>><?php link_to(tr("Home", "Main page of the site"), "index.php") ?> </li>
+                    <li <?php active_link("index.php", "docs/index.php")?>><?php link_to(tr("Introduction", "Main page of the site"), "index.php") ?> </li>
                     <li <?php active_link("docs/installation.php", "docs/index.php")?>><?php link_to(tr("Installation Instructions"), "docs/installation.php") ?></li>
-                    <li <?php active_link("docs/index.php")?>><?php link_to(tr("Documentation"), "docs/index.php") ?></li>
+                    <li <?php active_link("docs/index.php")?>><?php link_to(tr("Documentation & Samples"), "docs/index.php") ?></li>
                     <li <?php active_link("docs/editor.php")?>><?php link_to(tr("HTML → TML Converter"), "docs/editor.php") ?></li>
                 </ul>
                 <ul class="nav navbar-nav pull-right">
@@ -43,11 +43,14 @@
                                     <?php } ?>
                                 </li>
                                 <li role="presentation" class="divider"></li>
-                                <li role="presentation"><?php tr8n_link_to('dashboard', null , array("role" => "menuitem", "tabindex" => "-1")) ?></li>
                                 <li role="presentation"><?php tr8n_link_to('notifications_popup', null , array("role" => "menuitem", "tabindex" => "-1")) ?></li>
                                 <li role="presentation"><?php tr8n_link_to('toggle_inline', null , array("role" => "menuitem", "tabindex" => "-1")) ?></li>
                                 <li role="presentation" class="divider"></li>
-                                <li role="presentation"><?php tr8n_link_to('help', null , array("role" => "menuitem", "tabindex" => "-1")) ?></li>
+                                <li role="presentation"><?php tr8n_link_to('app_phrases', null , array("role" => "menuitem", "tabindex" => "-1")) ?></li>
+                                <li role="presentation"><?php tr8n_link_to('app_translations', null , array("role" => "menuitem", "tabindex" => "-1")) ?></li>
+                                <li role="presentation"><?php tr8n_link_to('app_translators', null , array("role" => "menuitem", "tabindex" => "-1")) ?></li>
+                                <li role="presentation"><?php tr8n_link_to('app_settings', null , array("role" => "menuitem", "tabindex" => "-1")) ?></li>
+                                <li role="presentation" class="divider"></li>
                                 <li role="presentation"><?php tr8n_link_to('shortcuts_popup', null , array("role" => "menuitem", "tabindex" => "-1")) ?></li>
                                 <?php if (\Tr8n\Config::instance()->isCacheEnabled() && !\Tr8n\Cache::isReadOnly()) { ?>
                                     <li role="presentation"><?php link_to("Reset Cache (v" . \Tr8n\Config::instance()->cacheVersion() . ")", "docs/reset_cache.php") ?></li>

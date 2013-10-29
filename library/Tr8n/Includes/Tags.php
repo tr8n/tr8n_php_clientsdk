@@ -18,9 +18,21 @@ function tr8n_link_to($dest, $title = null, $opts = array()) {
     $path = null;
     $function = "";
     switch ($dest) {
-        case 'dashboard':
-            if ($title == null) $title = "Dashboard";
-            $path = "/tr8n/translator/index";
+        case 'app_phrases':
+            if ($title == null) $title = "Phrases";
+            $path = "/tr8n/app/phrases/index";
+            break;
+        case 'app_settings':
+            if ($title == null) $title = "Settings";
+            $path = "/tr8n/app/settings/index";
+            break;
+        case 'app_translations':
+            if ($title == null) $title = "Translations";
+            $path = "/tr8n/app/translations/index";
+            break;
+        case 'app_translators':
+            if ($title == null) $title = "Translators";
+            $path = "/tr8n/app/translators/index";
             break;
         case 'assignments':
             if ($title == null) $title = "Assignments";
