@@ -277,7 +277,7 @@ class HtmlTranslator2 {
     private function translateTml($tml) {
         if ($this->isEmptyString($tml)) return $tml;
 
-        \Tr8n\Logger::instance()->info("Translating: ##" . $tml . "##", $this->tokens);
+//        \Tr8n\Logger::instance()->info("Translating: ##" . $tml . "##", $this->tokens);
 
         $tml = $this->generateDataTokens($tml);
 
