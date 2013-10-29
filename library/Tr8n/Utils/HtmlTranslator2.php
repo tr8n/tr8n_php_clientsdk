@@ -257,10 +257,7 @@ class HtmlTranslator2 {
      * @return bool
      */
     private function isEmptyString($tml) {
-        if ($tml == "\xc2\xa0") return true;
-
-        $tml = trim($tml, " \n\t");
-        $tml = trim($tml, ' ');
+        $tml = trim($tml," \n\r\t\0\x0b\xa0\xc2");
         return ($tml == '');
     }
 
@@ -279,7 +276,7 @@ class HtmlTranslator2 {
     private function translateTml($tml) {
         if ($this->isEmptyString($tml)) return $tml;
 
-//        \Tr8n\Logger::instance()->info("Translating: ##" . $tml . "##", $this->tokens);
+        \Tr8n\Logger::instance()->info("Translating: ##" . $tml . "##", $this->tokens);
 
         $tml = $this->generateDataTokens($tml);
 
