@@ -19,7 +19,7 @@
         body {
             padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
             padding-bottom: 40px;
-            background: white url(<?php echo url_for('/docs/assets/img/bg-pattern.png') ?>);
+            background-color: white;
         }
     </style>
 </head>

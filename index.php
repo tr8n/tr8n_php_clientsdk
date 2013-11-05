@@ -7,7 +7,7 @@
         text-align: center;
     }
     h3 span {
-        background:#F7F7F7;
+        background:white;
         padding:5px 15px 5px 15px;
     }
 </style>

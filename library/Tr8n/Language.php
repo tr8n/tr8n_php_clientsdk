@@ -69,6 +69,10 @@ class Language extends Base {
      */
     public $cases;
 
+    /**
+     * @var string
+     */
+    public $flag_url;
 
     /**
      * @param array $attributes
@@ -137,7 +141,7 @@ class Language extends Base {
      * @return string
      */
     public function flagUrl() {
-        return $this->application->host . '/assets/tr8n/flags/' . $this->locale . '.png';
+        return $this->flag_url;
     }
 
     /*
