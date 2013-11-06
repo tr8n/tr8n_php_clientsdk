@@ -15,6 +15,8 @@
     <?php stylesheet_tag("bootstrap.css") ?>
     <?php stylesheet_tag("sh.css") ?>
     <?php include(__DIR__ . '/../../library/Tr8n/Includes/Scripts.php'); ?>
+    <title><?php echo \Tr8n\Config::instance()->application->name ?></title>
+    <link rel="SHORTCUT ICON" href="<?php echo url_for('docs/assets/img/favicon.ico') ?>"/>
     <style>
         body {
             padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
