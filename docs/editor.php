@@ -140,8 +140,8 @@
 ?>
 <iframe id="translations" src="/tr8n/docs/editor_content.php?<?php echo http_build_query($params) ?>" name="results" style="width:100%;height:500px;background:white;"></iframe>
 
-<?php javascript_tag('../ckeditor/ckeditor.js') ?>
-<?php javascript_tag('../ckeditor/adapters/jquery.js') ?>
+<?php javascript_tag('../editors/ckeditor/ckeditor.js') ?>
+<?php javascript_tag('../editors/ckeditor/adapters/jquery.js') ?>
 
 <script>
     $( document ).ready( function() {

@@ -121,12 +121,13 @@ class Logger {
         }
 
         $this->_logFilePath = Config::instance()->loggerFilePath();
+        $logDirectory = explode(DIRECTORY_SEPARATOR, $this->_logFilePath);
+        array_pop($logDirectory);
+        $logDirectory = implode(DIRECTORY_SEPARATOR, $logDirectory);
+        if (!file_exists($logDirectory)) {
+            mkdir($logDirectory, self::$_defaultPermissions, true);
+        }
         $this->_severityThreshold = Config::instance()->loggerSeverity();
-
-//        $logDirectory = $logFilePath.split(DIRECTORY_SEPARATOR);
-//        if (!file_exists($logDirectory)) {
-//            mkdir($logDirectory, self::$_defaultPermissions, true);
-//        }
 
         if (file_exists($this->_logFilePath) && !is_writable($this->_logFilePath)) {
             $this->_logStatus = self::STATUS_OPEN_FAILED;
