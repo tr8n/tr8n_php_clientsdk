@@ -1,7 +1,7 @@
 <?php include('includes/header.php'); ?>
 <?php tr8n_begin_block_with_options(array("source" => "/html_translator")) ?>
 
-<h1 style="text-align:center">HTML &#8594; TML Converter and Translator</h1>
+<h1 style="text-align:center"><?php tre("Content Translator") ?></h1>
 <br>
 
 <?php
@@ -55,16 +55,26 @@
             file_put_contents($selected_file_path, $content);
         }
     }
+
+    $editors = array("ckeditor", "tinymce", 'yui', 'nicedit');
+    $selected_editor = (isset($_GET["editor"]) ? $_GET["editor"] : (isset($_POST["editor"]) ? $_POST["editor"] : "ckeditor"));
 ?>
 
 <form action="/tr8n/docs/editor.php" method="post" id="editor_form">
 
-<div style="margin-top:20px;">
+<div style="margin-top:20px;" class="yui-skin-sam">
         <input type="hidden" id="file_action" name="file_action">
         <input type="hidden" id="file_name" name="file_name">
 
         <div>
             <div style="color:#888;float:right;padding-top:10px;"><?php echo $selected_file_path ?></div>
+            <select id="editor" name="editor" style="width:130px;">
+                <?php
+                foreach($editors as $edt) { ?>
+                    <option value="<?php echo $edt ?>" <?php if ($selected_editor == $edt) echo "selected"; ?>  ><?php echo $edt ?></option>
+                <?php } ?>
+            </select>
+
             <select id="sample" name="sample">
                 <option value="">-- select --</option>
                 <?php
@@ -74,26 +84,26 @@
             </select>
         </div>
 
-        <textarea id="content" name="content"><?php echo $content ?></textarea>
+        <textarea id="content" name="content" style="width:100%; height:400px;"><?php echo $content ?></textarea>
 
         <div style="padding-top:10px;">
             <div style="float:right">
                 <button type="submit" class="btn btn-primary">
-                    Save & Translate
+                    <?php tre("Save & Translate") ?>
                 </button>
                 <button type="button" class="btn btn-warning" onClick="renameSample()">
-                    Rename
+                    <?php tre("Rename") ?>
                 </button>
                 <button type="button" class="btn btn-danger" onClick="deleteSample()">
-                    Delete
+                    <?php tre("Delete") ?>
                 </button>
                 <button type="button" class="btn btn-success" onClick="saveAsNewSample()">
-                    Save As...
+                    <?php tre("Save As...") ?>
                 </button>
             </div>
             <div>
                 <button type="button" class="btn" onClick="newSample()">
-                    New Sample
+                    <?php tre("New Sample") ?>
                 </button>
             </div>
         </div>
@@ -108,24 +118,24 @@
 <h3>
     <div style="float:right">
         <span style="font-size:11px; padding:10px; background:#eee; border: 1px solid #ccc; vertical-align: middle; margin-right:20px;">
-            <input type="checkbox" id="debug_tml" name="debug_tml" style="vertical-align:middle;margin:0px;" <?php if (isset($_POST["debug_tml"])) {echo "checked";} ?>> Debug TML
+            <input type="checkbox" id="debug_tml" name="debug_tml" style="vertical-align:middle;margin:0px;" <?php if (isset($_POST["debug_tml"])) {echo "checked";} ?>> <?php tre("Debug TML") ?>
             &nbsp;&nbsp;
-            <input type="checkbox" id="split" name="split" style="vertical-align:middle;margin:0px;" <?php if (isset($_POST["split"])) {echo "checked";} ?>> Split by sentence
+            <input type="checkbox" id="split" name="split" style="vertical-align:middle;margin:0px;" <?php if (isset($_POST["split"])) {echo "checked";} ?>> <?php tre("Split by sentence") ?>
             &nbsp;&nbsp;
-            <input type="checkbox" id="special_tokens" name="special_tokens" style="vertical-align:middle;margin:0px;" <?php if (isset($_POST["special_tokens"])) {echo "checked";} ?>> Special char tokens
+            <input type="checkbox" id="special_tokens" name="special_tokens" style="vertical-align:middle;margin:0px;" <?php if (isset($_POST["special_tokens"])) {echo "checked";} ?>> <?php tre("Special char tokens") ?>
             &nbsp;&nbsp;
-            <input type="checkbox" id="numeric_tokens" name="numeric_tokens" style="vertical-align:middle;margin:0px;" <?php if (isset($_POST["numeric_tokens"])) {echo "checked";} ?>> Numeric tokens
+            <input type="checkbox" id="numeric_tokens" name="numeric_tokens" style="vertical-align:middle;margin:0px;" <?php if (isset($_POST["numeric_tokens"])) {echo "checked";} ?>> <?php tre("Numeric tokens") ?>
         </span>
 
         <button type="button" class="btn" onClick="reloadTranslations()">
-            Update
+            <?php tre("Update") ?>
         </button>
 
         <button type="button" class="btn" onClick="detachTranslations()">
-            Detach
+            <?php tre("Detach") ?>
         </button>
     </div>
-    Output and Translations
+    <?php tre("Output and Translations") ?>
 </h3>
 
 </form>
@@ -140,19 +150,79 @@
 ?>
 <iframe id="translations" src="/tr8n/docs/editor_content.php?<?php echo http_build_query($params) ?>" name="results" style="width:100%;height:500px;background:white;"></iframe>
 
-<?php javascript_tag('../editors/ckeditor/ckeditor.js') ?>
-<?php javascript_tag('../editors/ckeditor/adapters/jquery.js') ?>
+<?php if ($selected_editor == 'ckeditor') { ?>
+    <?php javascript_tag('../editors/ckeditor/ckeditor.js') ?>
+    <?php javascript_tag('../editors/ckeditor/adapters/jquery.js') ?>
+    <script type="text/javascript">
+        $( document ).ready( function() {
+            $('textarea#content').ckeditor();
+
+        } );
+    </script>
+
+<?php } else if ($selected_editor == 'tinymce') { ?>
+
+    <?php javascript_tag('../editors/tinymce/tinymce.min.js') ?>
+    <script type="text/javascript">
+        tinymce.init({
+            selector: "textarea#content",
+            theme: "modern",
+            height: 400,
+            plugins: [
+                "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                "save table contextmenu directionality emoticons template paste textcolor"
+            ]
+        });
+    </script>
+
+<?php } else if ($selected_editor == 'yui') { ?>
+    <!-- Skin CSS file -->
+    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/assets/skins/sam/skin.css">
+    <!-- Utility Dependencies -->
+    <script src="http://yui.yahooapis.com/2.9.0/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+    <script src="http://yui.yahooapis.com/2.9.0/build/element/element-min.js"></script>
+    <!-- Needed for Menus, Buttons and Overlays used in the Toolbar -->
+    <script src="http://yui.yahooapis.com/2.9.0/build/container/container_core-min.js"></script>
+    <script src="http://yui.yahooapis.com/2.9.0/build/menu/menu-min.js"></script>
+    <script src="http://yui.yahooapis.com/2.9.0/build/button/button-min.js"></script>
+    <!-- Source file for Rich Text Editor-->
+    <script src="http://yui.yahooapis.com/2.9.0/build/editor/editor-min.js"></script>
+
+    <script type="text/javascript">
+        var myEditor = new YAHOO.widget.Editor('content', {
+            height: '400px',
+            width: '100%',
+            dompath: true, //Turns on the bar at the bottom
+            animate: true //Animates the opening, closing and moving of Editor windows
+        });
+        myEditor.render();
+    </script>
+
+<?php } else if ($selected_editor == 'nicedit') { ?>
+
+    <script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        bkLib.onDomLoaded(nicEditors.allTextAreas);
+    </script>
+
+<?php } ?>
 
 <script>
     $( document ).ready( function() {
-         var editor = $('textarea#content').ckeditor();
-
         $("#sample").on("change", function() {
-            var sel = $('#sample').find(":selected").val();
-            location.href = "/tr8n/docs/editor.php?sample=" + sel;
+            updateSelection();
         });
+        $("#editor").on("change", function() {
+            updateSelection();
+        });
+    });
 
-    } );
+    function updateSelection() {
+        var edt = $('#editor').find(":selected").val();
+        var sel = $('#sample').find(":selected").val();
+        location.href = "/tr8n/docs/editor.php?editor=" +  edt + "&sample=" + sel;
+    }
 
     function newSample() {
         var new_name = prompt("What would you like to name the new sample?", sel);
