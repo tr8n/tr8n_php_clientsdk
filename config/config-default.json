@@ -1,9 +1,12 @@
 {
 	"application": {
-		"host": "http://localhost:3000",
-		"key": "default",
-		"secret": "n/a"
+		"host": "SERVICE_HOST",
+		"key": "APPLICATION_KEY",
+		"secret": "APPLICATION_SECRET"
 	},
+    "local": {
+        "base_path": "/tr8n"
+    },
 	"cache": {
 		"enabled": false,
 		"adapter": "apc",

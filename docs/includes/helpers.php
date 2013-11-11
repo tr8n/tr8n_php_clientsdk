@@ -1,10 +1,9 @@
 <?php
-    $g_base_url = $_SERVER['REQUEST_URI'];
-    $g_base_url = "/tr8n/";
-
     function url_for($path) {
-        global $g_base_url;
-        return $g_base_url . $path;
+        if ($path[0] != '/') {
+            $path = '/'.$path;
+        }
+        return \Tr8n\Config::instance()->configValue("local.base_path") . $path;
     }
 
     function stylesheet_tag($path) {
@@ -12,7 +11,6 @@
     }
 
     function javascript_tag($path) {
-        global $g_base_url;
         if (strpos($path, '//') !== FALSE) {
             echo '<script type="text/javascript" src="' . $path . '"></script>';
             return;
