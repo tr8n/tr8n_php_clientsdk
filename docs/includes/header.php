@@ -14,10 +14,10 @@
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li <?php active_link("index.php", "docs/index.php")?>><?php link_to(tr("Introduction", "Main page of the site"), "index.php") ?> </li>
                     <li <?php active_link("docs/installation.php", "docs/index.php")?>><?php link_to(tr("Installation Instructions"), "docs/installation.php") ?></li>
                     <li <?php active_link("docs/index.php")?>><?php link_to(tr("Documentation & Samples"), "docs/index.php") ?></li>
-                    <li <?php active_link("docs/editor.php")?>><?php link_to(tr("Content Translator"), "docs/editor.php") ?></li>
+                    <li <?php active_link("docs/tml.php")?>><?php link_to(tr("TML Interactive Console"), "docs/tml.php") ?></li>
+                    <li <?php active_link("docs/editor.php")?>><?php link_to(tr("Blog Translator"), "docs/editor.php") ?></li>
                 </ul>
                 <ul class="nav navbar-nav pull-right">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onClick="Tr8n.UI.LanguageSelector.show()"><?php tr8n_language_name_tag(tr8n_current_language(), array("flag" => true)) ?></a></li>

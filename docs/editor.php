@@ -1,7 +1,7 @@
 <?php include('includes/header.php'); ?>
 <?php tr8n_begin_block_with_options(array("source" => "/html_translator")) ?>
 
-<h1 style="text-align:center"><?php tre("Content Translator") ?></h1>
+<h1 style="text-align:center"><?php tre("Blog Translator") ?></h1>
 <br>
 
 <?php
@@ -66,8 +66,7 @@
         <input type="hidden" id="file_action" name="file_action">
         <input type="hidden" id="file_name" name="file_name">
 
-        <div>
-            <div style="color:#888;float:right;padding-top:10px;"><?php echo $selected_file_path ?></div>
+        <div style="float:right">
             <select id="editor" name="editor" style="width:130px;">
                 <?php
                 foreach($editors as $edt) { ?>
@@ -83,30 +82,37 @@
                 <?php } ?>
             </select>
         </div>
-
-        <textarea id="content" name="content" style="width:100%; height:400px;"><?php echo $content ?></textarea>
-
-        <div style="padding-top:10px;">
-            <div style="float:right">
-                <button type="submit" class="btn btn-primary">
-                    <?php tre("Save & Translate") ?>
-                </button>
-                <button type="button" class="btn btn-warning" onClick="renameSample()">
-                    <?php tre("Rename") ?>
-                </button>
-                <button type="button" class="btn btn-danger" onClick="deleteSample()">
-                    <?php tre("Delete") ?>
-                </button>
-                <button type="button" class="btn btn-success" onClick="saveAsNewSample()">
-                    <?php tre("Save As...") ?>
-                </button>
-            </div>
-            <div>
-                <button type="button" class="btn" onClick="newSample()">
-                    <?php tre("New Sample") ?>
-                </button>
-            </div>
+        <div style="padding-bottom:0px;">
+            <h3><?php tre("Enter A Blog Post") ?></h3>
         </div>
+
+        <div>
+            <textarea id="content" name="content" style="width:100%; height:400px;"><?php echo $content ?></textarea>
+        </div>
+
+        <?php if (\Tr8n\Config::instance()->current_translator) { ?>
+            <div style="padding-top:10px;">
+                <div style="float:right">
+                    <button type="button" class="btn" onClick="newSample()">
+                        <?php tre("New Sample") ?>
+                    </button>
+                    <button type="button" class="btn btn-warning" onClick="renameSample()">
+                        <?php tre("Rename") ?>
+                    </button>
+                    <button type="button" class="btn btn-danger" onClick="deleteSample()">
+                        <?php tre("Delete") ?>
+                    </button>
+                    <button type="button" class="btn btn-success" onClick="saveAsNewSample()">
+                        <?php tre("Save As...") ?>
+                    </button>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">
+                        <?php tre("Save & Translate") ?>
+                    </button>
+                </div>
+            </div>
+        <?php } ?>
 </div>
 
 <hr>

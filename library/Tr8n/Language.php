@@ -187,43 +187,48 @@ class Language extends Base {
      * @return string
      */
     public function translate($label, $description = "", $token_values = array(), $options = array()) {
-        $locale = isset($options["locale"]) ? $options["locale"] : Config::instance()->blockOption("locale");
-        if ($locale == null) $locale = Config::instance()->default_locale;
+        try {
+            $locale = isset($options["locale"]) ? $options["locale"] : Config::instance()->blockOption("locale");
+            if ($locale == null) $locale = Config::instance()->default_locale;
 
-        $level = isset($options["level"]) ? $options["level"] : Config::instance()->blockOption("level");
-        if ($level == null) $level = Config::instance()->default_level;
+            $level = isset($options["level"]) ? $options["level"] : Config::instance()->blockOption("level");
+            if ($level == null) $level = Config::instance()->default_level;
 
-        $source_key = isset($options['source']) ? $options["source"] : Config::instance()->blockOption('source');
-        if ($source_key == null) $source_key = Config::instance()->current_source;
+            $source_key = isset($options['source']) ? $options["source"] : Config::instance()->blockOption('source');
+            if ($source_key == null) $source_key = Config::instance()->current_source;
 
-        $temp_key = new TranslationKey(array(
-            "application"   => $this->application,
-            "label"         => $label,
-            "description"   => $description,
-            "locale"        => $locale,
-            "level"         => $level,
-            "translations"  => array()
-        ));
+            $temp_key = new TranslationKey(array(
+                "application"   => $this->application,
+                "label"         => $label,
+                "description"   => $description,
+                "locale"        => $locale,
+                "level"         => $level,
+                "translations"  => array()
+            ));
 
-        if (Config::instance()->isDisabled() || $this->isDefault()) {
-            return $temp_key->substituteTokens($label, $token_values, $this, $options);
+            if (Config::instance()->isDisabled() || $this->isDefault()) {
+                return $temp_key->substituteTokens($label, $token_values, $this, $options);
+            }
+
+            $token_values = array_merge($token_values, array("viewing_user" => Config::instance()->current_user));
+
+            // always check request cache first - a page can have the same key appearing multiple times
+            // we don't want to hit a remote cache unnecessarily
+            $translation_key = $this->application->translationKey($temp_key->key);
+            if ($translation_key) {
+                return $translation_key->translate($this, $token_values, $options);
+            }
+
+            // When translator hasn't enabled inline translations, use cache
+            if (Config::instance()->isCacheEnabled()) {
+                return $this->translateFromCache($temp_key, $token_values, $options);
+            }
+
+            return $this->translateFromService($temp_key, $token_values, $options);
+        } catch(Exception $e) {
+            \Tr8n\Logger::instance()->error("Failed to translate: " . $label);
+            return $label;
         }
-
-        $token_values = array_merge($token_values, array("viewing_user" => Config::instance()->current_user));
-
-        // always check request cache first - a page can have the same key appearing multiple times
-        // we don't want to hit a remote cache unnecessarily
-        $translation_key = $this->application->translationKey($temp_key->key);
-        if ($translation_key) {
-            return $translation_key->translate($this, $token_values, $options);
-        }
-
-        // When translator hasn't enabled inline translations, use cache
-        if (Config::instance()->isCacheEnabled()) {
-            return $this->translateFromCache($temp_key, $token_values, $options);
-        }
-
-        return $this->translateFromService($temp_key, $token_values, $options);
 	}
 
     /**

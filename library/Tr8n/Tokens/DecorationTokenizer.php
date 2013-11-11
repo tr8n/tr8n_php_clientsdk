@@ -234,7 +234,7 @@ class DecorationTokenizer {
             return $default_decoration;
         }
 
-        throw new Tr8nException("Not sure how to process default decoration: " . $token);
+        return $value;
     }
 
     /**
@@ -251,7 +251,7 @@ class DecorationTokenizer {
             if ($this->isDefaultDecoration($token)) {
                 return $this->defaultDecoration($token, $value);
             }
-            throw new Tr8nException("The token [" . $token . "] is neither default decoration, nor has a value: " . $this->text);
+            return $value;
         }
 
         $method = $this->context[$token];
