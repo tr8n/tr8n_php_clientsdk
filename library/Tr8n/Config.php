@@ -352,9 +352,9 @@ class Config {
         $verification_sig = hash_hmac('sha256', $payload_json_encoded , $secret, true);
         $verification_sig = trim(base64_encode($verification_sig), "\n");
 
-//        if ($payload_encoded_sig != $verification_sig) {
-//            throw new Tr8nException("Invalid signature provided.");
-//        }
+        if ($payload_encoded_sig != $verification_sig) {
+            throw new Tr8nException("Invalid signature provided.");
+        }
 
 //        \Tr8n\Logger::instance()->info("Signature1", $payload_encoded_sig);
 //        \Tr8n\Logger::instance()->info("Signature2", $verification_sig);
