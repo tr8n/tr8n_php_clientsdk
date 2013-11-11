@@ -4,7 +4,7 @@
     <h1 style="text-align:center"><?php tre("TML Interactive Console") ?></h1>
 
 
-    <form action="/tr8n/docs/tml_content.php" method="get" id="tml_form" target="tml_translations">
+    <form action="<?php echo \Tr8n\Config::instance()->configValue("local.base_path") ?>/docs/tml_content.php" method="get" id="tml_form" target="tml_translations">
         <input type="hidden" id="tml_label" name="tml_label" value="">
         <input type="hidden" id="tml_context" name="tml_context" value="">
         <input type="hidden" id="tml_tokens" name="tml_tokens" value="">
@@ -57,7 +57,7 @@
         &#9660;
     </div>
 
-    <iframe id="tml_translations" name="tml_translations" src="/tr8n/docs/tml_content.php" style="width:100%;height:600px;background:white;border:1px solid #eee;"></iframe>
+    <iframe id="tml_translations" name="tml_translations" src="<?php echo \Tr8n\Config::instance()->configValue("local.base_path") ?>/docs/tml_content.php" style="width:100%;height:600px;background:white;border:1px solid #eee;"></iframe>
 
 <?php tr8n_finish_block_with_options() ?>
 <?php include('includes/footer.php'); ?>

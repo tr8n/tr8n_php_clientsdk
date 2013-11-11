@@ -21,7 +21,9 @@ $options = json_decode($options, true);
 <?php tr8n_begin_block_with_options(array("source" => "/examples/interactive_tml")) ?>
 
 <div style="padding:15px;">
-<?php tre($label, $context, $tokens, $options) ?>
+    <?php if ($label != "") { ?>
+        <?php tre($label, $context, $tokens, $options) ?>
+    <?php } ?>
 </div>
 
 <?php tr8n_finish_block_with_options() ?>
