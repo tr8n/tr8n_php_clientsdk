@@ -7,7 +7,7 @@
 	"cache": {
 		"enabled": true,
 		"adapter": "apc",
-		"version": 9,
+		"version": 10,
 		"timeout": 3600
 	},
 	"html_translator": {
