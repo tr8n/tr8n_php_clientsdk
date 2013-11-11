@@ -154,7 +154,7 @@
     $params["special_tokens"] = isset($_POST["special_tokens"]);
     $params["numeric_tokens"] = isset($_POST["numeric_tokens"]);
 ?>
-<iframe id="translations" src="<?php echo \Tr8n\Config::instance()->configValue("local.base_path") ?>/docs/editor_content.php?<?php echo http_build_query($params) ?>" name="results" style="width:100%;height:500px;background:white;"></iframe>
+<iframe id="translations" src="<?php echo \Tr8n\Config::instance()->configValue("local.base_path") ?>/docs/editor_content.php?<?php echo http_build_query($params) ?>" name="results" style="width:100%;height:500px;background:white;border:1px solid #eee;"></iframe>
 
 <?php if ($selected_editor == 'ckeditor') { ?>
     <?php javascript_tag('../editors/ckeditor/ckeditor.js') ?>
