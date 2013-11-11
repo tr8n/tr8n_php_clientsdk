@@ -154,7 +154,7 @@
     $params["special_tokens"] = isset($_POST["special_tokens"]);
     $params["numeric_tokens"] = isset($_POST["numeric_tokens"]);
 ?>
-<iframe id="translations" src="/tr8n/docs/editor_content.php?<?php echo http_build_query($params) ?>" name="results" style="width:100%;height:500px;background:white;"></iframe>
+<iframe id="translations" src="<?php echo \Tr8n\Config::instance()->configValue("local.base_path") ?>/docs/editor_content.php?<?php echo http_build_query($params) ?>" name="results" style="width:100%;height:500px;background:white;"></iframe>
 
 <?php if ($selected_editor == 'ckeditor') { ?>
     <?php javascript_tag('../editors/ckeditor/ckeditor.js') ?>
@@ -227,7 +227,7 @@
     function updateSelection() {
         var edt = $('#editor').find(":selected").val();
         var sel = $('#sample').find(":selected").val();
-        location.href = "/tr8n/docs/editor.php?editor=" +  edt + "&sample=" + sel;
+        location.href = "<?php echo \Tr8n\Config::instance()->configValue("local.base_path") ?>/docs/editor.php?editor=" +  edt + "&sample=" + sel;
     }
 
     function newSample() {
@@ -274,7 +274,7 @@
         params["special_tokens"] = asParam('special_tokens');
         params["numeric_tokens"] = asParam('numeric_tokens');
 
-        return "/tr8n/docs/editor_content.php?sample=<?php echo $selected_sample ?>&" + $.param(params);
+        return "<?php echo \Tr8n\Config::instance()->configValue("local.base_path") ?>/docs/editor_content.php?sample=<?php echo $selected_sample ?>&" + $.param(params);
     }
 
     function reloadTranslations() {
