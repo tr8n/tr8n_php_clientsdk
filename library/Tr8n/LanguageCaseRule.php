@@ -29,6 +29,10 @@ use \Tr8n\Utils\ArrayUtils;
 class LanguageCaseRule extends Base {
 
     /**
+     * @var integer
+     */
+    public $id;
+    /**
      * @var LanguageCase
      */
     public $language_case;
@@ -143,7 +147,7 @@ class LanguageCaseRule extends Base {
      * @return array
      */
     public function toArray($keys=array()) {
-        return parent::toArray(array("description", "examples", "conditions", "conditions_expression", "operations", "operations_expression"));
+        return parent::toArray(array("id", "description", "examples", "conditions", "conditions_expression", "operations", "operations_expression"));
     }
 
 }
