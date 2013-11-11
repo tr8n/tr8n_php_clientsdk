@@ -66,7 +66,6 @@
 <?php javascript_tag('ace/theme-chrome.js') ?>
 <?php javascript_tag('ace/mode-html.js') ?>
 <?php javascript_tag('ace/mode-json.js') ?>
-<?phpjavascript_tag('jquery-ace.js') ?>
 
 <style type="text/css" media="screen">
     .ace_editor {
