@@ -339,6 +339,10 @@ class Language extends Base {
      * @return array
      */
     public function toArray($keys=array()) {
+        if (count($keys) > 0) {
+            return parent::toArray($keys);
+        }
+
         $info = parent::toArray(array("locale", "name", "english_name", "native_name", "right_to_left"));
         $info["contexts"] = array();
         foreach($this->contexts as $name=>$value) {

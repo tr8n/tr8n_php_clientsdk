@@ -58,7 +58,11 @@ class HtmlDecorator extends Base {
         $classes = array('tr8n_translatable');
 
         if ($translation_key->isLocked()) {
-            array_push($classes, 'tr8n_locked');
+            if ($config->current_translator->isFeatureEnabled('show_locked_keys')) {
+                array_push($classes, 'tr8n_locked');
+            } else {
+                return $label;
+            }
         } else if ($language->isDefault()) {
             array_push($classes, 'tr8n_not_translated');
         } else if (array_key_exists("fallback", $options)) {

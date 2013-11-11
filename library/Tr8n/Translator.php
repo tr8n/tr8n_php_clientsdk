@@ -26,24 +26,100 @@ namespace Tr8n;
 
 class Translator extends Base {
 
-    public $application, $id, $name, $email, $inline;
-    public $voting_power, $rank, $level, $locale, $manager, $code, $access_token;
+    /**
+     * @var Application
+     */
+    public $application;
+    /**
+     * @var integer
+     */
+    public $id;
+    /**
+     * @var string
+     */
+    public $name;
+    /**
+     * @var string
+     */
+    public $email;
+    /**
+     * @var boolean
+     */
+    public $inline;
+    /**
+     * @var boolean[]
+     */
+    public $features;
+    /**
+     * @var integer
+     */
+    public $voting_power;
+    /**
+     * @var integer
+     */
+    public $rank;
+    /**
+     * @var integer
+     */
+    public $level;
+    /**
+     * @var string
+     */
+    public $locale;
+    /**
+     * @var boolean
+     */
+    public $manager;
+    /**
+     * @var string
+     */
+    public $code;
+    /**
+     * @var string
+     */
+    public $access_token;
 
+    /**
+     * @param array $attributes
+     */
     public function __construct($attributes=array()) {
         parent::__construct($attributes);
     }
 
+    /**
+     * @return bool
+     */
     public function isInlineModeEnabled() {
         return ($this->inline==true);
     }
 
+    /**
+     * @return bool
+     */
     public function isManager() {
         return ($this->manager==true);
     }
 
+    /**
+     * @return null|string
+     */
     public function mugshot() {
         if (!isset($this->email)) return null;
         $gravatar_id = md5(strtolower($this->email));
         return "http://gravatar.com/avatar/$gravatar_id.png?s=48";
+    }
+
+    /**
+     * @param $key string
+     * @return bool
+     */
+    public function isFeatureEnabled($key) {
+        if ($this->features == null)
+            return false;
+
+        if (!isset($this->features[$key])) {
+            return false;
+        }
+        return $this->features[$key];
     }
 }

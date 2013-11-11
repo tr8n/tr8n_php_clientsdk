@@ -394,6 +394,11 @@ class Application extends Base {
     }
 
     public function toArray($keys=array()) {
-        return parent::toArray(array("host"));
+        $hash = parent::toArray(array("host"));
+        $hash["languages"] = array();
+        foreach($this->languages as $l) {
+            array_push($hash["languages"], $l->toArray(array("locale", "name", "english_name", "native_name", "right_to_left", "flag_url")));
+        }
+        return $hash;
     }
 }

@@ -134,6 +134,10 @@ class Config {
         return $value;
     }
 
+    public function updateConfig() {
+        file_put_contents($this->configFilePath('config.json'), StringUtils::prettyPrint(json_encode($this->config)));
+    }
+
     public function initApplication($host = null, $client_id = null, $client_secret = null) {
         if ($host == null) { // fallback onto the configuration file
             $host = $this->configValue("application.host");
@@ -200,20 +204,19 @@ class Config {
     }
 
     public function cacheVersion() {
-        if (!isset($this->config["cache"]["version"]))
-            return 0;
-        return $this->config["cache"]["version"];
+        $version = $this->configValue("cache.version");
+        return ($version == null ? 0 : $version);
     }
 
     public function cacheTimeout() {
-        if (!isset($this->config["cache"]["timeout"]))
-            return 3600;
-        return $this->config["cache"]["timeout"];
+        $timeout = $this->configValue("cache.timeout");
+        return ($timeout == null ? 3600 : $timeout);
     }
 
     public function incrementCache() {
-        $this->config["cache"]["version"] =  $this->cacheVersion() + 1;
-        file_put_contents($this->configFilePath('config.json'), StringUtils::prettyPrint(json_encode($this->config)));
+        $version = $this->cacheVersion();
+        $this->config["cache"]["version"] =  $version + 1;
+        $this->updateConfig();
     }
 
     public function loggerSeverity() {
@@ -221,8 +224,9 @@ class Config {
     }
 
     public function isCacheEnabled() {
-        if (!isset($this->config["cache"]["enabled"]) || $this->config["cache"]["enabled"] == false)
+        if ($this->configValue("cache.enabled") === false) {
             return false;
+        }
 
         if ($this->current_translator && $this->current_translator->isInlineModeEnabled())
             return false;
@@ -337,28 +341,27 @@ class Config {
     }
 
     public function decodeAndVerifyParams($signed_request, $secret) {
+//        \Tr8n\Logger::instance()->info($signed_request);
         $signed_request = urldecode($signed_request);
-//        echo($signed_request);
+        $signed_request = base64_decode($signed_request);
 
         $parts = explode('.', $signed_request);
-        $sig = base64_decode($parts[0]);
-        $data = json_decode(base64_decode($parts[1]), true);
+        $payload_encoded_sig = trim($parts[0], "\n");
+        $payload_json_encoded = $parts[1];
 
-//      data = JSON.parse(Base64.decode64(payload))
-//      # pp :secret, secret
-//
-//      if data['algorithm'].to_s.upcase != 'HMAC-SHA256'
-//        raise Tr8n::Exception.new("Bad signature algorithm: %s" % data['algorithm'])
-//      end
-//      expected_sig = OpenSSL::HMAC.digest('sha256', secret, payload)
-//      # pp :expected, expected_sig
-//      # pp :actual, sig
-//
-//      pp data
-//
-//      # if expected_sig != sig
-//      #   raise Tr8n::Exception.new("Bad signature")
-//      # end
+        $verification_sig = hash_hmac('sha256', $payload_json_encoded , $secret, true);
+        $verification_sig = trim(base64_encode($verification_sig), "\n");
+
+        if ($payload_encoded_sig != $verification_sig) {
+            throw new Tr8nException("Invalid signature provided.");
+        }
+
+//        \Tr8n\Logger::instance()->info("Signature1", $payload_encoded_sig);
+//        \Tr8n\Logger::instance()->info("Signature2", $verification_sig);
+
+        $payload_json = base64_decode($payload_json_encoded);
+        $data = json_decode($payload_json, true);
+//        \Tr8n\Logger::instance()->info("Data", $data);
         return $data;
     }
 }

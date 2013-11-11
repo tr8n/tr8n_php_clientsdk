@@ -44,7 +44,7 @@ function tr8n_init_client_sdk($host = null, $key = null, $secret = null) {
     }
 
     $cookie_name = "tr8n_" . \Tr8n\Config::instance()->application->key;
-    \Tr8n\Logger::instance()->info("Locating cookie file $cookie_name...");
+//    \Tr8n\Logger::instance()->info("Locating cookie file $cookie_name...");
 
     $locale = \Tr8n\Config::instance()->default_locale;
     $translator = null;
@@ -56,7 +56,7 @@ function tr8n_init_client_sdk($host = null, $key = null, $secret = null) {
 //        \Tr8n\Logger::instance()->info("Cookie params", $cookie_params);
 
         $locale = $cookie_params['locale'];
-        if (isset($cookie_params["translator"])) {
+        if (isset($cookie_params['translator'])) {
             $translator = new \Tr8n\Translator(array_merge($cookie_params["translator"], array('application' => \Tr8n\Config::instance()->application)));
         }
     } else {
@@ -64,7 +64,6 @@ function tr8n_init_client_sdk($host = null, $key = null, $secret = null) {
     }
 
     \Tr8n\Config::instance()->initRequest(array('locale' => $locale, 'translator' => $translator, 'source' => isset($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : null));
-
     return true;
 }
 
