@@ -81,11 +81,6 @@ class Config {
     public $current_component;
 
     /**
-     * @var TranslationKey[]
-     */
-    public $current_translation_keys;
-
-    /**
      * @var array
      */
     private $block_options;

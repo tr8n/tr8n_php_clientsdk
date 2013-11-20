@@ -109,7 +109,9 @@ class TranslationKey extends Base {
         }
 
         if ($this->locale == null) {
-            $this->locale = Config::instance()->default_locale;
+            $this->locale = \Tr8n\Config::instance()->blockOption("locale");
+            if ($this->locale == null)
+                $this->locale = $this->application->default_locale;
         }
 
         if ($this->language == null) {
@@ -183,6 +185,7 @@ class TranslationKey extends Base {
                                 array("key"=>$this->key, "label"=>$this->label, "description"=>$this->description, "locale" => $language->locale),
                                 array("class"=>'\Tr8n\TranslationKey', "attributes"=>array("application"=>$this->application)));
 
+        /** @var $translation_key TranslationKey */
         return $this->application->cacheTranslationKey($translation_key);
     }
 
@@ -202,16 +205,13 @@ class TranslationKey extends Base {
     }
 
     /**
-     * Set translations for a specific language
-     *
      * @param Language $language
      * @param Translation[] $translations
      */
-    public function setTranslations(Language $language, $translations) {
+    public function setLanguageTranslations($language, $translations) {
         foreach($translations as $translation) {
             $translation->setTranslationKey($this);
         }
-
         $this->translations[$language->locale] = $translations;
     }
 
@@ -304,6 +304,9 @@ class TranslationKey extends Base {
         return $this->data_tokens;
     }
 
+    /**
+     * @return array|\string[]
+     */
     public function dataTokenNamesMap() {
         if ($this->data_token_names == null) {
             $this->data_token_names = array();
@@ -331,17 +334,6 @@ class TranslationKey extends Base {
         if (strpos($label, '[') === FALSE) return $label;
         $dt = new Tokens\DecorationTokenizer($label, $token_values, array("allowed_tokens" => $this->decorationTokens()));
         return $dt->substitute();
-    }
-
-    /**
-     * @param Language $language
-     * @param Translation[] $translations
-     */
-    public function setLanguageTranslations($language, $translations) {
-        foreach($translations as $translation) {
-            $translation->setTranslationKey($this);
-        }
-        $this->translations[$language->locale] = $translations;
     }
 
     /**

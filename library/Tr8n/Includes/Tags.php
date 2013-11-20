@@ -56,19 +56,19 @@ function tr8n_link_to($dest, $title = null, $opts = array()) {
             break;
         case 'discussions':
             if ($title == null) $title = "Discussions";
-            $path = "/tr8n/forum";
+            $path = "/tr8n/app/forum";
             break;
         case 'awards':
             if ($title == null) $title = "Awards";
-            $path = "/tr8n/awards";
+            $path = "/tr8n/app/awards";
             break;
         case 'phrases':
             if ($title == null) $title = "Phrases";
-            $path = "/tr8n/phrases";
+            $path = "/tr8n/app/phrases";
             break;
         case 'translations':
             if ($title == null) $title = "Translations";
-            $path = "/tr8n/translations";
+            $path = "/tr8n/app/translations";
             break;
         case 'toggle_inline':
             if ($title == null) $title = "Toggle inline mode";

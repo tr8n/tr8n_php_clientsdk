@@ -46,6 +46,11 @@ class Application extends Base {
     public $name;
 
     /**
+     * @vars string
+     */
+    public $default_locale;
+
+    /**
      * @var string
      */
     public $description;
@@ -192,12 +197,14 @@ class Application extends Base {
             return $this->languages_by_locale[$locale];
         }
 
-        $language = Cache::fetch(Language::cacheKey($locale));
-        /** @var $language Language */
-        if ($language) {
-            $language->application = $this;
-            $this->languages_by_locale[$locale] = $language;
-            return $language;
+        if (\Tr8n\Config::instance()->isCacheEnabled()) {
+            $language = Cache::fetch(Language::cacheKey($locale));
+            /** @var $language Language */
+            if ($language) {
+                $language->application = $this;
+                $this->languages_by_locale[$locale] = $language;
+                return $language;
+            }
         }
 
         if ($fetch == false) return null;

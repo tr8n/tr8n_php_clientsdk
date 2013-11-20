@@ -160,7 +160,7 @@ class Language extends Base {
      */
     public function isDefault() {
         if ($this->application == null) return true;
-        return (Config::instance()->default_locale == $this->locale);
+        return ($this->application->default_locale == $this->locale);
     }
 
     /**
@@ -193,9 +193,6 @@ class Language extends Base {
 
             $level = isset($options["level"]) ? $options["level"] : Config::instance()->blockOption("level");
             if ($level == null) $level = Config::instance()->default_level;
-
-            $source_key = isset($options['source']) ? $options["source"] : Config::instance()->blockOption('source');
-            if ($source_key == null) $source_key = Config::instance()->current_source;
 
             $temp_key = new TranslationKey(array(
                 "application"   => $this->application,
@@ -286,20 +283,14 @@ class Language extends Base {
             // get cached translation keys for source key
             $source = Cache::fetch($cacheKey);
 
-            if ($source == null) {
-                // if nothing was cached and the cache is read only, cache  empty key and get out
-                if (Cache::isReadOnly()) {
-                    $translation_key->translations = array($this->locale => array());
-                    $this->application->cacheTranslationKey($translation_key);
-                    return $translation_key->translate($this, $token_values, $options);
-                }
-
-                // otherwise, fetch translation keys from service and cache it for the key
+            if ($source) {
+                $translation_keys = $source->translation_keys;
+            } else if (Cache::isReadOnly()) {
+                $translation_keys = array();
+            } else {
                 $source = $this->application->source($source_key);
                 $translation_keys = $source->fetchTranslationsForLanguage($this, $options);
                 Cache::store($cacheKey, $source);
-            } else {
-                $translation_keys = $source->translation_keys;
             }
 
             if (isset($translation_keys[$translation_key->key])) {

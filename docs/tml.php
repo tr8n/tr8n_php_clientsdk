@@ -24,13 +24,13 @@
 
         <table style="width:100%">
             <tr>
-                <td style="50%">
+                <td style="width:50%">
                     <div style="font-size:12px;float:right;padding-top:15px;color:#888"><?php tre("Dynamic data to be substituted")?></div>
                     <h4><?php tre("Tokens (optional, JSON)") ?></h4>
                     <div class="ace_editor" id="tml_tokens_editor" style="height:100px;">{}</div>
                 </td>
                 <td>&nbsp;</td>
-                <td style="50%">
+                <td style="width:50%">
                     <div style="font-size:12px;float:right;padding-top:15px;color:#888"><?php tre("Translation options")?></div>
                     <h4><?php tre("Options (optional, JSON)") ?></h4>
                     <div class="ace_editor" id="tml_options_editor" style="height:100px;">{}</div>

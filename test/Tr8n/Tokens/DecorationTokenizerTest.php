@@ -86,16 +86,6 @@ class DecorationTokenizerTest extends \BaseTest {
             $dt->parse()
         );
 
-        $dt = new \Tr8n\Tokens\DecorationTokenizer("[link: you have [italic: [bold: {count}] messages] [light: in your mailbox]]");
-        $this->assertEquals(
-            array("[tr8n]", "[link:", " you have ", "[italic:", " ", "[bold:", " {count}", "]", " messages", "]", " ", "[light:", " in your mailbox", "]", "]", "[/tr8n]"),
-            $dt->fragments
-        );
-        $this->assertEquals(
-            array("tr8n", array("link", "you have ", array("italic", "", array("bold", "{count}"), " messages"), " ", array("light", "in your mailbox"))),
-            $dt->parse()
-        );
-
         $dt = new \Tr8n\Tokens\DecorationTokenizer("[link] you have [italic: [bold: {count}] messages] [light: in your mailbox] [/link]");
         $this->assertEquals(
             array("[tr8n]", "[link]", " you have ", "[italic:", " ", "[bold:", " {count}", "]", " messages", "]", " ", "[light:", " in your mailbox", "]", " ", "[/link]", "[/tr8n]"),
@@ -109,9 +99,6 @@ class DecorationTokenizerTest extends \BaseTest {
 
     public function testSubstitution() {
         $dt = new \Tr8n\Tokens\DecorationTokenizer("[bold: Hello World]");
-        $this->assertEquals("<strong>Hello World</strong>", $dt->substitute());
-
-        $dt = new \Tr8n\Tokens\DecorationTokenizer("[bold: Hello World");
         $this->assertEquals("<strong>Hello World</strong>", $dt->substitute());
 
         $dt = new \Tr8n\Tokens\DecorationTokenizer("[bold]Hello World[/bold]");
