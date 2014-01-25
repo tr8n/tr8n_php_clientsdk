@@ -5,7 +5,7 @@
 Tr8n for PHP
 ==================
 
-PHP Client SDK for Tr8n Translation Engine
+PHP Client SDK for Tr8nHub Translation Platform.
 
 [![Build Status](https://travis-ci.org/tr8n/tr8n_php_clientsdk.png?branch=master)](https://travis-ci.org/tr8n/tr8n_php_clientsdk)
 [![Latest Stable Version](https://poser.pugx.org/tr8n/tr8n-client-sdk/v/stable.png)](https://packagist.org/packages/tr8n/tr8n-client-sdk)
