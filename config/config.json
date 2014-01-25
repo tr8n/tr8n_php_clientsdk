@@ -1,0 +1,68 @@
+{
+    "local": {
+        "base_path": "/tr8n"
+    },
+    "log": {
+        "enabled": true
+    },
+	"application": {
+		"host": "http://localhost:3000",
+		"key": "b420142a2c4201b36",
+		"secret": "e43888bf9142e1f9d"
+	},
+	"cache": {
+		"enabled": false,
+		"adapter": "apc",
+		"version": 1,
+		"timeout": 3600
+	},
+	"html_translator": {
+		"debug": false,
+		"debug_format": "<span style='font-size:20px;color:red;'>{<\/span> {$0} <span style='font-size:20px;color:red;'>}<\/span>",
+		"split_sentences": false,
+		"nodes": {
+			"ignored": [
+				"html",
+				"body"
+			],
+			"inline": [
+				"a",
+				"span",
+				"i",
+				"b",
+				"img",
+				"strong",
+				"s",
+				"em",
+				"u",
+				"sub",
+				"sup"
+			],
+			"short": [
+				"i",
+				"b"
+			],
+			"splitters": [
+				"br",
+				"hr"
+			]
+		},
+		"attributes": {
+			"labels": [
+				"title",
+				"alt"
+			]
+		},
+		"name_mapping": {
+			"b": "bold",
+			"i": "italic",
+			"a": "link",
+			"img": "picture"
+		},
+		"data_tokens": {
+			"special": false,
+			"numeric": false,
+			"numeric_name": "num"
+		}
+	}
+}
