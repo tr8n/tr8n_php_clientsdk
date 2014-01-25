@@ -110,6 +110,9 @@ Right-Mouse-Click (or Ctrl+Click on Mac) on any phrase and you will see an inlin
         Right-Mouse-Click on Windows or Ctrl+Click on Mac - brings inline translation window
 
 
+<img src="http://wiki.tr8nhub.com/images/6/6e/Sample_Translation.png">
+
+
 To learn about various integration options and TML language, please visit the following URL:
 
         http://wiki.tr8nhub.com/index.php?title=PHP_Client_SDK
