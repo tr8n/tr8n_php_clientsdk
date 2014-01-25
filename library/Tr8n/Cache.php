@@ -26,6 +26,7 @@ namespace Tr8n;
 
 class Cache {
 
+
     /**
      * @return mixed
      */

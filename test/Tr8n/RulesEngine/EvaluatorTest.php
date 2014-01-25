@@ -24,7 +24,6 @@ class EvaluatorTest extends \BaseTest {
             $e->evaluate(array("quote", array(1,2,3)))
         );
 
-
         $this->assertEquals(
             array("a","b","c"),
             $e->evaluate(array("quote", array("a","b","c")))

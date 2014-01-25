@@ -79,7 +79,7 @@ class DataToken {
         $parts = explode('::', $name_without_parens);
         $name_without_case_keys = trim($parts[0]);
 
-        $parts = explode(':', $name_without_parens);
+        $parts = explode(':', $name_without_case_keys);
         $this->short_name = trim($parts[0]);
 
         $keys = array();
@@ -232,14 +232,14 @@ class DataToken {
      * @throws \Tr8n\Tr8nException
      */
     public function tokenValue($token_values, $language, $options) {
-        if (array_key_exists($this->name(), $token_values)) {
+        if (array_key_exists($this->short_name, $token_values)) {
             $token_data = $token_values[$this->name()];
         } else {
-            $token_data = \Tr8n\Config::instance()->defaultToken($this->name(), 'data');
+            $token_data = \Tr8n\Config::instance()->defaultToken($this->short_name, 'data');
         }
 
         if ($token_data === null) {
-            throw new Tr8nException("Missing value for token: " . $this->name());
+            return "{".$this->short_name.": missing value}";
         }
 
         if (is_string($token_data) || is_numeric($token_data) || is_double($token_data)) {
@@ -249,7 +249,7 @@ class DataToken {
         if (is_array($token_data)) {
             if (\Tr8n\Utils\ArrayUtils::isHash($token_data)) {
                 if (!array_key_exists('object', $token_data))
-                    throw new Tr8nException("object attribute is missing in the hash for token: " . $this->full_name);
+                    return "{".$this->short_name.": object attribute is missing in the hash value}";
 
                 $token_object = $token_data['object'];
 
@@ -271,26 +271,28 @@ class DataToken {
                 if (array_key_exists('method', $token_data)) {
                     $method = $token_data['method'];
                     if (is_array($token_object)) {
-                        throw new Tr8nException("Invalid method properties for hash of token: " . $this->full_name);
+                        return "{".$this->short_name.": invalid method properties for hash value}";
                     }
                     return $this->sanitize($token_object->$method(), $token_values, $language, array_merge($options, array("sanitize" => true)));
                 }
 
-                throw new Tr8nException("value and attribute properties are missing in the hash for token: " . $this->full_name);
+                return "{".$this->short_name.": value and attribute properties are missing}";
             }
 
             if (count($token_data) == 0)
-                throw new Tr8nException("Invalid array value for token: " . $this->full_name);
+                return "{".$this->short_name.": array value is empty}";
 
             $token_object = $token_data[0];
-
-//            if (is_array($token_object)) {
-//            }
 
             if (count($token_data) == 1)
                 return $this->sanitize($token_object, $token_values, $language, array_merge($options, array("sanitize" => true)));
 
             $token_method = $token_data[1];
+
+            if (is_callable($token_method)) {
+                $token_value = $token_method($token_object);
+                return $this->sanitize($token_value, $token_values, $language, array_merge($options, array("sanitize" => false)));
+            }
 
             if (is_string($token_method)) {
                 # method
@@ -308,12 +310,7 @@ class DataToken {
                 return $this->sanitize($token_method, $token_values, $language, array_merge($options, array("sanitize" => false)));
             }
 
-            if (is_callable($token_method)) {
-                $token_value = $token_method($token_object);
-                return $this->sanitize($token_value, $token_values, $language, array_merge($options, array("sanitize" => false)));
-            }
-
-            throw new Tr8nException("Unsupported token array method for token: " . $this->full_name);
+            return "{".$this->short_name.": unsupported array method}";
         }
 
         return $this->sanitize($token_data, $token_values, $language, $options);

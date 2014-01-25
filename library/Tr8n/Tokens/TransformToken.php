@@ -185,7 +185,7 @@ class TransformToken extends DataToken {
 
             // token form {$0::plural} - number followed by language cases
             $keys = array();
-            preg_match_all('/{\$\d(::[\w]+)*}/', $value, $keys);
+            preg_match_all('/\{\$\d(::[\w]+)*\}/', $value, $keys);
             $keys = $keys[0];
 
             foreach($keys as $tkey) {

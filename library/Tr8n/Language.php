@@ -176,7 +176,7 @@ class Language extends Base {
      */
     public function alignment($default) {
         if ($this->right_to_left) return $default;
-        return $this->right_to_left ? "right" : "left";
+        return ($default == "left") ? "right" : "left";
     }
 
     /**

@@ -3,6 +3,30 @@
 
     <h1 style="text-align:center"><?php tre("TML Interactive Console") ?></h1>
 
+<?php
+$examples = array(
+    array("label" => "Hello World"),
+    array("label" => "Invite", "description" => "An invitation"),
+    array("label" => "Invite", "description" => "Action to invite someone"),
+    array("label" => "Number of messages: {count}", "tokens" => array("count" => 5)),
+    array("label" => "You have {count|| one: message, other: messages}", "tokens" => array("count" => 5)),
+    array("label" => "You have {count|| message, messages}", "tokens" => array("count" => 5)),
+    array("label" => "You have {count|| message}", "tokens" => array("count" => 5)),
+    array("label" => "You have {count| message}", "tokens" => array("count" => 5)),
+    array("label" => "Hello [bold: World]"),
+    array("label" => "Hello [bold: {user}]", "tokens" => array("user" => "Michael")),
+    array("label" => "Hello [bold: {user}], you have {count||message}.", "tokens" => array("user" => "Michael", "count" => 5)),
+    array("label" => "Hello [bold: {user}], [italic: you have [bold: {count||message}]].", "tokens" => array("user" => "Michael", "count" => 1)),
+    array("label" => "Hello [bold: {user}], [italic]you have [bold: {count||message}][/italic].", "tokens" => array("user" => "Michael", "count" => 3)),
+    array("label" => "{user|He, She} likes this post.", "tokens" => array("user" => array("object" => array("gender" => "male", "name" => "Michael")))),
+    array("label" => "{user|Dear} {user}", "tokens" => array("user" => array("object" => array("gender" => "male", "name" => "Michael"), "attribute" => "name"))),
+    array("label" => "{users||likes, like} this post.", "tokens" => array("users" => array(array(array("gender" => "male", "name" => "Michael"), array("gender" => "female", "name" => "Anna")), array("attribute" => "name")))),
+    array("label" => "{users||likes, like} this post.", "tokens" => array("users" => array(array(array("gender" => "female", "name" => "Anna")), array("attribute" => "name")))),
+    array("label" => "{users|He likes, She likes, They like} this post.", "tokens" => array("users"=> array(array(array("gender"=> "male", "name"=>"Michael"), array("gender"=> "female", "name"=>"Anna")), array("attribute"=> "name")))),
+    array("label" => "{users|He likes, She likes, They like} this post.", "tokens" => array("users"=> array(array(array("gender"=> "female", "name"=>"Anna")), array("attribute"=> "name")))),
+    array("label" => "{users|He likes, She likes, They like} this post.", "tokens" => array("users"=> array(array(array("gender"=> "male", "name"=>"Michael")), array("attribute"=> "name"))))
+)
+?>
 
     <form action="<?php echo \Tr8n\Config::instance()->configValue("local.base_path") ?>/docs/tml_content.php" method="get" id="tml_form" target="tml_translations">
         <input type="hidden" id="tml_label" name="tml_label" value="">
@@ -12,7 +36,36 @@
 
         <div style="padding-top:15px;">
             <div style="font-size:12px;float:right;padding-top:15px;color:#888"><?php tre("The text that you would like to translate.")?></div>
-            <h4><?php tre("Label (required, TML)") ?></h4>
+            <h4 style="display:inline-block;"><?php tre("Label (required, TML)") ?></h4>
+            <div class="dropdown" style="display:inline-block; padding-left:10px;">
+                <a id="samples_menu_trigger" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <?php tre("try some examples") ?><b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu pas" style="max-height:500px;overflow:auto;">
+                    <?php $index = 1 ?>
+                    <?php foreach($examples as $sample) { ?>
+                        <li style="font-size:13px;">
+                            <a href="javascript: loadExample(<?php echo $index-1 ?>)">
+                                <?php echo ($index++) ?>)
+                                <strong><?php echo $sample["label"] ?></strong>
+
+                                <?php if (isset($sample['description'])) { ?>
+                                    <div style="font-size:10px;padding-left:15px;">Context: <?php echo $sample['description'] ?></div>
+                                <?php } ?>
+
+                                <?php if (isset($sample['tokens'])) { ?>
+                                    <div style="font-size:10px;padding-left:15px;">Tokens: <?php echo json_encode($sample['tokens']) ?></div>
+                                <?php } ?>
+
+                                <?php if (isset($sample['options'])) { ?>
+                                    <div style="font-size:10px;padding-left:15px;">Options: <?php echo json_encode($sample['options']) ?></div>
+                                <?php } ?>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                    <?php } ?>
+                </ul>
+            </div>
             <div class="ace_editor" id="tml_label_editor" style="height:80px;"></div>
         </div>
 
@@ -105,5 +158,28 @@
 
     function newSample() {
         location.reload();
+    }
+
+    var examples = <?php echo json_encode($examples) ?>;
+    function loadExample(index) {
+//    alert("Loading: " + index);
+        label_editor.setValue(examples[index].label);
+
+        if (examples[index].description)
+            context_editor.setValue(examples[index].description);
+        else
+            context_editor.setValue("");
+
+        if (examples[index].tokens)
+            tokens_editor.setValue(JSON.stringify(examples[index].tokens));
+        else
+            tokens_editor.setValue("{}");
+
+        if (examples[index].options)
+            options_editor.setValue(JSON.stringify(examples[index].options));
+        else
+            options_editor.setValue("{}");
+
+        submitTml();
     }
 </script>

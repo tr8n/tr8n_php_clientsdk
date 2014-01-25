@@ -54,6 +54,10 @@ class MethodToken extends DataToken {
         return '/(\{[^_:.][\w]*(\.[\w]+)(:[\w]+)*(::[\w]+)*\})/';
     }
 
+//    public function parse() {
+//
+//    }
+
     /**
      * @return string
      */
