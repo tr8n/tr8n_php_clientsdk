@@ -32,7 +32,7 @@ class ConfigTest extends \BaseTest {
         $config = \Tr8n\Config::instance();
 
         $this->assertEquals(false, $config->isEnabled());
-        $this->assertEquals(true, $config->isLoggerEnabled());
+        $this->assertEquals(false, $config->isLoggerEnabled());
    }
 
     public function testDefaultTokens() {
