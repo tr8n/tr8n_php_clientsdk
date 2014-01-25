@@ -1,0 +1,11 @@
+Tr8n Configuration
+=================
+
+This folder contains default configuration settings. Make sure you have the config.json file available.
+
+You can create a your config.json using the following command:
+
+        $ cp config-default.json config.json
+        $ chmod 777 config.json
+
+

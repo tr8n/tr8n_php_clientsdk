@@ -1,15 +1,15 @@
 {
+    "application": {
+        "host": "http://localhost:3000",
+        "key": "b420142a2c4201b36",
+        "secret": "e43888bf9142e1f9d"
+    },
     "local": {
         "base_path": "/tr8n"
     },
     "log": {
         "enabled": false
     },
-	"application": {
-		"host": "http://localhost:3000",
-		"key": "b420142a2c4201b36",
-		"secret": "e43888bf9142e1f9d"
-	},
 	"cache": {
 		"enabled": false,
 		"adapter": "apc",
