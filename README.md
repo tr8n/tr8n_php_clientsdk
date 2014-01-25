@@ -45,6 +45,68 @@ Now you are ready to integrate Tr8n into your application.
 Integration
 ==================
 
-To learn about how to get PHP SDK working, please read this document:
+Before you can proceed with the integration, please visit http://tr8nhub.com register as a user and create a new application.
 
-http://wiki.tr8nhub.com/index.php?title=PHP_Client_SDK
+Once you have created a new application, go to the security tab in the application administration section and copy your application key and secret.
+
+You will need to enter them in the initialization function of the Tr8n SDK.
+
+To make sure you have installed everything correctly, let's create a sample test file in the root folder of your app and call it tr8n.php
+
+Paste the following content into the file:
+
+
+        <?php require_once(__DIR__ . '/vendor/tr8n/tr8n-client-sdk/library/Tr8n.php'); ?>
+        <?php tr8n_init_client_sdk("https://tr8nhub.com", "YOUR_APPLICATION_KEY", "YOUR_APPLICATION_SECRET"); ?>
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>" lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>">
+        <head>
+            <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title><?php echo tr8n_application()->name ?></title>
+            <?php include(__DIR__ . '/vendor/tr8n/tr8n-client-sdk/library/Tr8n/Includes/Scripts.php'); ?>
+        </head>
+        <body>
+            <?php tre("Hello World") ?>
+        </body>
+        </html>
+        <?php tr8n_complete_request() ?>
+
+
+Make sure you replace YOUR_APPLICATION_KEY and YOUR_APPLICATION_SECRET with the key and secret you copied from tr8nhub.com
+
+Now you can open up your browser and navigate to the file:
+
+        http://localhost/your_app_path/tr8n.php
+
+
+If everything was configured correctly, you should see a phrase "Hello World" on your page.
+
+Press the following keys:  Ctrl+Shift+S
+
+You should see a lightbox with Tr8n's default shortcuts. You can configure those shortcuts in the application administration section.
+
+To close the lightbox, click on the top-right corner or simply press the Esc button.
+
+
+Press Ctrl+Shift+L to switch to a different language.
+
+        Ctrl+Shift+L  - opens language selector
+
+
+Now you can press Ctrl+Shift+I to enable inline translations.
+
+        Ctrl+Shift+I  - toggles inline translation mode
+
+
+When inline translations are enabled you will see translated phrases underlined in green color and not translated phrases with red.
+
+Right-Mouse-Click (or Ctrl+Click on Mac) on any phrase and you will see an inline translator window that will allow you to translate the phrase.
+
+        Right-Mouse-Click on Windows or Ctrl+Click on Mac - brings inline translation window
+
+
+To learn about various integration options and TML language, please visit the following URL:
+
+        http://wiki.tr8nhub.com/index.php?title=PHP_Client_SDK
