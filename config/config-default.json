@@ -4,6 +4,9 @@
 		"key": "APPLICATION_KEY",
 		"secret": "APPLICATION_SECRET"
 	},
+    "log": {
+        "enabled": false
+    },
     "local": {
         "base_path": "/tr8n"
     },

@@ -3,7 +3,7 @@
         "base_path": "/tr8n"
     },
     "log": {
-        "enabled": true
+        "enabled": false
     },
 	"application": {
 		"host": "http://localhost:3000",
