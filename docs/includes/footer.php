@@ -14,17 +14,17 @@
             <ul id="navlist" style="float:right;">
                 <li><a href="http://wiki.tr8nhub.com" class="quiet"><?php tre("Documentation") ?></a></li>
 
-                <li><?php image_tag('github.png') ?> <a href="http://github.com/tr8n" class="quiet"><?php tre("Source") ?></a></li>
-                <li><?php image_tag('wordpress.png') ?> <a href="http://blog.tr8nhub.com" class="quiet"><?php tre("Blog") ?></a></li>
+                <li><a href="http://github.com/tr8n" class="quiet"><?php tre("Source") ?></a></li>
+                <li><a href="http://blog.tr8nhub.com" class="quiet"><?php tre("Blog") ?></a></li>
 
-                <li><?php image_tag('facebook.png') ?> <a href="http://www.facebook.com/pages/Tr8n-Translation-Engine/138407706218622" class="quiet"><?php tre("Facebook") ?></a></li>
-                <li><?php image_tag('twitter.png') ?> <a href="http://twitter.com/Tr8nHub" class="quiet"><?php tre("Twitter") ?></a></li>
-                <li><?php image_tag('linkedin.png') ?> <a href="http://www.linkedin.com/groups/Internationalizing-your-application-using-Tr8n-4090552?gid=4090552" class="quiet"><?php tre("LinkedIn") ?></a></li>
+                <li><a href="http://www.facebook.com/pages/Tr8n-Translation-Engine/138407706218622" class="quiet"><?php tre("Facebook") ?></a></li>
+                <li><a href="http://twitter.com/Tr8nHub" class="quiet"><?php tre("Twitter") ?></a></li>
+                <li><a href="http://www.linkedin.com/groups/Internationalizing-your-application-using-Tr8n-4090552?gid=4090552" class="quiet"><?php tre("LinkedIn") ?></a></li>
 
                 <!-- li><a href="/extensions" class="quiet"><span class='tr8n_translatable tr8n_not_translated' data-translation_key_id='22'>Extensions</span></a></li -->
             </ul>
 
-            &copy; <a href="http://www.tr8nhub.com" class="quiet">Tr8nHub.com</a> 2013
+            &copy; <a href="http://www.tr8nhub.com" class="quiet">Tr8nHub.com</a> 2014
         </div>
     </footer>
 

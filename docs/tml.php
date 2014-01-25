@@ -20,11 +20,11 @@ $examples = array(
     array("label" => "Hello [bold: {user}], [italic]you have [bold: {count||message}][/italic].", "tokens" => array("user" => "Michael", "count" => 3)),
     array("label" => "{user|He, She} likes this post.", "tokens" => array("user" => array("object" => array("gender" => "male", "name" => "Michael")))),
     array("label" => "{user|Dear} {user}", "tokens" => array("user" => array("object" => array("gender" => "male", "name" => "Michael"), "attribute" => "name"))),
-    array("label" => "{users||likes, like} this post.", "tokens" => array("users" => array(array(array("gender" => "male", "name" => "Michael"), array("gender" => "female", "name" => "Anna")), array("attribute" => "name")))),
-    array("label" => "{users||likes, like} this post.", "tokens" => array("users" => array(array(array("gender" => "female", "name" => "Anna")), array("attribute" => "name")))),
-    array("label" => "{users|He likes, She likes, They like} this post.", "tokens" => array("users"=> array(array(array("gender"=> "male", "name"=>"Michael"), array("gender"=> "female", "name"=>"Anna")), array("attribute"=> "name")))),
-    array("label" => "{users|He likes, She likes, They like} this post.", "tokens" => array("users"=> array(array(array("gender"=> "female", "name"=>"Anna")), array("attribute"=> "name")))),
-    array("label" => "{users|He likes, She likes, They like} this post.", "tokens" => array("users"=> array(array(array("gender"=> "male", "name"=>"Michael")), array("attribute"=> "name"))))
+//    array("label" => "{users||likes, like} this post.", "tokens" => array("users" => array(array(array("gender" => "male", "name" => "Michael"), array("gender" => "female", "name" => "Anna")), array("attribute" => "name")))),
+//    array("label" => "{users||likes, like} this post.", "tokens" => array("users" => array(array(array("gender" => "female", "name" => "Anna")), array("attribute" => "name")))),
+//    array("label" => "{users|He likes, She likes, They like} this post.", "tokens" => array("users"=> array(array(array("gender"=> "male", "name"=>"Michael"), array("gender"=> "female", "name"=>"Anna")), array("attribute"=> "name")))),
+//    array("label" => "{users|He likes, She likes, They like} this post.", "tokens" => array("users"=> array(array(array("gender"=> "female", "name"=>"Anna")), array("attribute"=> "name")))),
+//    array("label" => "{users|He likes, She likes, They like} this post.", "tokens" => array("users"=> array(array(array("gender"=> "male", "name"=>"Michael")), array("attribute"=> "name"))))
 )
 ?>
 
