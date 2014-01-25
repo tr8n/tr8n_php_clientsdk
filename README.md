@@ -1,4 +1,8 @@
-Tr8n PHP Client SDK
+<p align="center">
+  <img src="https://raw.github.com/tr8n/tr8n/master/doc/screenshots/tr8nlogo.png">
+</p>
+
+Tr8n for PHP
 ==================
 
 PHP Client SDK for Tr8n Translation Engine
