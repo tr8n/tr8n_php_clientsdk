@@ -29,7 +29,7 @@ require_once(__DIR__."/../BaseTest.php");
 class LanguageContextRuleTest extends \BaseTest {
 
     public function testFallbackRule() {
-        $rule = new \Tr8n\LanguageContextRule(array("keyword" => "one", "definition" => array("conditions" => "(= 1 @n)"), "examples" => "1"));
+        $rule = new \Tr8n\LanguageContextRule(array("keyword" => "one", "conditions" => "(= 1 @n)", "examples" => "1"));
         $this->assertFalse($rule->isFallback());
 
         $rule = new \Tr8n\LanguageContextRule(array("keyword" => "other", "examples" => "0, 2-999; 1.2, 2.07..."));
@@ -38,15 +38,15 @@ class LanguageContextRuleTest extends \BaseTest {
 
 
     public function testEvaluatingRule() {
-        $rule = new \Tr8n\LanguageContextRule(array("keyword" => "one", "definition" => array("conditions" => "(= 1 @n)"), "examples" => "1"));
+        $rule = new \Tr8n\LanguageContextRule(array("keyword" => "one", "conditions" => "(= 1 @n)", "examples" => "1"));
         $this->assertFalse($rule->evaluate());
         $this->assertTrue($rule->evaluate(array("@n" => 1)));
         $this->assertFalse($rule->evaluate(array("@n" => 2)));
         $this->assertFalse($rule->evaluate(array("@n" => 0)));
 
-        $one = new \Tr8n\LanguageContextRule(array("keyword" => "one", "definition" => array("conditions" => "(&& (= 1 (mod @n 10)) (!= 11 (mod @n 100)))"), "description" => "array(n) mod 10 is 1 and array(n) mod 100 is not 11", "examples" => "1, 21, 31, 41, 51, 61..."));
-        $few = new \Tr8n\LanguageContextRule(array("keyword" => "few", "definition" => array("conditions" => "(&& (in '2..4' (mod @n 10)) (not (in '12..14' (mod @n 100))))"), "description" => "array(n) mod 10 in 2..4 and array(n) mod 100 not in 12..14", "examples" => "2-4, 22-24, 32-34..."));
-        $many = new \Tr8n\LanguageContextRule(array("keyword" => "many", "definition" => array("conditions" => "(|| (= 0 (mod @n 10)) (in '5..9' (mod @n 10)) (in '11..14' (mod @n 100)))"), "description" => "array(n) mod 10 is 0 or array(n) mod 10 in 5..9 or array(n) mod 100 in 11..14", "examples" => "0, 5-20, 25-30, 35-40..."));
+        $one = new \Tr8n\LanguageContextRule(array("keyword" => "one", "conditions" => "(&& (= 1 (mod @n 10)) (!= 11 (mod @n 100)))", "description" => "array(n) mod 10 is 1 and array(n) mod 100 is not 11", "examples" => "1, 21, 31, 41, 51, 61..."));
+        $few = new \Tr8n\LanguageContextRule(array("keyword" => "few", "conditions" => "(&& (in '2..4' (mod @n 10)) (not (in '12..14' (mod @n 100))))", "description" => "array(n) mod 10 in 2..4 and array(n) mod 100 not in 12..14", "examples" => "2-4, 22-24, 32-34..."));
+        $many = new \Tr8n\LanguageContextRule(array("keyword" => "many", "conditions" => "(|| (= 0 (mod @n 10)) (in '5..9' (mod @n 10)) (in '11..14' (mod @n 100)))", "description" => "array(n) mod 10 is 0 or array(n) mod 10 in 5..9 or array(n) mod 100 in 11..14", "examples" => "0, 5-20, 25-30, 35-40..."));
 
         foreach( array(
                     array($one, array(1, 21, 31, 101, 121)),

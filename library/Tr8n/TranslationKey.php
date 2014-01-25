@@ -110,11 +110,11 @@ class TranslationKey extends Base {
 
         if ($this->locale == null) {
             $this->locale = \Tr8n\Config::instance()->blockOption("locale");
-            if ($this->locale == null)
+            if ($this->locale == null && $this->application)
                 $this->locale = $this->application->default_locale;
         }
 
-        if ($this->language == null) {
+        if ($this->language == null && $this->application) {
             $this->language = $this->application->language($this->locale);
         }
 

@@ -187,7 +187,8 @@ class Config {
     }
 
     public function isLoggerEnabled() {
-        return true;
+//        return true;
+        return $this->configValue("log.enabled");
     }
 
     public function loggerFilePath() {

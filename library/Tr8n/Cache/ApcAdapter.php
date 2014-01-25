@@ -51,6 +51,7 @@ class ApcAdapter extends Base {
         } else {
             $value = $default;
         }
+
         apc_store($this->versionedKey($key), $this->serializeObject($key, $value), Config::instance()->cacheTimeout());
 
         return $value;

@@ -31,14 +31,14 @@ class LanguageTest extends \BaseTest {
         $this->assertEquals('English (US)', $this->english->english_name);
         $this->assertEquals('English (US)', $this->english->native_name);
         $this->assertEquals(array("date", "gender", "genders", "list", "number"), array_keys($this->english->contexts));
-        $this->assertEquals(array("ord", "ordinal", "plural", "pos", "singular", "times"), array_keys($this->english->cases));
+        $this->assertEquals(array("plural", "singular", "pos", "ord", "ordinal", "times"), array_keys($this->english->cases));
 
         $this->assertEquals('ru', $this->russian->locale);
-        $this->assertEquals('Russian - Русский', $this->russian->name);
+        $this->assertEquals('Русский', $this->russian->name);
         $this->assertEquals('Russian', $this->russian->english_name);
         $this->assertEquals('Русский', $this->russian->native_name);
-        $this->assertEquals(array("date", "gender", "genders", "list", "number", "value"), array_keys($this->russian->contexts));
-        $this->assertEquals(array("acc", "dat", "gen", "ins", "nom", "pos", "pre"), array_keys($this->russian->cases));
+        $this->assertEquals(array("number", "gender", "genders", "list", "date", "value"), array_keys($this->russian->contexts));
+        $this->assertEquals(array("nom", "gen", "dat", "acc", "ins", "pre", "pos"), array_keys($this->russian->cases));
     }
 
     public function testDefaultTranslationsWithNoTokens() {
