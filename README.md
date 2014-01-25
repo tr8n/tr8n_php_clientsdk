@@ -11,7 +11,12 @@ PHP Client SDK for Tr8n Translation Engine
 [![Latest Stable Version](https://poser.pugx.org/tr8n/tr8n-client-sdk/v/stable.png)](https://packagist.org/packages/tr8n/tr8n-client-sdk)
 [![Dependency Status](https://www.versioneye.com/user/projects/52e36159ec1375c6f4000075/badge.png)](https://www.versioneye.com/user/projects/52e36159ec1375c6f4000075)
 
-https://www.versioneye.com/user/projects/52e36159ec1375c6f4000075/badge.png
+
+Installation
+==================
+
+Integration
+==================
 
 To learn about how to get PHP SDK working, please read this document:
 
