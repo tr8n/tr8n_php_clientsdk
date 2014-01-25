@@ -15,6 +15,12 @@ PHP Client SDK for Tr8n Translation Engine
 Installation
 ==================
 
+Tr8n Client SDK for PHP can be installed using the composer dependency manager. If you don't already have composer installed on your system, you can get it using the following command:
+
+        $ cd YOUR_APPLICATION_FOLDER
+        $ curl -s http://getcomposer.org/installer | php
+
+
 Integration
 ==================
 
