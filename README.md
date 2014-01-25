@@ -49,6 +49,9 @@ Before you can proceed with the integration, please visit http://tr8nhub.com reg
 
 Once you have created a new application, go to the security tab in the application administration section and copy your application key and secret.
 
+<img src="http://wiki.tr8nhub.com/images/thumb/f/f7/Application_Settings.png/800px-Application_Settings.png">
+
+
 You will need to enter them in the initialization function of the Tr8n SDK.
 
 To make sure you have installed everything correctly, let's create a sample test file in the root folder of your app and call it tr8n.php
