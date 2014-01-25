@@ -33,7 +33,7 @@ class LanguageContextTest extends \BaseTest {
 
         $this->assertEquals(
             "/.*(count|num|minutes|seconds|hours|sum|total)(\d)*$/",
-            $context->tokenExpression()
+            $context->token_expression
         );
 
         foreach(array("num", "num1", "profile_num1", "profile_num21", "total", "total1", "num_hours", "seconds","count1", "count2") as $token) {

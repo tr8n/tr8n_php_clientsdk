@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2013 Michael Berkovich, tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -38,10 +38,11 @@ class LanguageCaseRuleTest extends \BaseTest {
 
     public function testEvaluation() {
         $case = $this->english->languageCase("plural");
+        /** @var LanguageCaseRule $rule */
         $rule = $case->rules[0];
         $this->assertEquals(
             "(in 'sheep,fish,series,species,money,rice,information,equipment' @value)",
-            $rule->conditions()
+            $rule->conditions
         );
 
         $this->assertTrue(
@@ -67,7 +68,7 @@ class LanguageCaseRuleTest extends \BaseTest {
         $rule = $case->rules[0];
         $this->assertEquals(
             "(= 1 @value)",
-            $rule->conditions()
+            $rule->conditions
         );
 
         $this->assertTrue(

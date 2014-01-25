@@ -31,7 +31,7 @@ class BaseTest extends \BaseTest {
     public function testAttributes() {
         $app = new \Tr8n\Application(self::loadJSON('application.json'));
         $english = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
-        print_r($english->toArray());
+//        print_r($english->toArray());
     }
 
 }

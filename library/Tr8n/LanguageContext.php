@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2013 Michael Berkovich, tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -82,6 +82,9 @@ class LanguageContext extends Base {
         }
     }
 
+    /**
+     * @return array
+     */
     function config() {
         $context_rules = Config::instance()->contextRules();
         if ($context_rules && isset($context_rules[$this->keyword]))
@@ -89,6 +92,10 @@ class LanguageContext extends Base {
         return array();
     }
 
+    /**
+     * @param $token
+     * @return bool
+     */
     function isAppliedToToken($token) {
         return (1==preg_match($this->token_expression, $token));
     }
@@ -109,6 +116,10 @@ class LanguageContext extends Base {
         return $this->fallback_rule;
     }
 
+    /**
+     * @param $obj
+     * @return array
+     */
     function vars($obj) {
         $vars = array();
         $config = $this->config();
@@ -141,6 +152,10 @@ class LanguageContext extends Base {
         return $vars;
     }
 
+    /**
+     * @param $obj
+     * @return mixed|LanguageContextRule
+     */
     function findMatchingRule($obj) {
         $token_vars = $this->vars($obj);
         foreach($this->rules as $key => $rule) {
