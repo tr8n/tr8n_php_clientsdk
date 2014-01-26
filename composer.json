@@ -5,12 +5,12 @@
     "keywords": ["tr8n","translation","internationalization","i18n","localization","l10n","t9n"],
     "homepage": "https://github.com/tr8n/tr8n_php_clientsdk",
     "license": "MIT",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Michael Berkovich",
             "email": "michael@tr8nhub.com",
-            "homepage": "http://tr8nhub.com",
-            "role": "Developer"
+            "homepage": "http://tr8nhub.com"
         }
     ],
     "require": {
