@@ -116,6 +116,10 @@ class Logger {
      *
      */
     function __construct() {
+        if (!Config::instance()->isLoggerEnabled()) {
+            return;
+        }
+
         if (Config::instance()->loggerSeverity() === self::OFF) {
             return;
         }
