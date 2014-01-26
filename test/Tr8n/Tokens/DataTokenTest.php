@@ -124,15 +124,15 @@ class DataTokenTest extends \BaseTest {
 
         $this->assertEquals("Michael", $token->tokenValue(array("user" => $user), $language));
 
-        $this->assertEquals("Mike", $token->tokenValue(array("user" => [$user, "Mike"]), $language));
+        $this->assertEquals("Mike", $token->tokenValue(array("user" => array($user, "Mike")), $language));
 
-        $this->assertEquals("Michael", $token->tokenValue(array("user" => [$user, "@name"]), $language));
+        $this->assertEquals("Michael", $token->tokenValue(array("user" => array($user, "@name")), $language));
 
-        $this->assertEquals("{user: property name1 does not exist}", $token->tokenValue(array("user" => [$user, "@name1"]), $language));
+        $this->assertEquals("{user: property name1 does not exist}", $token->tokenValue(array("user" => array($user, "@name1")), $language));
 
-        $this->assertEquals("Michael", $token->tokenValue(array("user" => [$user, "@@fullName"]), $language));
+        $this->assertEquals("Michael", $token->tokenValue(array("user" => array($user, "@@fullName")), $language));
 
-        $this->assertEquals("{user: method fullName1 does not exist}", $token->tokenValue(array("user" => [$user, "@@fullName1"]), $language));
+        $this->assertEquals("{user: method fullName1 does not exist}", $token->tokenValue(array("user" => array($user, "@@fullName1")), $language));
 
         $this->assertEquals("Michael", $token->tokenValue(array("user" => array($user, function($obj) { return $obj->name; } )), $language));
 
@@ -166,11 +166,11 @@ class DataTokenTest extends \BaseTest {
 
         $this->assertEquals("&lt;b&gt;Michael&lt;/b&gt;", $token->tokenValue(array("user" => $user), $language));
 
-        $this->assertEquals("<b>Mike</b>", $token->tokenValue(array("user" => [$user, "<b>Mike</b>"]), $language));
+        $this->assertEquals("<b>Mike</b>", $token->tokenValue(array("user" => array($user, "<b>Mike</b>")), $language));
 
-        $this->assertEquals("&lt;b&gt;Michael&lt;/b&gt;", $token->tokenValue(array("user" => [$user, "@name"]), $language));
+        $this->assertEquals("&lt;b&gt;Michael&lt;/b&gt;", $token->tokenValue(array("user" => array($user, "@name")), $language));
 
-        $this->assertEquals("&lt;b&gt;Michael&lt;/b&gt;", $token->tokenValue(array("user" => [$user, "@@fullName"]), $language));
+        $this->assertEquals("&lt;b&gt;Michael&lt;/b&gt;", $token->tokenValue(array("user" => array($user, "@@fullName")), $language));
 
         $this->assertEquals("<b>Michael</b>", $token->tokenValue(array("user" => array($user, function($obj) { return $obj->name; } )), $language));
 
@@ -199,15 +199,15 @@ class DataTokenTest extends \BaseTest {
 
         $this->assertEquals($user, DataToken::tokenObject(array("user" => $user), "user"));
 
-        $this->assertEquals($user, DataToken::tokenObject(array("user" => [$user, "Mike"]), "user"));
+        $this->assertEquals($user, DataToken::tokenObject(array("user" => array($user, "Mike")), "user"));
 
-        $this->assertEquals($user, DataToken::tokenObject(array("user" => [$user, "@name"]), "user"));
+        $this->assertEquals($user, DataToken::tokenObject(array("user" => array($user, "@name")), "user"));
 
-        $this->assertEquals($user, DataToken::tokenObject(array("user" => [$user, "@name1"]), "user"));
+        $this->assertEquals($user, DataToken::tokenObject(array("user" => array($user, "@name1")), "user"));
 
-        $this->assertEquals($user, DataToken::tokenObject(array("user" => [$user, "@@fullName"]), "user"));
+        $this->assertEquals($user, DataToken::tokenObject(array("user" => array($user, "@@fullName")), "user"));
 
-        $this->assertEquals($user, DataToken::tokenObject(array("user" => [$user, "@@fullName1"]), "user"));
+        $this->assertEquals($user, DataToken::tokenObject(array("user" => array($user, "@@fullName1")), "user"));
 
         $this->assertEquals($user, DataToken::tokenObject(array("user" => array($user, function($obj) { return $obj->name; } )), "user"));
 
@@ -247,15 +247,15 @@ class DataTokenTest extends \BaseTest {
 
         $this->assertEquals("Hello Michael", $token->substitute("Hello {user}", array("user" => $user), $language));
 
-        $this->assertEquals("Hello Mike", $token->substitute("Hello {user}", array("user" => [$user, "Mike"]), $language));
+        $this->assertEquals("Hello Mike", $token->substitute("Hello {user}", array("user" => array($user, "Mike")), $language));
 
-        $this->assertEquals("Hello Michael", $token->substitute("Hello {user}", array("user" => [$user, "@name"]), $language));
+        $this->assertEquals("Hello Michael", $token->substitute("Hello {user}", array("user" => array($user, "@name")), $language));
 
-        $this->assertEquals("Hello {user: property name1 does not exist}", $token->substitute("Hello {user}", array("user" => [$user, "@name1"]), $language));
+        $this->assertEquals("Hello {user: property name1 does not exist}", $token->substitute("Hello {user}", array("user" => array($user, "@name1")), $language));
 
-        $this->assertEquals("Hello Michael", $token->substitute("Hello {user}", array("user" => [$user, "@@fullName"]), $language));
+        $this->assertEquals("Hello Michael", $token->substitute("Hello {user}", array("user" => array($user, "@@fullName")), $language));
 
-        $this->assertEquals("Hello {user: method fullName1 does not exist}", $token->substitute("Hello {user}", array("user" => [$user, "@@fullName1"]), $language));
+        $this->assertEquals("Hello {user: method fullName1 does not exist}", $token->substitute("Hello {user}", array("user" => array($user, "@@fullName1")), $language));
 
         $this->assertEquals("Hello Michael", $token->substitute("Hello {user}", array("user" => array($user, function($obj) { return $obj->name; } )), $language));
 
