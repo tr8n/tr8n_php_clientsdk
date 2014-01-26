@@ -115,4 +115,4 @@ Right-Mouse-Click (or Ctrl+Click on Mac) on any phrase and you will see an inlin
 
 To learn about various integration options and TML language, please visit the following URL:
 
-        http://wiki.tr8nhub.com/index.php?title=PHP_Client_SDK
+http://wiki.tr8nhub.com/index.php?title=PHP_Client_SDK
