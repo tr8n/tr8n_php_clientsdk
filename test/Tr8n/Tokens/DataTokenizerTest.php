@@ -27,6 +27,7 @@ namespace Tr8n\Tokens;
 require_once(__DIR__."/../../BaseTest.php");
 
 class DataTokenizerTest extends \BaseTest {
+
     public function testParsing() {
         $dt = new \Tr8n\Tokens\DataTokenizer("Hello World");
         $this->assertEquals(array(), $dt->tokens);
@@ -43,5 +44,9 @@ class DataTokenizerTest extends \BaseTest {
         $this->assertEquals(array('gender'), $dt->tokens[0]->context_keys);
         $this->assertEquals('{user:gender}', $dt->tokens[0]->name(array("parens"=>true, "context_keys"=>true)));
 
+        $dt = new \Tr8n\Tokens\DataTokenizer("Dear {user}, you have {count||message}.");
+        $this->assertEquals(2, count($dt->tokens));
+        $this->assertEquals('user', $dt->tokens[0]->short_name);
+        $this->assertEquals('count', $dt->tokens[1]->short_name);
     }
 }

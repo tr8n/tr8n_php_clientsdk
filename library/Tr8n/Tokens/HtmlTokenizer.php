@@ -261,12 +261,19 @@ class HtmlTokenizer {
         return true;
     }
 
+    /**
+     *
+     */
     public function debug() {
         print_r("\n\n");
         $this->printTree($this->doc);
         print_r("\n\n");
     }
 
+    /**
+     * @param $node
+     * @return mixed
+     */
     private function nodeInfo($node) {
         if ($node->nodeType == 1)
             return $node->tagName;
@@ -277,6 +284,10 @@ class HtmlTokenizer {
         return $node->nodeType;
     }
 
+    /**
+     * @param $node
+     * @param int $depth
+     */
     private function printTree($node, $depth = 0) {
         $padding = str_repeat(' ', $depth);
 //        print($padding . ' ' . $node->tagName);

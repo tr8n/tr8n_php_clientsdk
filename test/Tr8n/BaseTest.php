@@ -28,10 +28,12 @@ require_once(__DIR__."/../BaseTest.php");
 
 class BaseTest extends \BaseTest {
 
-    public function testAttributes() {
-        $app = new \Tr8n\Application(self::loadJSON('application.json'));
-        $english = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
-//        print_r($english->toArray());
+    public function testCreateObject() {
+        $obj = Base::createObject(array("name" => "English"), array("class" => '\Tr8n\Language'));
+        $this->assertEquals('Tr8n\Language', get_class($obj));
+        $this->assertEquals('English', $obj->name);
+
+        $this->assertEquals(array('name' => 'English', 'contexts' => array(), 'cases' => array()), $obj->toArray());
     }
 
 }

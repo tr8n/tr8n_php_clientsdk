@@ -67,7 +67,9 @@ class LanguageCaseRule extends Base {
      */
     public $operations_expression;
 
-
+    /**
+     * @return array|int|string
+     */
     function conditionsExpression() {
         if (!isset($this->conditions_expression)) {
             $p = new RulesEngine\Parser($this->conditions);
@@ -76,6 +78,9 @@ class LanguageCaseRule extends Base {
         return $this->conditions_expression;
     }
 
+    /**
+     * @return array|int|string
+     */
     function operationsExpression() {
         if (!isset($this->operations_expression)) {
             $p = new RulesEngine\Parser($this->operations);

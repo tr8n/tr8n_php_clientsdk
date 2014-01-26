@@ -56,14 +56,23 @@ class LanguageContextRule extends Base {
      */
     public $conditions_expression;
 
+    /**
+     * @param array $attributes
+     */
     function __construct($attributes=array()) {
         parent::__construct($attributes);
     }
 
+    /**
+     * @return bool
+     */
     function isFallback() {
         return ($this->keyword == "other");
     }
 
+    /**
+     * @return array|int|string
+     */
     function conditionsExpression() {
         if (!isset($this->conditions_expression)) {
             $p = new RulesEngine\Parser($this->conditions);
@@ -72,6 +81,10 @@ class LanguageContextRule extends Base {
         return $this->conditions_expression;
     }
 
+    /**
+     * @param array $vars
+     * @return bool|mixed
+     */
     function evaluate($vars = array()) {
         if ($this->isFallback()) return true;
 

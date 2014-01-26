@@ -134,6 +134,10 @@ class Translation extends Base {
         return true;
     }
 
+    /**
+     * @param array $keys
+     * @return array
+     */
     public function toArray($keys=array()) {
         return parent::toArray(array("label", "context"));
     }

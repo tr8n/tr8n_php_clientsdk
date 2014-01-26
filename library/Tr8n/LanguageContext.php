@@ -71,6 +71,9 @@ class LanguageContext extends Base {
      */
     public $rules;
 
+    /**
+     * @param array $attributes
+     */
     function __construct($attributes=array()) {
         parent::__construct($attributes);
 

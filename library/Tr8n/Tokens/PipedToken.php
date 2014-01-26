@@ -49,17 +49,17 @@ namespace Tr8n\Tokens;
 
 use Tr8n\Tr8nException;
 
-class TransformToken extends DataToken {
+class PipedToken extends DataToken {
 
     /**
      * @var string
      */
-    protected $pipe_separator;
+    public $separator;
 
     /**
      * @var string[]
      */
-    protected $piped_parameters;
+    public $parameters;
 
     /**
      * @return string
@@ -72,42 +72,29 @@ class TransformToken extends DataToken {
      * Parses token elements
      */
     public function parse() {
-        $name_without_parens = preg_replace('/[{}\[\]]/', '', $this->full_name);
+        $name_without_parens = preg_replace('/[{}]/', '', $this->full_name);
 
         $parts = explode('|', $name_without_parens);
         $name_without_pipes = trim($parts[0]);
 
         $parts = explode('::', $name_without_pipes);
         $name_without_case_keys = trim($parts[0]);
+        array_shift($parts);
+        $this->case_keys = array_map('trim', $parts);
 
-        $parts = explode(':', $name_without_pipes);
+        $parts = explode(':', $name_without_case_keys);
         $this->short_name = trim($parts[0]);
+        array_shift($parts);
+        $this->context_keys = array_map('trim', $parts);
 
-        $keys = array();
-        preg_match_all('/(::[\w]+)/', $name_without_pipes, $keys);
-        $keys = $keys[0];
-        $this->case_keys = array();
-        foreach($keys as $key) {
-            array_push($this->case_keys, str_replace('::', '', $key));
-        }
+        $this->separator = (strpos($this->full_name,'||') !== false) ? '||' : '|';
 
-        $keys = array();
-        preg_match_all('/(:[\w]+)/', $name_without_case_keys, $keys);
-        $keys = $keys[0];
-        $this->context_keys = array();
-        foreach($keys as $key) {
-            array_push($this->context_keys, str_replace(':', '', $key));
-        }
-
-        $this->pipe_separator = (strpos($this->full_name,'||') !== false) ? '||' : '|';
-
-        $this->piped_parameters = array();
-
-        $parts = explode($this->pipe_separator, $name_without_parens);
+        $this->parameters = array();
+        $parts = explode($this->separator, $name_without_parens);
         if (count($parts) > 1) {
             $parts = explode(',', $parts[1]);
             foreach($parts as $part) {
-                array_push($this->piped_parameters, trim($part));
+                array_push($this->parameters, trim($part));
             }
         }
     }
@@ -115,8 +102,8 @@ class TransformToken extends DataToken {
     /**
      * @return bool
      */
-    public function isAllowedInTranslation() {
-        return ($this->pipe_separator == '||');
+    public function isValueDisplayedInTranslation() {
+        return ($this->separator == '||');
     }
 
     /**
@@ -145,13 +132,13 @@ class TransformToken extends DataToken {
      * @return array
      * @throws Tr8nException
      */
-    function generateValueMap($params, $context) {
+    public function generateValueMapForContext($context) {
         $values = array();
 
-        if (strstr($params[0], ':')) {
-           foreach($params as $param) {
+        if (strstr($this->parameters[0], ':')) {
+           foreach($this->parameters as $param) {
                $name_value = explode(':', $param);
-               $values[$name_value[0]] = $name_value[1];
+               $values[trim($name_value[0])] = trim($name_value[1]);
            }
             return $values;
         }
@@ -164,18 +151,18 @@ class TransformToken extends DataToken {
 
         // "unsupported"
         if (is_string($token_mapping)) {
-            throw new Tr8nException("The token mapping $token_mapping does not support " . count($params) . " params: " . $this->full_name);
+            throw new Tr8nException("The token mapping $token_mapping does not support " . count($this->parameters) . " params: " . $this->full_name);
         }
 
         // ["unsupported", {}]
         if (is_array($token_mapping) && !\Tr8n\Utils\ArrayUtils::isHash($token_mapping)) {
-            if (count($params) > count($token_mapping)) {
-                throw new Tr8nException("The token mapping $token_mapping does not support " . count($params) . " params: " . $this->full_name);
+            if (count($this->parameters) > count($token_mapping)) {
+                throw new Tr8nException("The token mapping $token_mapping does not support " . count($this->parameters) . " params: " . $this->full_name);
             }
 
-            $token_mapping = $token_mapping[count($params)-1];
+            $token_mapping = $token_mapping[count($this->parameters)-1];
             if (is_string($token_mapping)) {
-                throw new Tr8nException("The token mapping $token_mapping does not support " . count($params) . " params: " . $this->full_name);
+                throw new Tr8nException("The token mapping $token_mapping does not support " . count($this->parameters) . " params: " . $this->full_name);
             }
         }
 
@@ -194,11 +181,11 @@ class TransformToken extends DataToken {
                 $parts = explode('::', $token_without_parens);
                 $index = preg_replace('/[$]/', '', $parts[0]);
 
-                if (count($params) < $index) {
+                if (count($this->parameters) < $index) {
                     throw new Tr8nException("The index inside " . $token_mapping . " is out of bound: " . $this->full_name);
                 }
 
-                $val = $params[$index];
+                $val = $this->parameters[$index];
 
                 // TODO: check if language cases are enabled
                 foreach(array_slice($parts, 1) as $case_key) {
@@ -232,13 +219,13 @@ class TransformToken extends DataToken {
 
         $object = $token_values[$this->name()];
 
-        if (count($this->piped_parameters) == 0) {
+        if (count($this->parameters) == 0) {
             throw new Tr8nException("Piped params may not be empty for token: " . $this->full_name);
         }
 
         $context = $this->contextForLanguage($language);
 
-        $piped_values = $this->generateValueMap($this->piped_parameters, $context);
+        $piped_values = $this->generateValueMapForContext($context);
 
         $rule = $context->findMatchingRule($object);
         if ($rule == null) return $label;
@@ -255,7 +242,7 @@ class TransformToken extends DataToken {
         }
 
         $token_value = array();
-        if ($this->isAllowedInTranslation()) {
+        if ($this->isValueDisplayedInTranslation()) {
             array_push($token_value, $this->tokenValue($token_values, $language, $options));
             array_push($token_value, " ");
         }

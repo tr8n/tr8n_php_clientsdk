@@ -399,6 +399,10 @@ class Application extends Base {
         return $this->host . "/tr8n/api/proxy/boot.js?client_id=" . $this->key;
     }
 
+    /**
+     * @param array $keys
+     * @return array
+     */
     public function toArray($keys=array()) {
         $hash = parent::toArray(array("host", "name", "description"));
         $hash["languages"] = array();

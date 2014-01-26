@@ -85,15 +85,17 @@ class Config {
      */
     private $block_options;
 
-    private $rules_engine;
-    private $token_classes;
-
-    // Allows for setting a custom config class
+    /**
+     * @param $config
+     */
     public static function init($config) {
         static $inst = null;
         $inst = $config;
     }
 
+    /**
+     * @return Config
+     */
     public static function instance() {
         static $inst = null;
         if ($inst === null) {
@@ -102,6 +104,9 @@ class Config {
         return $inst;
     }
 
+    /**
+     *
+     */
     function __construct() {
         $this->application = null;
         $this->default_locale = 'en-US';
@@ -109,10 +114,17 @@ class Config {
         $this->block_options = array();
     }
 
+    /**
+     * @param $configurator
+     */
     public static function configure($configurator) {
         $configurator(self::instance());
     }
 
+    /**
+     * @param $key
+     * @return mixed|null|string|\string[]
+     */
     public function configValue($key) {
         if ($this->config == null) {
             $data = file_get_contents($this->configFilePath('config.json'));
@@ -129,10 +141,19 @@ class Config {
         return $value;
     }
 
+    /**
+     *
+     */
     public function updateConfig() {
         file_put_contents($this->configFilePath('config.json'), StringUtils::prettyPrint(json_encode($this->config)));
     }
 
+    /**
+     * @param null $host
+     * @param null $client_id
+     * @param null $client_secret
+     * @return null|Application
+     */
     public function initApplication($host = null, $client_id = null, $client_secret = null) {
         if ($host == null) { // fallback onto the configuration file
             $host = $this->configValue("application.host");
@@ -150,6 +171,9 @@ class Config {
         return $this->application;
     }
 
+    /**
+     * @param array $options
+     */
     public function initRequest($options = array()) {
         $this->current_language = $this->application->language((isset($options['locale']) ? $options['locale'] : $this->default_locale), true);
         $this->current_translator = (isset($options['translator']) ? $options['translator'] : null);
@@ -157,15 +181,25 @@ class Config {
         $this->current_component = (isset($options['component']) ? $options['component'] : null);
     }
 
+    /**
+     * @param array $options
+     */
     public function completeRequest($options = array()) {
         if (!isset($this->application)) return;
         $this->application->submitMissingKeys();
     }
 
+    /**
+     * @param array $options
+     */
     public function beginBlockWithOptions($options = array()) {
         array_push($this->block_options, $options);
     }
 
+    /**
+     * @param $key
+     * @return null
+     */
     public function blockOption($key) {
         if (count($this->block_options) == 0) return null;
         $current_options = $this->block_options[0];
@@ -173,52 +207,100 @@ class Config {
         return $current_options[$key];
     }
 
+    /**
+     * @return null
+     */
     public function finishBlockWithOptions() {
         if (count($this->block_options) == 0) return null;
         array_pop($this->block_options);
     }
 
+    /**
+     * @return bool
+     */
     public function isEnabled() {
         return ($this->application != null);
     }
 
+    /**
+     * @return bool
+     */
     public function isDisabled() {
         return !self::isEnabled();
     }
 
+    /**
+     * @return mixed|null|string|\string[]
+     */
     public function isLoggerEnabled() {
-//        return true;
         return $this->configValue("log.enabled");
     }
 
+    /**
+     * @return string
+     */
     public function loggerFilePath() {
         return __DIR__."/../../log/tr8n.log";
     }
 
+    /**
+     * @return string
+     */
     public function cachePath() {
         return __DIR__."/../../cache/";
     }
 
+    /**
+     * @return int|mixed|null|string|\string[]
+     */
     public function cacheVersion() {
         $version = $this->configValue("cache.version");
         return ($version == null ? 0 : $version);
     }
 
+    /**
+     * @return int|mixed|null|string|\string[]
+     */
     public function cacheTimeout() {
         $timeout = $this->configValue("cache.timeout");
         return ($timeout == null ? 3600 : $timeout);
     }
 
+    /**
+     *
+     */
     public function incrementCache() {
         $version = $this->cacheVersion();
         $this->config["cache"]["version"] =  $version + 1;
         $this->updateConfig();
     }
 
+    /**
+     * @return int
+     */
     public function loggerSeverity() {
+        $severity = $this->configValue("log.enabled");
+        if ($severity == null)
+            $severity = "debug";
+
+        if ($severity == "error")
+            return Logger::ERROR;
+
+        if ($severity == "warning")
+            return Logger::WARNING;
+
+        if ($severity == "notice")
+            return Logger::NOTICE;
+
+        if ($severity == "info")
+            return Logger::INFO;
+
         return Logger::DEBUG;
     }
 
+    /**
+     * @return bool
+     */
     public function isCacheEnabled() {
         if ($this->configValue("cache.enabled") === false) {
             return false;
@@ -230,6 +312,9 @@ class Config {
         return true;
     }
 
+    /**
+     * @return null|string
+     */
     public function cacheAdapterClass() {
         if (!isset($this->config["cache"]["adapter"]))
             $adapter = 'chdb';
@@ -246,19 +331,38 @@ class Config {
         return null;
     }
 
+    /**
+     * @return string
+     */
     public function decoratorClass() {
+        $decorator = $this->configValue("decorator");
+        if ($decorator == null)
+            $decorator = "html";
+
         return '\Tr8n\Decorators\HtmlDecorator';
     }
 
+    /**
+     * @return mixed
+     */
     public function defaultSource() {
         return $_SERVER["REQUEST_URI"];
     }
 
+    /**
+     * @param $file_name
+     * @return string
+     */
     public function configFilePath($file_name) {
         return __DIR__."/../../config/" . $file_name;
     }
 
-    // TODO: should be cached
+    /**
+     * @param $key
+     * @param string $type
+     * @param string $format
+     * @return null
+     */
     public function defaultToken($key, $type = 'data', $format = 'html') {
         if ($this->default_tokens == null) {
             $data = file_get_contents($this->configFilePath('tokens.json'));
@@ -277,6 +381,9 @@ class Config {
         return $this->default_tokens[$type][$format][$key];
     }
 
+    /**
+     * @return array
+     */
     public function contextRules() {
         return array(
             "number" => array(
@@ -322,20 +429,37 @@ class Config {
         );
     }
 
+    /**
+     * @return array
+     */
     public function supportedGenders() {
         return array("male", "female", "unknown", "neutral");
     }
 
+    /**
+     * @param $input
+     * @return string
+     */
     protected function base64UrlDecode($input) {
         return base64_decode(strtr($input, '-_', '+/'));
     }
 
+    /**
+     * @param $input
+     * @return mixed|string
+     */
     protected function base64UrlEncode($input) {
         $str = strtr(base64_encode($input), '+/', '-_');
         $str = str_replace('=', '', $str);
         return $str;
     }
 
+    /**
+     * @param $signed_request
+     * @param $secret
+     * @return mixed
+     * @throws Tr8nException
+     */
     public function decodeAndVerifyParams($signed_request, $secret) {
 //        \Tr8n\Logger::instance()->info($signed_request);
         $signed_request = urldecode($signed_request);

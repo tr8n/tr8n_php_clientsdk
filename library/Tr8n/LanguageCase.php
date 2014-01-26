@@ -66,6 +66,9 @@ class LanguageCase extends Base {
      */
     public $rules;
 
+    /**
+     * @param array $attributes
+     */
     function __construct($attributes=array()) {
         parent::__construct($attributes);
 
@@ -77,10 +80,18 @@ class LanguageCase extends Base {
         }
     }
 
+    /**
+     * @return string
+     */
     public function substitutionExpression() {
         return '/<\/?[^>]*>/';
     }
 
+    /**
+     * @param $value
+     * @param null $object
+     * @return null|LanguageCaseRule
+     */
     public function findMatchingRule($value, $object = null) {
         foreach($this->rules as $rule) {
             if ($rule->evaluate($value, $object) == true)
@@ -90,6 +101,12 @@ class LanguageCase extends Base {
         return null;
     }
 
+    /**
+     * @param $value
+     * @param null $object
+     * @param array $options
+     * @return mixed
+     */
     public function apply($value, $object = null, $options = array()) {
         $tags = array();
         preg_match_all($this->substitutionExpression(), $value, $tags);
@@ -132,6 +149,13 @@ class LanguageCase extends Base {
         return $value;
     }
 
+    /**
+     * @param $element
+     * @param $value
+     * @param $rule
+     * @param array $options
+     * @return string
+     */
     public function decorate($element, $value, $rule, $options = array()) {
         if (isset($options["skip_decoration"])) return $value;
         if ($this->language->isDefault()) return $value;
@@ -145,6 +169,10 @@ class LanguageCase extends Base {
                "' data-case_key='" . str_replace("'", "\'", $element) . "'>" . $value . "</span>";
     }
 
+    /**
+     * @param array $keys
+     * @return array
+     */
     public function toArray($keys=array()) {
         $info = parent::toArray(array("id", "keyword", "description", "latin_name", "native_name"));
         $info["rules"] = array();

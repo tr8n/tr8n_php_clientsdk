@@ -34,6 +34,4 @@ class ApplicationTest extends \BaseTest {
         $this->assertEquals('en-US', $app->language('en-US')->locale);
     }
 
-
-
 }

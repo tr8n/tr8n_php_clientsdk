@@ -62,6 +62,16 @@ class DataToken {
         return '/(\{[^_:][\w]*(:[\w]+)*(::[\w]+)*\})/';
     }
 
+    public static function tokenWithName($name) {
+        $class = get_called_class();
+        return new $class("", $name);
+    }
+
+    public static function tokenWithLabelAndName($label, $name) {
+        $class = get_called_class();
+        return new $class($label, $name);
+    }
+
     /**
      * @param string $label
      * @param string $token
@@ -76,28 +86,17 @@ class DataToken {
      * Parses token name elements
      */
     function parse() {
-        $name_without_parens = preg_replace('/[{}\[\]]/', '', $this->full_name);
+        $name_without_parens = preg_replace('/[{}]/', '', $this->full_name);
+
         $parts = explode('::', $name_without_parens);
         $name_without_case_keys = trim($parts[0]);
+        array_shift($parts);
+        $this->case_keys = array_map('trim', $parts);
 
         $parts = explode(':', $name_without_case_keys);
         $this->short_name = trim($parts[0]);
-
-        $keys = array();
-        preg_match_all('/(::[\w]+)/', $name_without_parens, $keys);
-        $keys = $keys[0];
-        $this->case_keys = array();
-        foreach($keys as $key) {
-            array_push($this->case_keys, str_replace('::', '', $key));
-        }
-
-        $keys = array();
-        preg_match_all('/(:[\w]+)/', $name_without_case_keys, $keys);
-        $keys = $keys[0];
-        $this->context_keys = array();
-        foreach($keys as $key) {
-            array_push($this->context_keys, str_replace(':', '', $key));
-        }
+        array_shift($parts);
+        $this->context_keys = array_map('trim', $parts);
     }
 
     /**
@@ -191,6 +190,8 @@ class DataToken {
                 if (!array_key_exists('object', $token_object)) return null;
                 return $token_object['object'];
             }
+            if (count($token_object) == 0)
+                return null;
             return $token_object[0];
         }
 
@@ -232,7 +233,7 @@ class DataToken {
      * @return string
      * @throws \Tr8n\Tr8nException
      */
-    public function tokenValue($token_values, $language, $options) {
+    public function tokenValue($token_values, $language, $options = array()) {
         if (array_key_exists($this->short_name, $token_values)) {
             $token_data = $token_values[$this->name()];
         } else {
@@ -244,7 +245,7 @@ class DataToken {
         }
 
         if (is_string($token_data) || is_numeric($token_data) || is_double($token_data)) {
-            return $this->sanitize($token_data, $token_values, $language, $options);
+            return $this->sanitize($token_data, $token_values, $language, array_merge($options, array("sanitize" => false)));
         }
 
         if (is_array($token_data)) {
@@ -264,8 +265,13 @@ class DataToken {
                         if (array_key_exists($attribute, $token_object)) {
                             return $this->sanitize($token_object[$attribute], $token_values, $language, array_merge($options, array("sanitize" => true)));
                         }
-                        throw new Tr8nException("Invalid attribute properties for object in the hash of token: " . $this->full_name);
+                        return "{".$this->short_name.": property ".$attribute." does not exist}";
                     }
+
+                    if (!property_exists($token_object, $attribute)) {
+                        return "{".$this->short_name.": property ".$attribute." does not exist}";
+                    }
+
                     return $this->sanitize($token_object->$attribute, $token_values, $language, array_merge($options, array("sanitize" => true)));
                 }
 
@@ -274,10 +280,14 @@ class DataToken {
                     if (is_array($token_object)) {
                         return "{".$this->short_name.": invalid method properties for hash value}";
                     }
+
+                    if (!method_exists($token_object, $method)) {
+                        return "{".$this->short_name.": method ".$method." does not exist}";
+                    }
                     return $this->sanitize($token_object->$method(), $token_values, $language, array_merge($options, array("sanitize" => true)));
                 }
 
-                return "{".$this->short_name.": value and attribute properties are missing}";
+                return $this->sanitize($token_object, $token_values, $language, array_merge($options, array("sanitize" => true)));
             }
 
             if (count($token_data) == 0)
@@ -299,12 +309,22 @@ class DataToken {
                 # method
                 if (preg_match('/^@@/', $token_method)) {
                     $attribute = substr($token_method, 2);
+
+                    if (!method_exists($token_object, $attribute)) {
+                        return "{".$this->short_name.": method ".$attribute." does not exist}";
+                    }
+
                     $token_value = $token_object->$attribute();
                     return $this->sanitize($token_value, $token_values, $language, array_merge($options, array("sanitize" => true)));
                 }
                 # attribute
                 if (preg_match('/^@/', $token_method)) {
                     $attribute = substr($token_method, 1);
+
+                    if (!property_exists($token_object, $attribute)) {
+                        return "{".$this->short_name.": property ".$attribute." does not exist}";
+                    }
+
                     $token_value = $token_object->$attribute;
                     return $this->sanitize($token_value, $token_values, $language, array_merge($options, array("sanitize" => true)));
                 }
@@ -314,7 +334,7 @@ class DataToken {
             return "{".$this->short_name.": unsupported array method}";
         }
 
-        return $this->sanitize($token_data, $token_values, $language, $options);
+        return $this->sanitize($token_data, $token_values, $language, array_merge($options, array("sanitize" => true)));
     }
 
     /**
@@ -327,7 +347,9 @@ class DataToken {
     public function sanitize($token_object, $token_values, $language, $options) {
         $token_value = "" . $token_object;
 
-        // TODO: add HTML escaping
+        if (isset($options["sanitize"]) && $options["sanitize"]) {
+            $token_value = htmlspecialchars($token_value);
+        }
 
         if (isset($this->case_keys) && count($this->case_keys) > 0) {
             foreach($this->case_keys as $case) {

@@ -36,6 +36,7 @@ class Base {
     );
 
     /**
+     * Default constructor for Tr8n objects
      * @param array $attributes
      */
     function __construct($attributes=array()) {
@@ -131,9 +132,13 @@ class Base {
         return new $options["class"]($data);
     }
 
+    /**
+     * Serializes an object into a dictionary
+     * @param array $keys
+     * @return array
+     */
     public function toArray($keys=array()) {
         $vars = get_object_vars($this);
-//        print_r($vars);
 
         $results = array();
         if (count($keys) == 0) {

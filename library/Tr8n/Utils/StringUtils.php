@@ -26,6 +26,11 @@ namespace Tr8n\Utils;
 
 class StringUtils {
 
+    /**
+     * @param $match
+     * @param $str
+     * @return bool|int
+     */
     public static function startsWith($match, $str) {
         if (is_array($match)) {
             foreach($match as $option) {
@@ -36,6 +41,11 @@ class StringUtils {
         return preg_match('/^'.$match.'/', $str);
     }
 
+    /**
+     * @param $match
+     * @param $str
+     * @return bool|int
+     */
     public static function endsWith($match, $str) {
         if (is_array($match)) {
             foreach($match as $option) {
@@ -46,6 +56,11 @@ class StringUtils {
         return preg_match('/'.$match.'$/', $str);
     }
 
+    /**
+     * @param $text
+     * @param array $opts
+     * @return array
+     */
     public static function splitSentences($text, $opts = array()) {
         $sentence_regex = '/[^.!?\s][^.!?]*(?:[.!?](?![\'"]?\s|$)[^.!?]*)*[.!?]?[\'"]?(?=\s|$)/';
 
@@ -56,6 +71,10 @@ class StringUtils {
         return $matches;
     }
 
+    /**
+     * @param $json
+     * @return string
+     */
     public static function prettyPrint($json) {
         $result = '';
         $level = 0;

@@ -57,7 +57,6 @@ class TranslationTest extends \BaseTest {
                 $few->isValidTranslation(array("count" => $count))
             );
         }
-
     }
 
     public function testMatchingWithMultipleTokens() {

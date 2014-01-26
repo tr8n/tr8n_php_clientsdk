@@ -53,7 +53,7 @@ class DataTokenizer {
         return array(
             '\Tr8n\Tokens\DataToken',
             '\Tr8n\Tokens\MethodToken',
-            '\Tr8n\Tokens\TransformToken');
+            '\Tr8n\Tokens\PipedToken');
     }
 
     /**

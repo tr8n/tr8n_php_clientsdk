@@ -103,6 +103,10 @@ class Source extends Base {
         return $this->translation_keys;
     }
 
+    /**
+     * @param array $keys
+     * @return array
+     */
     public function toArray($keys=array()) {
         $info = parent::toArray(array("source", "url", "name", "description"));
         if ($this->translation_keys) {

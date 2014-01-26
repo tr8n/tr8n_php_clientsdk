@@ -54,6 +54,12 @@ foreach($files as $dir) {
     }
 }
 
+/**
+ * @param null $host
+ * @param null $key
+ * @param null $secret
+ * @return bool
+ */
 function tr8n_init_client_sdk($host = null, $key = null, $secret = null) {
     global $tr8n_page_t0;
     $tr8n_page_t0 = microtime(true);
@@ -89,6 +95,9 @@ function tr8n_init_client_sdk($host = null, $key = null, $secret = null) {
     return true;
 }
 
+/**
+ * @param array $options
+ */
 function tr8n_complete_request($options = array()) {
     \Tr8n\Config::instance()->completeRequest($options);
     global $tr8n_page_t0;
@@ -96,6 +105,9 @@ function tr8n_complete_request($options = array()) {
     \Tr8n\Logger::instance()->info("Page loaded in " . $milliseconds . " milliseconds");
 }
 
+/**
+ * @return null|\Tr8n\Application
+ */
 function tr8n_application() {
     return \Tr8n\Config::instance()->application;
 }
@@ -107,14 +119,23 @@ function tr8n_current_language() {
     return \Tr8n\Config::instance()->current_language;
 }
 
+/**
+ * @return \Tr8n\Translator
+ */
 function tr8n_current_translator() {
     return \Tr8n\Config::instance()->current_translator;
 }
 
+/**
+ * @param array $options
+ */
 function tr8n_begin_block_with_options($options = array()) {
     \Tr8n\Config::instance()->beginBlockWithOptions($options);
 }
 
+/**
+ * @return null
+ */
 function tr8n_finish_block_with_options() {
     return \Tr8n\Config::instance()->finishBlockWithOptions();
 }

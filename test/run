@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+require 'fsevent'
+require 'terminal-notifier'
+
+class UnitTester < FSEvent
+  def on_change(directories)
+    puts "Detected change in: #{directories.inspect}"
+    run_php_unit
+  end
+
+  def start
+    puts "watching #{registered_directories.join(", ")} for changes"
+    super
+  end
+
+  def run_php_unit
+    system('clear')
+    if (system("phpunit"))
+      system("terminal-notifier -message 'All tests are passing' -title 'PHPUnit'")
+    else
+      system("terminal-notifier -message 'Tests are failing' -title 'PHPUnit'")
+    end
+  end
+end
+
+Signal.trap("INT"){ puts "\nCustom INT handler called."; exit }
+
+tester = UnitTester.new
+tester.watch_directories ["#{Dir.pwd}/library", "#{Dir.pwd}/test"]
+tester.start
