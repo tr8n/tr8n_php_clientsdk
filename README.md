@@ -66,8 +66,6 @@ Paste the following content into the file:
         <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>" lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>">
         <head>
             <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title><?php echo tr8n_application()->name ?></title>
             <?php include(__DIR__ . '/vendor/tr8n/tr8n-client-sdk/library/Tr8n/Includes/Scripts.php'); ?>
         </head>
         <body>
