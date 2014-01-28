@@ -75,10 +75,17 @@ class Language extends Base {
     public $flag_url;
 
     /**
+     * @var string
+     */
+    public $direction;
+
+    /**
      * @param array $attributes
      */
     function __construct($attributes=array()) {
         parent::__construct($attributes);
+
+        $this->direction = $this->right_to_left ? "rtl" : "ltr";
 
         $this->contexts = array();
         if (isset($attributes['contexts'])) {

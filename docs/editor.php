@@ -5,7 +5,7 @@
 <br>
 
 <?php
-    $path = dirname(__FILE__)."/../test/fixtures/html/examples";
+    $path = dirname(__FILE__)."/../tests/fixtures/html/examples";
 
     $content = isset($_POST["content"]) ? $_POST["content"] : null;
     $selected_sample = null;

@@ -14,7 +14,6 @@
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li <?php active_link("docs/installation.php", "docs/index.php")?>><?php link_to(tr("Installation Instructions"), "docs/installation.php") ?></li>
                     <li <?php active_link("docs/index.php")?>><?php link_to(tr("Documentation & Samples"), "docs/index.php") ?></li>
                     <li <?php active_link("docs/tml.php")?>><?php link_to(tr("TML Interactive Console"), "docs/tml.php") ?></li>
                     <li <?php active_link("docs/editor.php")?>><?php link_to(tr("Blog Translator"), "docs/editor.php") ?></li>
