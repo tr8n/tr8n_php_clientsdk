@@ -9,12 +9,28 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="true"
-         bootstrap="./test/BaseTest.php"
+         bootstrap="./tests/BaseTest.php"
         >
     <testsuites>
         <testsuite name="Tr8n Test Suite">
-            <directory>./test/Tr8n/</directory>
+            <directory>./tests/Tr8n/</directory>
         </testsuite>
     </testsuites>
 
+    <filter>
+        <whitelist>
+            <directory>./src</directory>
+            <exclude>
+                <directory>./build</directory>
+                <directory>./tests</directory>
+                <directory>./travis</directory>
+                <directory>./vendor</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+        <log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/>
+    </logging>
 </phpunit>

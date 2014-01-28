@@ -27,5 +27,5 @@ end
 Signal.trap("INT"){ puts "\nCustom INT handler called."; exit }
 
 tester = UnitTester.new
-tester.watch_directories ["#{Dir.pwd}/library", "#{Dir.pwd}/test"]
+tester.watch_directories ["#{Dir.pwd}/library", "#{Dir.pwd}/tests"]
 tester.start

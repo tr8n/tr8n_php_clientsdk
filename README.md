@@ -11,7 +11,7 @@ PHP Client SDK for Tr8nHub Translation Platform.
 [![Coverage Status](https://coveralls.io/repos/tr8n/tr8n_php_clientsdk/badge.png)](https://coveralls.io/r/tr8n/tr8n_php_clientsdk)
 [![Latest Stable Version](https://poser.pugx.org/tr8n/tr8n-client-sdk/v/stable.png)](https://packagist.org/packages/tr8n/tr8n-client-sdk)
 [![Dependency Status](https://www.versioneye.com/user/projects/52e36159ec1375c6f4000075/badge.png)](https://www.versioneye.com/user/projects/52e36159ec1375c6f4000075)
-
+[![Total Downloads](https://poser.pugx.org/tr8n/tr8n-client-sdk/downloads.png)](https://packagist.org/packages/tr8n/tr8n-client-sdk)
 
 Installation
 ==================
