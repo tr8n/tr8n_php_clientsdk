@@ -91,7 +91,15 @@ function tr8n_init_client_sdk($host = null, $key = null, $secret = null) {
         \Tr8n\Logger::instance()->info("Cookie file $cookie_name not found!");
     }
 
-    \Tr8n\Config::instance()->initRequest(array('locale' => $locale, 'translator' => $translator, 'source' => isset($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : null));
+    if (isset($_SERVER["REQUEST_URI"])) {
+        $source = $_SERVER["REQUEST_URI"];
+        $source = explode("?", $source);
+        $source = $source[0];
+    } else {
+        $source = "unknown";
+    }
+
+    \Tr8n\Config::instance()->initRequest(array('locale' => $locale, 'translator' => $translator, 'source' => $source));
     return true;
 }
 
