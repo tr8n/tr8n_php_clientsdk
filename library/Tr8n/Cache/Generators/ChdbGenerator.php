@@ -100,7 +100,7 @@ class ChdbGenerator extends Base {
         $fp = fopen("chdb://ChdbInMemory", "r+");
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, Config::instance()->application->host . Application::API_PATH . "application/translations?client_id=" . Config::instance()->application->key);
+        curl_setopt($ch, CURLOPT_URL, Config::instance()->application->host . Application::API_PATH . "application/translations?stream=true&client_id=" . Config::instance()->application->key);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_BUFFERSIZE, 256);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

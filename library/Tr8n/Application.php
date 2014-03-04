@@ -70,6 +70,16 @@ class Application extends Base {
     public $features;
 
     /**
+     * @var string[]
+     */
+    public $shortcuts;
+
+    /**
+     * @var string
+     */
+    public $css;
+
+    /**
      * @var Language[]
      */
     public $languages;
@@ -163,6 +173,18 @@ class Application extends Base {
             foreach($attributes['components'] as $l) {
                 array_push($this->components, new Component(array_merge($l, array("application" => $this))));
             }
+        }
+
+        if (isset($attributes['features'])) {
+            $this->features = $attributes['features'];
+        }
+
+        if (isset($attributes['shortcuts'])) {
+            $this->shortcuts = $attributes['shortcuts'];
+        }
+
+        if (isset($attributes['css'])) {
+            $this->css = $attributes['css'];
         }
 
         $this->languages_by_locale  = null;
@@ -349,6 +371,15 @@ class Application extends Base {
         $this->missing_keys_by_sources = null;
     }
 
+    /**
+     * @param $key
+     * @return bool
+     */
+    public function isFeatureEnabled($key) {
+        if (!$this->features || !isset($this->features[$key]))
+            return false;
+        return $this->features[$key];
+    }
 
     /**
      * @return \Tr8n\EmailTemplate[]

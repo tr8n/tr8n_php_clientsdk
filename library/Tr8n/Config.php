@@ -83,6 +83,11 @@ class Config {
     /**
      * @var array
      */
+    public $requested_sources;
+
+    /**
+     * @var array
+     */
     private $block_options;
 
     /**
@@ -179,6 +184,8 @@ class Config {
         $this->current_translator = (isset($options['translator']) ? $options['translator'] : null);
         $this->current_source = (isset($options['source']) ? $options['source'] : null);
         $this->current_component = (isset($options['component']) ? $options['component'] : null);
+        $this->requested_sources = array();
+        if ($this->current_source) array_push($this->requested_sources, $this->current_source);
     }
 
     /**
@@ -194,6 +201,9 @@ class Config {
      */
     public function beginBlockWithOptions($options = array()) {
         array_push($this->block_options, $options);
+
+        if (isset($options["source"]))
+            array_push($this->requested_sources, $options["source"]);
     }
 
     /**

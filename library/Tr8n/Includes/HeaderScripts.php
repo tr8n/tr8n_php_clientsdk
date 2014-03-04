@@ -78,6 +78,9 @@
                     if (typeof(tr8n_on_ready) === 'function') {
                         tr8n_on_ready();
                     }
+                    if (typeof(tr8n_footer_scripts) === 'function') {
+                        tr8n_footer_scripts();
+                    }
                 });
             }
         })();
