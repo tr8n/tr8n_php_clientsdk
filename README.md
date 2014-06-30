@@ -58,20 +58,20 @@ To make sure you have installed everything correctly, create a sample test file 
 Paste the following content into the file:
 
 ```php
-    <?php require_once(__DIR__ . '/vendor/tr8n/tr8n-client-sdk/library/Tr8n.php'); ?>
-    <?php tr8n_init_client_sdk("https://tr8nhub.com", "YOUR_APPLICATION_KEY", "YOUR_APPLICATION_SECRET"); ?>
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<?php require_once(__DIR__ . '/vendor/tr8n/tr8n-client-sdk/library/Tr8n.php'); ?>
+<?php tr8n_init_client_sdk("https://tr8nhub.com", "YOUR_APPLICATION_KEY", "YOUR_APPLICATION_SECRET"); ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
-    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>" lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>">
-    <head>
-        <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
-        <?php include(__DIR__ . '/vendor/tr8n/tr8n-client-sdk/library/Tr8n/Includes/Scripts.php'); ?>
-    </head>
-    <body>
-        <?php tre("Hello World") ?>
-    </body>
-    </html>
-    <?php tr8n_complete_request() ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>" lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>">
+<head>
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+    <?php include(__DIR__ . '/vendor/tr8n/tr8n-client-sdk/library/Tr8n/Includes/Scripts.php'); ?>
+</head>
+<body>
+    <?php tre("Hello World") ?>
+</body>
+</html>
+<?php tr8n_complete_request() ?>
 ```
 
 
