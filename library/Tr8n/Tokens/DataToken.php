@@ -199,6 +199,85 @@ class DataToken {
     }
 
     /**
+     * gets the value based on various evaluation methods
+     *
+     * examples:
+     *
+     * tr("Hello {user}", array("user" => array($current_user, $current_user->name)))
+     * tr("Hello {user}", array("user" => array($current_user, "@name")))
+     * tr("Hello {user}", array("user" => array($current_user, "@@firstName")))
+     *
+     * tr("Hello {user}", {:user => array(array("name" => "Michael", "gender" => "male"), "Michael")))
+     * tr("Hello {user}", {:user => array(array("name" => "Michael", "gender" => "male"), "@name")))
+     *
+     * @param $array
+     * @param $language
+     * @param $options
+     */
+
+    public function tokenValueFromArrayParam($token_data, $language, $options) {
+        // if you provided an array, it better have some values
+        if (count($token_data) < 2) {
+            \Tr8n\Logger::instance()->error("Invalid value for array token " . $this->full_name . " in " . $this->label);
+            return $this->full_name;
+        }
+
+        $object = $token_data[0];
+        $method = $token_data[1];
+
+        // if the first value of an array is an array handle it here
+        if (is_array($object) && !(\Tr8n\Utils\ArrayUtils::isHash($object))) {
+            return $this->tokenValueFromArray($token_data, $language, $options);
+        }
+
+        if (is_string($method)) {
+            # method
+            if (preg_match('/^@@/', $method)) {
+                if (\Tr8n\Utils\ArrayUtils::isHash($object)) {
+                    \Tr8n\Logger::instance()->error("Invalid method for array token hash " . $this->full_name . " in " . $this->label);
+                    return $this->full_name;
+                }
+
+                $attribute = substr($method, 2);
+
+                if (!method_exists($method, $attribute)) {
+                    \Tr8n\Logger::instance()->error("Invalid method for array token object " . $this->full_name . " in " . $this->label);
+                    return $this->full_name;
+                }
+
+                $value = $method->$attribute();
+                return $this->sanitize($value, $object, $language, array_merge($options, array("sanitize" => true)));
+            }
+
+            # attribute
+            if (preg_match('/^@/', $method)) {
+                $attribute = substr($method, 1);
+
+                if (\Tr8n\Utils\ArrayUtils::isHash($object)) {
+                    if (isset($object[$attribute]))
+                        return $this->sanitize($object[$attribute], $object, $language, array_merge($options, array("sanitize" => true)));
+                    else {
+                        \Tr8n\Logger::instance()->error("Invalid attribute for array token hash " . $this->full_name . " in " . $this->label);
+                        return $this->full_name;
+                    }
+                }
+
+                if (!property_exists($object, $attribute)) {
+                    \Tr8n\Logger::instance()->error("Invalid property for array token object " . $this->full_name . " in " . $this->label);
+                    return $this->full_name;
+                }
+
+                $token_value = $object->$attribute;
+                return $this->sanitize($token_value, $object, $language, array_merge($options, array("sanitize" => true)));
+            }
+            return $this->sanitize($method, $object, $language, array_merge($options, array("sanitize" => false)));
+        }
+
+        Logger::instance()->error("Invalid value for array token " . $this->full_name . " in " . $this->label);
+        return $this->full_name;
+    }
+
+    /**
      * Returns a value from values hash.
      *
      * Token objects can be passed as:
@@ -211,6 +290,10 @@ class DataToken {
      * - if object is an array, the second value is the substitution value
      *
      *     tr("Hello {user}", array("user" => array($current_user, $current_user->name)));
+     *
+     * - if the substitution value starts with @ - it is an attribute of an object
+     *
+     *     tr("Hello {user}", array("user" => array($current_user, "@name")));
      *
      * - if the substitution value starts with @@ - it is a method of an object
      *
@@ -337,6 +420,69 @@ class DataToken {
         return $this->sanitize($token_data, $token_values, $language, array_merge($options, array("sanitize" => true)));
     }
 
+    /**
+     *
+     * tr("Hello {user_list}!", "", {:user_list => [[user1, user2, user3], :name]}}
+     *
+     * first element is an array, the rest of the elements are similar to the
+     * regular tokens lambda, symbol, string, with parameters that follow
+     *
+     * if you want to pass options, then make the second parameter an array as well
+     *
+     * tr("{users} joined the site", {:users => [[user1, user2, user3], :name]})
+     *
+     * tr("{users} joined the site", {:users => [[user1, user2, user3], lambda{|user| user.name}]})
+     *
+     * tr("{users} joined the site", {:users => [[user1, user2, user3], {:attribute => :name})
+     *
+     * tr("{users} joined the site", {:users => [[user1, user2, user3], {:attribute => :name, :value => "<strong>{$0}</strong>"})
+     *
+     * tr("{users} joined the site", {:users => [[user1, user2, user3], "<strong>{$0}</strong>")
+     *
+     * tr("{users} joined the site", {:users => [[user1, user2, user3], :name, {
+     *   :limit => 4,
+     *   :separator => ', ',
+     *   :joiner => 'and',
+     *   :remainder => lambda{|elements| tr("*{count||other}", :count => elements.size)},
+     *   :expandable => true,
+     *   :collapsable => true
+     * })
+     *
+     *
+     */
+    
+    public function tokenValueFromArray($params, $language, $options = array()) {
+        $list_options = array(
+            "description" => "List joiner",
+            "limit" => 4,
+            "separator" => ", ",
+            "joiner" => 'and',
+            "less" => '{laquo} less',
+            "expandable" => true,
+            "collapsable" => true
+        );
+
+        $objects = $params[0];
+        $method = $params[1];
+
+        if (count($params) > 2)
+            $list_options = array_merge($list_options, $params[2]);
+        if (is_set($options["skip_decorations"]) && $options["skip_decorations"])
+            $list_options["expandable"] = false;
+
+//        $values = array();
+//        foreach ($objects as $obj) {
+//            if (is_string($method)) {
+//                $this->sanitize($token_method, $token_values, $language, array_merge($options, array("sanitize" => false)));
+//                $value = str_replace('{$0}', sanitize )
+//            }
+//
+//
+//        }
+
+    }
+
+    
     /**
      * @param mixed $token_object
      * @param mixed[] $token_values

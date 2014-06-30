@@ -55,7 +55,7 @@
                 tr8n_add_css(window.document, '/assets/tr8n/tools.css', false);
                 tr8n_add_css(window.document, "<?php echo tr8n_application()->css ?>", true);
 
-                tr8n_add_script(window.document, 'tr8n-jssdk', '/assets/tr8n/tools.js?t=<?php echo microtime() ?>', function() {
+                tr8n_add_script(window.document, 'tr8n-jssdk', '/assets/tr8n/tools.js', function() {
                     Tr8n.app_key = '<?php echo tr8n_application()->key ?>';
                     Tr8n.host = '<?php echo tr8n_application()->host ?>';
                     Tr8n.sources = <?php echo json_encode(\Tr8n\Config::instance()->requested_sources) ?>;

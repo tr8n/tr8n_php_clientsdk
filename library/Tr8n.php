@@ -60,35 +60,34 @@ foreach($files as $dir) {
  * @param null $secret
  * @return bool
  */
-function tr8n_init_client_sdk($host = null, $key = null, $secret = null) {
+function tr8n_init_client_sdk($key = null, $secret = null, $host = null) {
     global $tr8n_page_t0;
     $tr8n_page_t0 = microtime(true);
 
-    \Tr8n\Config::instance()->initApplication($host, $key, $secret);
-
-    if (\Tr8n\Config::instance()->isDisabled()) {
-        \Tr8n\Logger::instance()->error("Tr8n application failed to initialize. Please verify if you set the host, key and secret correctly.");
-        return false;
-    }
-
-    $cookie_name = "tr8n_" . \Tr8n\Config::instance()->application->key;
-//    \Tr8n\Logger::instance()->info("Locating cookie file $cookie_name...");
+    \Tr8n\Config::instance()->initApplication($key, $secret, $host);
 
     $locale = \Tr8n\Config::instance()->default_locale;
     $translator = null;
 
-    if (isset($_COOKIE[$cookie_name])) {
-        \Tr8n\Logger::instance()->info("Cookie file $cookie_name found!");
+    if (\Tr8n\Config::instance()->isEnabled()) {
+        $cookie_name = "tr8n_" . \Tr8n\Config::instance()->application->key;
 
-        $cookie_params = \Tr8n\Config::instance()->decodeAndVerifyParams($_COOKIE[$cookie_name], \Tr8n\Config::instance()->application->secret);
-//        \Tr8n\Logger::instance()->info("Cookie params", $cookie_params);
+        if (isset($_COOKIE[$cookie_name])) {
+            \Tr8n\Logger::instance()->info("Cookie file $cookie_name found!");
 
-        $locale = $cookie_params['locale'];
-        if (isset($cookie_params['translator'])) {
-            $translator = new \Tr8n\Translator(array_merge($cookie_params["translator"], array('application' => \Tr8n\Config::instance()->application)));
+            $cookie_params = \Tr8n\Config::instance()->decodeAndVerifyParams($_COOKIE[$cookie_name], \Tr8n\Config::instance()->application->secret);
+    //        \Tr8n\Logger::instance()->info("Cookie params", $cookie_params);
+
+            $locale = $cookie_params['locale'];
+            if (isset($cookie_params['translator'])) {
+                $translator = new \Tr8n\Translator(array_merge($cookie_params["translator"], array('application' => \Tr8n\Config::instance()->application)));
+            }
+        } else {
+            \Tr8n\Logger::instance()->info("Cookie file $cookie_name not found!");
         }
     } else {
-        \Tr8n\Logger::instance()->info("Cookie file $cookie_name not found!");
+        \Tr8n\Logger::instance()->error("Tr8n application failed to initialize. Please verify if you set the host, key and secret correctly.");
+        \Tr8n\Config::instance()->application = \Tr8n\Application::dummyApplication();
     }
 
     if (isset($_SERVER["REQUEST_URI"])) {
@@ -244,12 +243,6 @@ function trh($label, $description = "", $tokens = array(), $options = array()) {
     $params = \Tr8n\Utils\ArrayUtils::normalizeTr8nParameters($label, $description, $tokens, $options);
 
     $html = trim($params["label"]);
-//    $ht = new \Tr8n\Utils\HtmlTokenizer($html, array(), $params["options"]);
-//    $params["tokens"] = array_merge($ht->context, $params["tokens"]);
-//    $params["label"] = $ht->tml;
-//    $params["options"]["use_div"] = true;
-//    tr($params);
-
     $ht = new \Tr8n\Utils\HtmlTranslator($html, array(), $params["options"]);
     return $ht->translate();
 }

@@ -130,7 +130,7 @@ class Config {
      * @param $key
      * @return mixed|null|string|\string[]
      */
-    public function configValue($key) {
+    public function configValue($key, $default = null) {
         if ($this->config == null) {
             $data = file_get_contents($this->configFilePath('config.json'));
             $this->config = json_decode($data, true);
@@ -139,7 +139,7 @@ class Config {
         $value = $this->config;
         $parts = explode(".", $key);
         foreach($parts as $part) {
-            if (!isset($value[$part])) return null;
+            if (!isset($value[$part])) return $default;
             $value = $value[$part];
         }
 
@@ -159,18 +159,18 @@ class Config {
      * @param null $client_secret
      * @return null|Application
      */
-    public function initApplication($host = null, $client_id = null, $client_secret = null) {
-        if ($host == null) { // fallback onto the configuration file
-            $host = $this->configValue("application.host");
+    public function initApplication($client_id = null, $client_secret = null, $host = null) {
+        if ($client_id == null) { // fallback onto the configuration file
             $client_id = $this->configValue("application.key");
             $client_secret = $this->configValue("application.secret");
+            $host = $this->configValue("application.host", "https://translationexchange.com");
         }
 
         if ($this->application == null) {
             try {
                 $this->application = Application::init($host, $client_id, $client_secret);
             } catch (Tr8nException $e) {
-                $this->application = null;
+                $this->application = Application::dummyApplication();
             }
         }
         return $this->application;
@@ -180,7 +180,12 @@ class Config {
      * @param array $options
      */
     public function initRequest($options = array()) {
-        $this->current_language = $this->application->language((isset($options['locale']) ? $options['locale'] : $this->default_locale), true);
+        if ($this->isEnabled()) {
+            $this->current_language = $this->application->language((isset($options['locale']) ? $options['locale'] : $this->default_locale), true);
+        } else {
+            $this->current_language = $this->application->language($this->default_locale);
+        }
+
         $this->current_translator = (isset($options['translator']) ? $options['translator'] : null);
         $this->current_source = (isset($options['source']) ? $options['source'] : null);
         $this->current_component = (isset($options['component']) ? $options['component'] : null);
@@ -229,7 +234,7 @@ class Config {
      * @return bool
      */
     public function isEnabled() {
-        return ($this->application != null);
+        return ($this->application != null && $this->application->initialized);
     }
 
     /**
@@ -289,7 +294,7 @@ class Config {
      * @return int
      */
     public function loggerSeverity() {
-        $severity = $this->configValue("log.enabled");
+        $severity = $this->configValue("log.severity");
         if ($severity == null)
             $severity = "debug";
 
@@ -360,6 +365,14 @@ class Config {
     }
 
     /**
+     * @return Language
+     */
+    public function defaultLanguage() {
+        $data = file_get_contents($this->configFilePath('languages/' . $this->default_locale . '.json'));
+        return new \Tr8n\Language(json_decode($data, true));
+    }
+
+    /**
      * @param $file_name
      * @return string
      */
@@ -368,7 +381,7 @@ class Config {
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @param string $type
      * @param string $format
      * @return null
@@ -387,6 +400,33 @@ class Config {
 
         if (!isset($this->default_tokens[$type][$format][$key]))
             return null;
+
+        return $this->default_tokens[$type][$format][$key];
+    }
+
+
+    /**
+     * @param string $key
+     * @param string $value
+     * @param string $type
+     * @param string $format
+     * @return string
+     */
+    public function setDefaultToken($key, $value, $type = 'data', $format = 'html') {
+        if ($this->default_tokens == null) {
+            $data = file_get_contents($this->configFilePath('tokens.json'));
+            $this->default_tokens = json_decode($data, true);
+        }
+
+        if (!isset($this->default_tokens[$type])) {
+            $this->default_tokens[$type] = array();
+        }
+
+        if (!isset($this->default_tokens[$type][$format])) {
+            $this->default_tokens[$type][$format] = array();
+        }
+
+        $this->default_tokens[$type][$format][$key] = $value;
 
         return $this->default_tokens[$type][$format][$key];
     }

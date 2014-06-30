@@ -94,6 +94,10 @@ class Application extends Base {
      */
     public $components;
 
+    /**
+     * @var Boolean
+     */
+    public $initialized;
 
     /**
      * @var Language[]
@@ -144,7 +148,22 @@ class Application extends Base {
         $app->key = $key;
         $app->host = $host;
         $app->secret = $secret;
+        $app->initialized = true;
 
+        return $app;
+    }
+
+    /**
+     * @return Application
+     */
+    public static function dummyApplication() {
+        Logger::instance()->info("Falling back onto dummy application...");
+
+        $app = new Application();
+        $app->name = "Disconnected Application";
+        $app->languages_by_locale = array(
+            \Tr8n\Config::instance()->default_locale => \Tr8n\Config::instance()->defaultLanguage()
+        );
         return $app;
     }
 

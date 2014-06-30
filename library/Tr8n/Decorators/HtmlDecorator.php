@@ -45,7 +45,7 @@ class HtmlDecorator extends Base {
         if (!$config->current_translator->isInlineModeEnabled()) return $label;
         if ($translation_key->isLocked() && !$config->current_translator->isManager()) return $label;
 
-        $element = "span";
+        $element = "tr8n:tr";
         if (isset($options["use_div"])) {
             $element = "div";
         }

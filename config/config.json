@@ -1,14 +1,24 @@
 {
+    "application_production": {
+        "key": "70b41a860df8c211d",
+        "secret": "9ce8f25737d8ba553"
+    },
+    "application_sandbox": {
+        "key": "9d0e1bc30aa946878",
+        "secret": "10e7abba6f5414013",
+        "host": "https://sandbox.tr8nhub.com"
+    },
     "application": {
-        "host": "http://localhost:3000",
-        "key": "b420142a2c4201b36",
-        "secret": "e43888bf9142e1f9d"
+        "key": "53b2c5e7ce2e10726",
+        "secret": "b66c578907938519f",
+        "host": "http://localhost:3000"
     },
     "local": {
         "base_path": "/tr8n"
     },
     "log": {
-        "enabled": false
+        "enabled": true,
+        "severity": "debug"
     },
 	"cache": {
 		"enabled": false,
