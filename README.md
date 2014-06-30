@@ -19,18 +19,18 @@ Installation
 Tr8n Client SDK for PHP can be installed using the composer dependency manager. If you don't already have composer installed on your system, you can get it using the following command:
 
 ```sh
-    $ cd YOUR_APPLICATION_FOLDER
-    $ curl -s http://getcomposer.org/installer | php
+$ cd YOUR_APPLICATION_FOLDER
+$ curl -s http://getcomposer.org/installer | php
 ```
 
 Create composer.json in the root folder of your application, and add the following content:
 
 ```json
-    {
-        "require": {
-            "tr8n/tr8n-client-sdk": "dev-master"
-        }
+{
+    "require": {
+        "tr8n/tr8n-client-sdk": "dev-master"
     }
+}
 ```
 
 This tells composer that your application requires tr8n-client-sdk library to be installed.
@@ -38,7 +38,7 @@ This tells composer that your application requires tr8n-client-sdk library to be
 Now install Tr8n SDK library by executing the following command:
 
 ```sh
-    $ php composer.phar install
+$ php composer.phar install
 ```
 
 Composer will automatically create a vendor folder and put the SDK into vendor/tr8n/tr8n-client-sdk directory.
@@ -79,7 +79,8 @@ Make sure you replace YOUR_APPLICATION_KEY and YOUR_APPLICATION_SECRET with the 
 
 Now you can open up your browser and navigate to the file:
 
-        http://localhost/your_app_path/tr8n.php
+http://localhost/your_app_path/tr8n.php
+
 
 If everything was configured correctly, you should see a phrase "Hello World" on your page.
 
