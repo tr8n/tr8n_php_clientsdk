@@ -46,16 +46,11 @@ Now you are ready to integrate Tr8n into your application.
 Integration
 ==================
 
-Before you can proceed with the integration, please visit http://tr8nhub.com register as a user and create a new application.
+Before you can proceed with the integration, please visit https://translationexchange.com to register your application.
 
-Once you have created a new application, go to the security tab in the application administration section and copy your application key and secret.
+Once you have created a new application, you will be given an application key and a secret. You will need to enter them in the initialization function of the Tr8n SDK.
 
-<img src="http://wiki.tr8nhub.com/images/thumb/f/f7/Application_Settings.png/800px-Application_Settings.png">
-
-
-You will need to enter them in the initialization function of the Tr8n SDK.
-
-To make sure you have installed everything correctly, let's create a sample test file in the root folder of your app and call it tr8n.php
+To make sure you have installed everything correctly, create a sample test file in the root folder of your app and call it tr8n.php
 
 Paste the following content into the file:
 
@@ -91,30 +86,20 @@ You should see a lightbox with Tr8n's default shortcuts. You can configure those
 
 To close the lightbox, click on the top-right corner or simply press the Esc button.
 
-
 Press Ctrl+Shift+L to switch to a different language.
 
-        Ctrl+Shift+L  - opens language selector
-
-
 Now you can press Ctrl+Shift+I to enable inline translations.
-
-        Ctrl+Shift+I  - toggles inline translation mode
-
 
 When inline translations are enabled you will see translated phrases underlined in green color and not translated phrases with red.
 
 Right-Mouse-Click (or Ctrl+Click on Mac) on any phrase and you will see an inline translator window that will allow you to translate the phrase.
 
-        Right-Mouse-Click on Windows or Ctrl+Click on Mac - brings inline translation window
-
-
 <img src="http://wiki.tr8nhub.com/images/6/6e/Sample_Translation.png">
 
 
-To learn about various integration options and TML language, please visit the following URL:
+To learn about various integration options and TML features, visit our online interactive documentation:
 
-http://wiki.tr8nhub.com/index.php?title=PHP_Client_SDK
+http://php.tr8n.io/docs
 
 
 Links
