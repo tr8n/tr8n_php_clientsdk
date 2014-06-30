@@ -5,7 +5,7 @@
 Tr8n for PHP
 ==================
 
-PHP Client SDK for Tr8nHub Translation Platform.
+PHP Client SDK for TranslationExchange Platform.
 
 [![Build Status](https://travis-ci.org/tr8n/tr8n_php_clientsdk.png?branch=master)](https://travis-ci.org/tr8n/tr8n_php_clientsdk)
 [![Coverage Status](https://coveralls.io/repos/tr8n/tr8n_php_clientsdk/badge.png?branch=master)](https://coveralls.io/r/tr8n/tr8n_php_clientsdk?branch=master)
@@ -59,7 +59,7 @@ Paste the following content into the file:
 
 ```php
 <?php require_once(__DIR__ . '/vendor/tr8n/tr8n-client-sdk/library/Tr8n.php'); ?>
-<?php tr8n_init_client_sdk("https://tr8nhub.com", "YOUR_APPLICATION_KEY", "YOUR_APPLICATION_SECRET"); ?>
+<?php tr8n_init_client_sdk("YOUR_APPLICATION_KEY", "YOUR_APPLICATION_SECRET"); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>" lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>">
@@ -75,7 +75,7 @@ Paste the following content into the file:
 ```
 
 
-Make sure you replace YOUR_APPLICATION_KEY and YOUR_APPLICATION_SECRET with the key and secret you copied from tr8nhub.com
+Make sure you replace YOUR_APPLICATION_KEY and YOUR_APPLICATION_SECRET with the key and secret you copied from translationexchange.com
 
 Now you can open up your browser and navigate to the file:
 
@@ -98,7 +98,7 @@ When inline translations are enabled you will see translated phrases underlined 
 
 Right-Mouse-Click (or Ctrl+Click on Mac) on any phrase and you will see an inline translator window that will allow you to translate the phrase.
 
-<img src="http://wiki.tr8nhub.com/images/6/6e/Sample_Translation.png">
+<img src="http://wiki.tr8n.io/images/6/6e/Sample_Translation.png">
 
 
 To learn about various integration options and TML features, visit our online interactive documentation:
@@ -109,13 +109,13 @@ http://php.tr8n.io/docs
 Links
 ==================
 
-* Register on TranslationExchange.com: https://translationexchange.com
+* Register at TranslationExchange.com: https://translationexchange.com
+
+* Visit PHP Interactive Documentation: http://php.tr8n.io
 
 * Read TranslationExchange documentation: http://wiki.tr8n.io
 
 * Visit TranslationExchange blog: http://blog.tr8n.io
-
-* PHP Interactive Documentation: http://php.tr8n.io
 
 * Follow TranslationExchange on Twitter: https://twitter.com/translationx
 
