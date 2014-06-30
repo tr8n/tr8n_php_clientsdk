@@ -18,25 +18,28 @@ Installation
 
 Tr8n Client SDK for PHP can be installed using the composer dependency manager. If you don't already have composer installed on your system, you can get it using the following command:
 
-        $ cd YOUR_APPLICATION_FOLDER
-        $ curl -s http://getcomposer.org/installer | php
-
+```sh
+    $ cd YOUR_APPLICATION_FOLDER
+    $ curl -s http://getcomposer.org/installer | php
+```
 
 Create composer.json in the root folder of your application, and add the following content:
 
-        {
-            "require": {
-                "tr8n/tr8n-client-sdk": "dev-master"
-            }
+```json
+    {
+        "require": {
+            "tr8n/tr8n-client-sdk": "dev-master"
         }
+    }
+```
 
 This tells composer that your application requires tr8n-client-sdk library to be installed.
 
 Now install Tr8n SDK library by executing the following command:
 
-
-        $ php composer.phar install
-
+```sh
+    $ php composer.phar install
+```
 
 Composer will automatically create a vendor folder and put the SDK into vendor/tr8n/tr8n-client-sdk directory.
 
@@ -54,21 +57,22 @@ To make sure you have installed everything correctly, create a sample test file 
 
 Paste the following content into the file:
 
+```php
+    <?php require_once(__DIR__ . '/vendor/tr8n/tr8n-client-sdk/library/Tr8n.php'); ?>
+    <?php tr8n_init_client_sdk("https://tr8nhub.com", "YOUR_APPLICATION_KEY", "YOUR_APPLICATION_SECRET"); ?>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
-        <?php require_once(__DIR__ . '/vendor/tr8n/tr8n-client-sdk/library/Tr8n.php'); ?>
-        <?php tr8n_init_client_sdk("https://tr8nhub.com", "YOUR_APPLICATION_KEY", "YOUR_APPLICATION_SECRET"); ?>
-        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-
-        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>" lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>">
-        <head>
-            <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
-            <?php include(__DIR__ . '/vendor/tr8n/tr8n-client-sdk/library/Tr8n/Includes/Scripts.php'); ?>
-        </head>
-        <body>
-            <?php tre("Hello World") ?>
-        </body>
-        </html>
-        <?php tr8n_complete_request() ?>
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>" lang="<?php echo Tr8n\Config::instance()->current_language->locale; ?>">
+    <head>
+        <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+        <?php include(__DIR__ . '/vendor/tr8n/tr8n-client-sdk/library/Tr8n/Includes/Scripts.php'); ?>
+    </head>
+    <body>
+        <?php tre("Hello World") ?>
+    </body>
+    </html>
+    <?php tr8n_complete_request() ?>
+```
 
 
 Make sure you replace YOUR_APPLICATION_KEY and YOUR_APPLICATION_SECRET with the key and secret you copied from tr8nhub.com
@@ -76,7 +80,6 @@ Make sure you replace YOUR_APPLICATION_KEY and YOUR_APPLICATION_SECRET with the 
 Now you can open up your browser and navigate to the file:
 
         http://localhost/your_app_path/tr8n.php
-
 
 If everything was configured correctly, you should see a phrase "Hello World" on your page.
 
@@ -110,6 +113,8 @@ Links
 * Read TranslationExchange documentation: http://wiki.tr8n.io
 
 * Visit TranslationExchange blog: http://blog.tr8n.io
+
+* PHP Interactive Documentation: http://php.tr8n.io
 
 * Follow TranslationExchange on Twitter: https://twitter.com/translationx
 
