@@ -38,7 +38,7 @@ This tells composer that your application requires tr8n-client-sdk library to be
 Now install Tr8n SDK library by executing the following command:
 
 ```sh
-$ php composer.phar install
+$ composer install
 ```
 
 Composer will automatically create a vendor folder and put the SDK into vendor/tr8n/tr8n-client-sdk directory.
