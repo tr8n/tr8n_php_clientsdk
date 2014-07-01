@@ -17,9 +17,11 @@ CHDB (constant hash database) is a fast key-value database for constant data, re
 <h4>Prerequisites</h4>
 
 <p>For CHDB library to work you need to install <a href="http://cmph.sourceforge.net/">C Minimal Perfect Hashing Library</a> </p>
-<p>You can download it from <a href="http://sourceforge.net/projects/cmph/">http://sourceforge.net/projects/cmph/</a>. Once downloaded run the following commands:</p>
+<p>You can download it from <a href="http://sourceforge.net/projects/cmph/">http://sourceforge.net/projects/cmph/</a>. To configure and install cmph, run the following commands:</p>
 
 <pre><code class="language-bash">
+  $ wget http://colocrossing.dl.sourceforge.net/project/cmph/cmph/cmph-2.0.tar.gz
+  $ tar -zxvf cmph-2.0.tar.gz
   $ cd cmph-2.0
   $ ./configure
   $ make
@@ -28,7 +30,7 @@ CHDB (constant hash database) is a fast key-value database for constant data, re
 
 <p>Now you can install CHDB by using PECL:</p>
 
-<pre><code class="language-bash">$ pecl install chdb</code></pre>
+<pre><code class="language-bash">$ sudo pecl install chdb</code></pre>
 
 <p>
     Add "extension=chdb.so" to php.ini and restart your server.
