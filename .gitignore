@@ -5,4 +5,4 @@ build
 vendor
 composer.phar
 composer.lock
-
+config/config.json
