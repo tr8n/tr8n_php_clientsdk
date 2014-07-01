@@ -199,19 +199,21 @@ class TranslationKey extends Base {
             return $this->application->cacheTranslationKey($this);
         }
 
-        $data = \Tr8n\Cache::fetch(self::cacheKey($language->locale, $this->label, $this->description));
-        if ($data == null)
-            return $this;
+        if (Config::instance()->isCacheEnabled()) {
+            $data = \Tr8n\Cache::fetch(self::cacheKey($language->locale, $this->label, $this->description));
+            if ($data == null)
+                return $this;
 
-        if (strstr($data, '},{') === false) {
-            $this->addTranslation($language->locale, array("label" => $data));
-        } else {
-            $translations_json = json_decode($data, true);
-            foreach($translations_json as $translation_json) {
-                $this->addTranslation($language->locale, $translation_json);
+            if (strstr($data, '},{') === false) {
+                $this->addTranslation($language->locale, array("label" => $data));
+            } else {
+                $translations_json = json_decode($data, true);
+                foreach($translations_json as $translation_json) {
+                    $this->addTranslation($language->locale, $translation_json);
+                }
             }
         }
-
+        
 //        $translation_key_json = $this->application->apiClient()->get("translation_key/translations",
 //            array("key"=>$this->key, "label"=>$this->label, "description"=>$this->description, "locale" => $language->locale),
 //            array("cache_key" => self::cacheKey($language->locale, $this->label, $this->description))
