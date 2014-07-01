@@ -127,7 +127,8 @@ class Cache {
      * @return bool
      */
     public static function isReadOnly() {
-        return self::instance()->isReadOnly();
+        $adapter = Config::instance()->configValue("cache.adapter");
+        return $adapter == "file" || $adapter == "chdb";
     }
 
     /**

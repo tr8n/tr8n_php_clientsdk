@@ -21,8 +21,8 @@
         "severity": "debug"
     },
 	"cache": {
-		"enabled": false,
-		"adapter": "memcache",
+		"enabled": true,
+		"adapter": "apc",
         "pretty": "true"
 	},
 	"html_translator": {
