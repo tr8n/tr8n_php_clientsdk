@@ -265,8 +265,9 @@ class Application extends Base {
      * @return Language
      */
     public function addLanguage($language) {
-        $lang = $this->language($language->locale, false);
-        if ($lang != null) return $lang;
+        if (isset($this->languages_by_locale[$language->locale])) {
+            return $this->languages_by_locale[$language->locale];
+        }
 
         $language->application = $this;
         array_push($this->languages, $language);

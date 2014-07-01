@@ -21,7 +21,7 @@
         "severity": "debug"
     },
 	"cache": {
-		"enabled": true,
+		"enabled": false,
 		"adapter": "memcache",
         "pretty": "true"
 	},
