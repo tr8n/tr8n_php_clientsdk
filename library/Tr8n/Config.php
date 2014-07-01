@@ -141,7 +141,10 @@ class Config {
      */
     public function configValue($key, $default = null) {
         if ($this->config == null) {
-            $data = file_get_contents($this->configFilePath('config.json'));
+            $config_file_path = $this->configFilePath('config.json');
+            if (!file_exists($config_file_path))
+                $config_file_path = $this->configFilePath('config-default.json');
+            $data = file_get_contents($config_file_path);
             $this->config = json_decode($data, true);
         }
 
