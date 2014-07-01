@@ -1,8 +1,16 @@
 <?php
 
 /**
- * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, TranslationExchange.com
  *
+ *  _______                  _       _   _             ______          _
+ * |__   __|                | |     | | (_)           |  ____|        | |
+ *    | |_ __ __ _ _ __  ___| | __ _| |_ _  ___  _ __ | |__  __  _____| |__   __ _ _ __   __ _  ___
+ *    | | '__/ _` | '_ \/ __| |/ _` | __| |/ _ \| '_ \|  __| \ \/ / __| '_ \ / _` | '_ \ / _` |/ _ \
+ *    | | | | (_| | | | \__ \ | (_| | |_| | (_) | | | | |____ >  < (__| | | | (_| | | | | (_| |  __/
+ *    |_|_|  \__,_|_| |_|___/_|\__,_|\__|_|\___/|_| |_|______/_/\_\___|_| |_|\__,_|_| |_|\__, |\___|
+ *                                                                                        __/ |
+ *                                                                                       |___/
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -38,6 +46,10 @@ class FileGenerator extends Base {
      */
     private $languages;
 
+    private $current_cache_path;
+
+    private $symlink_cache_path;
+
     /**
      * @return FileGenerator
      */
@@ -49,13 +61,8 @@ class FileGenerator extends Base {
         return $inst;
     }
 
-    /**
-     *
-     */
     public function run() {
         $this->started_at = new \DateTime();
-
-        $this->prepareCache();
 
         $this->cacheApplication();
         $this->languages = $this->cacheLanguages();
@@ -65,25 +72,49 @@ class FileGenerator extends Base {
         $this->finalize();
     }
 
-    /**
-     * Creates cache folder for current cache export
-     */
-    function prepareCache() {
-        $this->cache_path = Config::instance()->cachePath() . '/files/' . 'tr8n_' . Config::instance()->application->key . '_' . $this->started_at->format('Y_m_d_H_i_s') . '/';
-        mkdir($this->cache_path, 0777, true);
+
+    function currentCachePath() {
+        if ($this->current_cache_path == null) {
+            $this->current_cache_path = $this->baseCachePath() . DIRECTORY_SEPARATOR . $this->datedFileName();
+            $this->log("Current cache path: " . $this->current_cache_path);
+            if (!file_exists($this->current_cache_path)) mkdir($this->current_cache_path, 0777, true);
+        }
+        return $this->current_cache_path;
     }
 
     /**
      * @param string|array $key
      * @param string|null $data
      */
-    public function cache($key, $data) {
-        $file_name = $this->cache_path . FileAdapter::fileName($key);
-        file_put_contents($file_name, $data);
+    public function cache($path, $data) {
+        $parts = explode(DIRECTORY_SEPARATOR, $path);
+        if (count($parts) > 1) { // if directories included in the path
+            array_pop($parts);
+            $file_path = $this->currentCachePath() . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $parts);
+            if (!file_exists($file_path)) mkdir($file_path, 0777, true);
+        }
+        $file_path = $this->currentCachePath() . DIRECTORY_SEPARATOR . $path . ".json";
+        $this->log("Saving file: " . $file_path);
+
+        if (Config::instance()->configValue("cache.pretty", false)) {
+            $data = \Tr8n\Utils\StringUtils::prettyPrint($data);
+        }
+
+        file_put_contents($file_path, $data);
+    }
+
+    function generateSymlink() {
+        if (file_exists($this->symlinkPath()))
+            unlink($this->symlinkPath());
+
+        symlink($this->currentCachePath(), $this->symlinkPath());
     }
 
     function symlinkPath() {
-        return FileAdapter::cachePath();
+        if ($this->symlink_cache_path == null) {
+            $this->symlink_cache_path = $this->baseCachePath() . DIRECTORY_SEPARATOR . 'current';
+        }
+        return $this->symlink_cache_path;
     }
 
     /**
@@ -91,17 +122,15 @@ class FileGenerator extends Base {
      */
     private function cacheTranslations() {
         $this->log("Downloading translations...");
-        $sources = Config::instance()->application->get("application/sources");
+        $sources = Config::instance()->application->apiClient()->get("application/sources");
         foreach($this->languages as $language) {
             $this->log("--------------------------------------------------------------");
-            $this->log("Downloading ". $language["locale"]. " language...");
+            $this->log($language["locale"]. " locale...");
             $this->log("--------------------------------------------------------------");
             foreach($sources as $source) {
                 $this->log("Downloading ". $source["source"] . " in " . $language["locale"]. "...");
-                $key = Source::cacheKey($source["source"], $language["locale"]);
-                $translation_keys = Config::instance()->application->get("source/translations", array("source" => $source["source"], "locale" => $language["locale"]));
-                $source = array("source" => $source["source"], "translation_keys" => $translation_keys);
-                $this->cache($key, json_encode($source));
+                $source = Config::instance()->application->apiClient()->get("source", array("source" => $source["source"], "locale" => $language["locale"], "translations" => "true"));
+                $this->cache(Source::cacheKey($source["source"], $language["locale"]), json_encode($source));
             }
         }
     }

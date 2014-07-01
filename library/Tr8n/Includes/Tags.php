@@ -1,8 +1,16 @@
 <?php
 
 /**
- * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, TranslationExchange.com
  *
+ *  _______                  _       _   _             ______          _
+ * |__   __|                | |     | | (_)           |  ____|        | |
+ *    | |_ __ __ _ _ __  ___| | __ _| |_ _  ___  _ __ | |__  __  _____| |__   __ _ _ __   __ _  ___
+ *    | | '__/ _` | '_ \/ __| |/ _` | __| |/ _ \| '_ \|  __| \ \/ / __| '_ \ / _` | '_ \ / _` |/ _ \
+ *    | | | | (_| | | | \__ \ | (_| | |_| | (_) | | | | |____ >  < (__| | | | (_| | | | | (_| |  __/
+ *    |_|_|  \__,_|_| |_|___/_|\__,_|\__|_|\___/|_| |_|______/_/\_\___|_| |_|\__,_|_| |_|\__, |\___|
+ *                                                                                        __/ |
+ *                                                                                       |___/
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -23,6 +31,12 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/**
+ * Displays default language selector
+ *
+ * @param \Tr8n\Language $language
+ * @param array $opts
+ */
 function tr8n_language_name_tag($language = null, $opts = array()) {
     if ($language == null) $language = tr8n_current_language();
     if (isset($opts["flag"])) {
@@ -32,11 +46,23 @@ function tr8n_language_name_tag($language = null, $opts = array()) {
     echo $language->native_name;
 }
 
+/**
+ * Displays language name
+ *
+ * @param \Tr8n\Language $language
+ */
 function tr8n_language_flag_tag($language = null) {
     if ($language == null) $language = tr8n_current_language();
     echo "<img src='" . $language->flagUrl() . "' style='margin-right:3px;'>";
 }
 
+/**
+ * Tr8n related links
+ *
+ * @param string $dest
+ * @param null $title
+ * @param array $opts
+ */
 function tr8n_link_to($dest, $title = null, $opts = array()) {
     $path = null;
     $function = "";
@@ -129,10 +155,20 @@ function tr8n_link_to($dest, $title = null, $opts = array()) {
     echo "Invalid tr8n link key";
 }
 
+/**
+ * Translator login
+ *
+ * @return string
+ */
 function tr8n_login_url() {
     return Tr8n\Config::instance()->application->host . '/login';
 }
 
+/**
+ * Translator signup
+ *
+ * @return string
+ */
 function tr8n_signup_url() {
     return Tr8n\Config::instance()->application->host . '/signup';
 }

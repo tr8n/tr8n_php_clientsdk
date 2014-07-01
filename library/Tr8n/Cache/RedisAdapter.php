@@ -1,8 +1,16 @@
 <?php
 
 /**
- * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, TranslationExchange.com
  *
+ *  _______                  _       _   _             ______          _
+ * |__   __|                | |     | | (_)           |  ____|        | |
+ *    | |_ __ __ _ _ __  ___| | __ _| |_ _  ___  _ __ | |__  __  _____| |__   __ _ _ __   __ _  ___
+ *    | | '__/ _` | '_ \/ __| |/ _` | __| |/ _ \| '_ \|  __| \ \/ / __| '_ \ / _` | '_ \ / _` |/ _ \
+ *    | | | | (_| | | | \__ \ | (_| | |_| | (_) | | | | |____ >  < (__| | | | (_| | | | | (_| |  __/
+ *    |_|_|  \__,_|_| |_|___/_|\__,_|\__|_|\___/|_| |_|______/_/\_\___|_| |_|\__,_|_| |_|\__, |\___|
+ *                                                                                        __/ |
+ *                                                                                       |___/
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -27,61 +35,37 @@ namespace Tr8n\Cache;
 
 use Tr8n\Config;
 
-class RedisAdapter extends Base {
-
-    private $cache;
+class RedisAdapter extends MemcacheAdapter {
 
     public function __construct() {
-//        $this->cache = new Memcache();
-//        $this->cache->connect('localhost', 11211) or die ("Could not connect");
+        $this->cache = new \Redis;
+        if (Config::instance()->configValue("socket")) {
+            $this->cache->connect(Config::instance()->configValue("socket"));
+        } else {
+            $this->cache->connect(
+                Config::instance()->configValue("cache.host", 'localhost'),
+                Config::instance()->configValue("cache.port", 6379),
+                Config::instance()->configValue("cache.timeout", 0.0)
+            );
+        }
     }
 
     public function key() {
-        return "memcache";
-    }
-
-    public function fetch($key, $default = null) {
-        $value = $this->cache->get($this->versionedKey($key));
-        if ($value) {
-            $this->info("Cache hit " . $key);
-            return $this->deserializeObject($key, $value);
-        }
-
-        $this->info("Cache miss " . $key);
-
-        if ($default == null)
-            return null;
-
-        if (is_callable($default)) {
-            $value = $default();
-        } else {
-            $value = $default;
-        }
-
-        $this->cache->add($this->versionedKey($key), $this->serializeObject($key, $value), false, Config::instance()->cacheTimeout());
-
-        return $value;
+        return "redis";
     }
 
     public function store($key, $value) {
         $this->info("Cache store " . $key);
-        return $this->cache->add($this->versionedKey($key), $this->serializeObject($key, $value), false, Config::instance()->cacheTimeout());
-    }
-
-    public function delete($key) {
-        $this->info("Cache delete " . $key);
-        return $this->cache->delete($this->versionedKey($key));
+        return $this->cache->set(
+            $this->versionedKey($key),
+            $value,
+            Config::instance()->configValue("cache.timeout", 3600)
+        );
     }
 
     public function exists($key) {
         $this->info("Cache exists " . $key);
-        return $this->cache->get($this->versionedKey($key));
-    }
-
-    public function isReadOnly() {
-        return false;
+        return $this->cache->exists($this->versionedKey($key));
     }
 
 }
-
-?>

@@ -1,7 +1,5 @@
 <?php include('includes/header.php'); ?>
-<?php
-\Tr8n\Config::instance()->incrementCache();
-?>
+<?php \Tr8n\Cache::incrementVersion(); ?>
 
 <h4><?php tre("Incrementing cache version...") ?></h4>
 

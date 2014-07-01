@@ -6,6 +6,5 @@ This folder contains default configuration settings. Make sure you have the conf
 You can create the file using the following command:
 
         $ cp config-default.json config.json
-        $ chmod 777 config.json
 
 

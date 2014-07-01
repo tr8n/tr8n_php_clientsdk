@@ -1,7 +1,16 @@
 <?php
+
 /**
- * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, TranslationExchange.com
  *
+ *  _______                  _       _   _             ______          _
+ * |__   __|                | |     | | (_)           |  ____|        | |
+ *    | |_ __ __ _ _ __  ___| | __ _| |_ _  ___  _ __ | |__  __  _____| |__   __ _ _ __   __ _  ___
+ *    | | '__/ _` | '_ \/ __| |/ _` | __| |/ _ \| '_ \|  __| \ \/ / __| '_ \ / _` | '_ \ / _` |/ _ \
+ *    | | | | (_| | | | \__ \ | (_| | |_| | (_) | | | | |____ >  < (__| | | | (_| | | | | (_| |  __/
+ *    |_|_|  \__,_|_| |_|___/_|\__,_|\__|_|\___/|_| |_|______/_/\_\___|_| |_|\__,_|_| |_|\__, |\___|
+ *                                                                                        __/ |
+ *                                                                                       |___/
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -62,9 +71,8 @@ class Source extends Base {
     function __construct($attributes=array()) {
         parent::__construct($attributes);
 
-        $this->translation_keys = null;
+        $this->translation_keys = array();
         if (isset($attributes['translation_keys'])) {
-            $this->translation_keys = array();
             foreach($attributes['translation_keys'] as $tk) {
                 $translation_key = new TranslationKey(array_merge($tk, array("application" => $this->application)));
                 $this->translation_keys[$translation_key->key] = $this->application->cacheTranslationKey($translation_key);
@@ -73,50 +81,21 @@ class Source extends Base {
 	}
 
     /**
+     * @param string $key
+     * @return null|TranslationKey
+     */
+    public function translationKey($key) {
+        if (!isset($this->translation_keys[$key])) return null;
+        return $this->translation_keys[$key];
+    }
+
+    /**
      * @param string $source_key
      * @param string $locale
      * @return string
      */
     public static function cacheKey($source_key, $locale) {
-        return "s@_[" . $locale . "]_[" . $source_key . "]";
-    }
-
-    /**
-     * @param Language $language
-     * @param array $options
-     * @return array|null
-     */
-    public function fetchTranslationsForLanguage($language, $options = array()) {
-        if ($this->translation_keys !== null) {
-            return $this->translation_keys;
-        }
-
-        $keys_with_translations = $this->application->get("source/translations", array("source" => $this->source, "locale" => $language->locale),
-                            array("class" => '\Tr8n\TranslationKey', "attributes" => array("application" => $this->application)));
-
-        $this->translation_keys = array();
-
-        foreach($keys_with_translations as $translation_key) {
-            $this->translation_keys[$translation_key->key] = $this->application->cacheTranslationKey($translation_key);
-        }
-
-        return $this->translation_keys;
-    }
-
-    /**
-     * @param array $keys
-     * @return array
-     */
-    public function toArray($keys=array()) {
-        $info = parent::toArray(array("source", "url", "name", "description"));
-        if ($this->translation_keys) {
-            $info["translation_keys"] = array();
-            foreach(array_values($this->translation_keys) as $tkey) {
-                /** @var TranslationKey $tkey */
-                array_push($info["translation_keys"], $tkey->toArray());
-            }
-        }
-        return $info;
+        return $locale . DIRECTORY_SEPARATOR . '[' . preg_replace('/[\.\/]/', '-', $source_key) . ']';
     }
 
 }

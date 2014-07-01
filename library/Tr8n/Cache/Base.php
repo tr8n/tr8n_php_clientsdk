@@ -1,8 +1,16 @@
 <?php
 
 /**
- * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, TranslationExchange.com
  *
+ *  _______                  _       _   _             ______          _
+ * |__   __|                | |     | | (_)           |  ____|        | |
+ *    | |_ __ __ _ _ __  ___| | __ _| |_ _  ___  _ __ | |__  __  _____| |__   __ _ _ __   __ _  ___
+ *    | | '__/ _` | '_ \/ __| |/ _` | __| |/ _ \| '_ \|  __| \ \/ / __| '_ \ / _` | '_ \ / _` |/ _ \
+ *    | | | | (_| | | | \__ \ | (_| | |_| | (_) | | | | |____ >  < (__| | | | (_| | | | | (_| |  __/
+ *    |_|_|  \__,_|_| |_|___/_|\__,_|\__|_|\___/|_| |_|______/_/\_\___|_| |_|\__,_|_| |_|\__, |\___|
+ *                                                                                        __/ |
+ *                                                                                       |___/
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -38,6 +46,21 @@ abstract class Base {
     public abstract function delete($key);
     public abstract function exists($key);
 
+    const TR8N_VERSION_KEY = '__tr8n_version__';
+    const TR8N_KEY_PREFIX = 'tr8n_v';
+
+    /**
+     * @var string
+     */
+    private $base_cache_path;
+
+    /**
+     * Holds the current cache version
+     *
+     * @var string
+     */
+    private $version;
+
     /**
      * @return bool
      */
@@ -49,7 +72,7 @@ abstract class Base {
      * @return bool
      */
     public function isReadOnly() {
-        return true;
+        return false;
     }
 
     /**
@@ -74,43 +97,54 @@ abstract class Base {
         Logger::instance()->info($this->key() . " - " . $msg);
     }
 
-    function versionedKey($key) {
-        return "tr8n_v" . Config::instance()->cacheVersion() . "_" . $key;
-    }
-
     /**
-     * @param mixed $data
-     * @return mixed
+     * Returns current cache version
+     *
+     * @return integer
      */
-    function serializeObject($key, $data) {
-        $prefix = substr($key, 0, 2);
-        if (in_array($prefix, array('a@', 'l@', 's@', 'c@'))) {
-            $json = json_encode($data->toArray());
-//            $this->info($json);
-            return $json;
+    function version() {
+        if ($this->version == null) {
+            $this->version = intval($this->fetch(self::TR8N_VERSION_KEY, Config::instance()->configValue("cache.version", 1)));
         }
-
-        return $data;
+        return $this->version;
     }
 
     /**
+     * Increments cache version
+     * @return integer
+     */
+    function incrementVersion() {
+        $this->store(self::TR8N_VERSION_KEY, $this->version() + 1);
+        return $this->version();
+    }
+
+    /**
+     * Appends version to a key
+     *
      * @param string $key
-     * @param mixed $data
-     * @return Application|Component|Language|Source
+     * @return string
      */
-    function deserializeObject($key, $data) {
-        $prefix = substr($key, 0, 2);
-
-//        $this->info($data);
-
-        switch($prefix) {
-            case 'a@': return new Application(json_decode($data, true));
-            case 'l@': return new Language(array_merge(json_decode($data, true), array("application" => Config::instance()->application)));
-            case 's@': return new Source(array_merge(json_decode($data, true), array("application" => Config::instance()->application)));
-            case 'c@': return new Component(array_merge(json_decode($data, true), array("application" => Config::instance()->application)));
-        }
-
-        return $data;
+    function versionedKey($key) {
+        if ($key == self::TR8N_VERSION_KEY) return $key;
+        return self::TR8N_KEY_PREFIX . $this->version() . "_" . $key;
     }
 
+    /**
+     * @return string
+     */
+    function baseCachePath() {
+        if ($this->base_cache_path == null) {
+            $this->base_cache_path = Config::instance()->configValue("cache.path", Config::instance()->rootPath() . DIRECTORY_SEPARATOR . "cache");
+            if (!file_exists($this->base_cache_path)) mkdir($this->base_cache_path, 0777, true);
+            $this->info("Base cache path: " . $this->base_cache_path);
+        }
+        return $this->base_cache_path;
+    }
+
+    /**
+     * @return string
+     */
+    function currentCachePath() {
+        return $this->baseCachePath() . DIRECTORY_SEPARATOR . 'current';
+    }
 }

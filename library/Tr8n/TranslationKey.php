@@ -1,7 +1,16 @@
 <?php
+
 /**
- * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, TranslationExchange.com
  *
+ *  _______                  _       _   _             ______          _
+ * |__   __|                | |     | | (_)           |  ____|        | |
+ *    | |_ __ __ _ _ __  ___| | __ _| |_ _  ___  _ __ | |__  __  _____| |__   __ _ _ __   __ _  ___
+ *    | | '__/ _` | '_ \/ __| |/ _` | __| |/ _ \| '_ \|  __| \ \/ / __| '_ \ / _` | '_ \ / _` |/ _ \
+ *    | | | | (_| | | | \__ \ | (_| | |_| | (_) | | | | |____ >  < (__| | | | (_| | | | | (_| |  __/
+ *    |_|_|  \__,_|_| |_|___/_|\__,_|\__|_|\___/|_| |_|______/_/\_\___|_| |_|\__,_|_| |_|\__, |\___|
+ *                                                                                        __/ |
+ *                                                                                       |___/
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -120,16 +129,25 @@ class TranslationKey extends Base {
 
         $this->translations = array();
         if (isset($attributes['translations'])) {
-            foreach($attributes["translations"] as $locale => $translations) {
-                $language = $this->application->language($locale);
+            $this->addTranslations($attributes['translations']);
+        }
+    }
 
-                if (!array_key_exists($locale, $this->translations))
-                    $this->translations[$locale] = array();
+    public function addTranslation($locale, $translation_json) {
+        if ($this->translations == null)
+            $this->translations = array();
 
-                foreach($translations as $translation_hash) {
-                    $t = new Translation(array_merge($translation_hash, array("translation_key"=>$this, "locale"=>$language->locale)));
-                    array_push($this->translations[$locale], $t);
-                }
+        if (!isset($this->translations[$locale]))
+            $this->translations[$locale] = array();
+
+        $t = new Translation(array_merge($translation_json, array("translation_key"=>$this, "locale"=>$locale)));
+        array_push($this->translations[$locale], $t);
+    }
+
+    public function addTranslations($translations_data) {
+        foreach($translations_data as $locale => $translations) {
+            foreach($translations as $translation_json) {
+                $this->addTranslation($locale, $translation_json);
             }
         }
     }
@@ -140,8 +158,8 @@ class TranslationKey extends Base {
      * @param string $locale
      * @return string
      */
-    public static function cacheKey($label, $description, $locale) {
-        return "t@_[" . $locale . "]_[" . self::generateKey($label, $description) . "]";
+    public static function cacheKey($locale, $label, $description) {
+        return $locale . DIRECTORY_SEPARATOR . self::generateKey($label, $description);
     }
 
     /**
@@ -181,14 +199,30 @@ class TranslationKey extends Base {
             return $this->application->cacheTranslationKey($this);
         }
 
-        $translation_key = $this->application->post("translation_key/translations",
-                                array("key"=>$this->key, "label"=>$this->label, "description"=>$this->description, "locale" => $language->locale),
-                                array("class"=>'\Tr8n\TranslationKey', "attributes"=>array("application"=>$this->application)));
+        $data = \Tr8n\Cache::fetch(self::cacheKey($language->locale, $this->label, $this->description));
+        if ($data == null)
+            return $this;
+
+        if (strstr($data, '},{') === false) {
+            $this->addTranslation($language->locale, array("label" => $data));
+        } else {
+            $translations_json = json_decode($data, true);
+            foreach($translations_json as $translation_json) {
+                $this->addTranslation($language->locale, $translation_json);
+            }
+        }
+
+//        $translation_key_json = $this->application->apiClient()->get("translation_key/translations",
+//            array("key"=>$this->key, "label"=>$this->label, "description"=>$this->description, "locale" => $language->locale),
+//            array("cache_key" => self::cacheKey($language->locale, $this->label, $this->description))
+//        );
+//        if (isset($translation_key_json["translations"])) {
+//            $this->addTranslations($translation_key_json['translations']);
+//        }
 
         /** @var $translation_key TranslationKey */
-        return $this->application->cacheTranslationKey($translation_key);
+        return $this->application->cacheTranslationKey($this);
     }
-
 
     /*
      * Re-assigns the ownership of the application and translation key
@@ -336,22 +370,5 @@ class TranslationKey extends Base {
         return $dt->substitute();
     }
 
-    /**
-     * @return mixed[]
-     */
-    public function toArray($keys=array()) {
-        $info = parent::toArray(array("id", "key", "label", "description", "locale", "level"));
-        if (count($this->translations) > 0) {
-            $info["translations"] = array();
-            foreach($this->translations as $locale=>$locale_translations) {
-                $info["translations"][$locale] = array();
-                foreach($locale_translations as $translation) {
-                    /**  @var Translation $translation */
-                    array_push($info["translations"][$locale], $translation->toArray());
-                }
-            }
-        }
-        return $info;
-    }
 
 }

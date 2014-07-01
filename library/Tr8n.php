@@ -1,7 +1,16 @@
 <?php
+
 /**
- * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, TranslationExchange.com
  *
+ *  _______                  _       _   _             ______          _
+ * |__   __|                | |     | | (_)           |  ____|        | |
+ *    | |_ __ __ _ _ __  ___| | __ _| |_ _  ___  _ __ | |__  __  _____| |__   __ _ _ __   __ _  ___
+ *    | | '__/ _` | '_ \/ __| |/ _` | __| |/ _ \| '_ \|  __| \ \/ / __| '_ \ / _` | '_ \ / _` |/ _ \
+ *    | | | | (_| | | | \__ \ | (_| | |_| | (_) | | | | |____ >  < (__| | | | (_| | | | | (_| |  __/
+ *    |_|_|  \__,_|_| |_|___/_|\__,_|\__|_|\___/|_| |_|______/_/\_\___|_| |_|\__,_|_| |_|\__, |\___|
+ *                                                                                        __/ |
+ *                                                                                       |___/
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -110,6 +119,20 @@ function tr8n_complete_request($options = array()) {
     global $tr8n_page_t0;
     $milliseconds = round(microtime(true) - $tr8n_page_t0,3)*1000;
     \Tr8n\Logger::instance()->info("Page loaded in " . $milliseconds . " milliseconds");
+}
+
+/**
+ * Includes Tr8n JavaScript library
+ */
+function tr8n_scripts() {
+  include(__DIR__ . '/Tr8n/Includes/HeaderScripts.php');
+}
+
+/**
+ * Includes Tr8n footer scripts
+ */
+function tr8n_footer() {
+  include(__DIR__ . '/Tr8n/Includes/FooterScripts.php');
 }
 
 /**

@@ -1,7 +1,16 @@
 <?php
+
 /**
- * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, TranslationExchange.com
  *
+ *  _______                  _       _   _             ______          _
+ * |__   __|                | |     | | (_)           |  ____|        | |
+ *    | |_ __ __ _ _ __  ___| | __ _| |_ _  ___  _ __ | |__  __  _____| |__   __ _ _ __   __ _  ___
+ *    | | '__/ _` | '_ \/ __| |/ _` | __| |/ _ \| '_ \|  __| \ \/ / __| '_ \ / _` | '_ \ / _` |/ _ \
+ *    | | | | (_| | | | \__ \ | (_| | |_| | (_) | | | | |____ >  < (__| | | | (_| | | | | (_| |  __/
+ *    |_|_|  \__,_|_| |_|___/_|\__,_|\__|_|\___/|_| |_|______/_/\_\___|_| |_|\__,_|_| |_|\__, |\___|
+ *                                                                                        __/ |
+ *                                                                                       |___/
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -125,6 +134,11 @@ class Application extends Base {
     public $missing_keys_by_sources;
 
     /**
+     * @var ApiClient
+     */
+    private $api_client;
+
+    /**
      * @param string $host
      * @param string $key
      * @param string $secret
@@ -137,13 +151,9 @@ class Application extends Base {
 
         Logger::instance()->info("Initializing application...");
 
-        $app = Cache::fetch(self::cacheKey($key));
-        if ($app == null) {
-            $app = Application::executeRequest("application", array('client_id' => $key, 'definition' => $options['definition']),
-                array('host' => $host, 'client_secret' => $secret, 'class' => 'Tr8n\Application')
-            );
-            Cache::store(self::cacheKey($key), $app);
-        }
+        $app = ApiClient::fetch("application", array('client_id' => $key, 'definition' => $options['definition']),
+            array('host' => $host, 'client_secret' => $secret, 'class' => '\Tr8n\Application', 'cache_key' => self::cacheKey())
+        );
 
         $app->key = $key;
         $app->host = $host;
@@ -217,8 +227,8 @@ class Application extends Base {
      * @param string $key
      * @return string
      */
-    public static function cacheKey($key) {
-        return "a@_[" . $key . "]";
+    public static function cacheKey() {
+        return "application";
     }
 
     /**
@@ -226,7 +236,7 @@ class Application extends Base {
      * @param bool $fetch
      * @return Language
      */
-    public function language($locale = null, $fetch = true) {
+    public function language($locale = null) {
         $locale = ($locale == null ? Config::instance()->default_locale : $locale);
 
         if ($this->languages_by_locale == null) {
@@ -237,24 +247,16 @@ class Application extends Base {
             return $this->languages_by_locale[$locale];
         }
 
-        if (\Tr8n\Config::instance()->isCacheEnabled()) {
-            $language = Cache::fetch(Language::cacheKey($locale));
-            /** @var $language Language */
-            if ($language) {
-                $language->application = $this;
-                $this->languages_by_locale[$locale] = $language;
-                return $language;
-            }
-        }
+        $language = $this->apiClient()->get("language",
+            array("locale" => $locale),
+            array("class" => '\Tr8n\Language',
+                  "attributes" => array("application" => $this),
+                  "cache_key"  => Language::cacheKey($locale)
+            )
+        );
 
-        if ($fetch == false) return null;
-
-        $this->languages_by_locale[$locale] = $this->get("language", array("locale" => $locale), array("class" => '\Tr8n\Language', "attributes" => array("application" => $this)));
-
-        if (Config::instance()->isCacheEnabled() && !Cache::isReadOnly()) {
-            Cache::store(Language::cacheKey($locale), $this->languages_by_locale[$locale]);
-        }
-
+        $language->application = $this;
+        $this->languages_by_locale[$locale] = $language;
         return $this->languages_by_locale[$locale];
     }
 
@@ -278,7 +280,7 @@ class Application extends Base {
      * @param bool $register
      * @return null|Source
      */
-    public function source($key, $register = true) {
+    public function source($key, $locale) {
         if ($this->sources_by_key == null) {
             $this->sources_by_key = array();
             foreach($this->sources as $source) {
@@ -290,9 +292,18 @@ class Application extends Base {
             return $this->sources_by_key[$key];
         }
 
-        if ($register != true) return null;
+        try {
+            $this->sources_by_key[$key] = $this->apiClient()->get("source",
+                array("source" => $key, "locale" => $locale, "translations" => "true"),
+                array("class" => '\Tr8n\Source',
+                    "attributes" => array("application" => $this),
+                    "cache_key" => Source::cacheKey($key, $locale)
+                )
+            );
+        } catch (Tr8nException $e) {
+            $this->sources_by_key[$key] = new Source(array("source" => $key));
+        }
 
-        $this->sources_by_key[$key] = $this->post("source/register", array("source" => $key), array("class" => '\Tr8n\Source', "attributes" => array("application" => $this)));
         return $this->sources_by_key[$key];
     }
 
@@ -315,7 +326,11 @@ class Application extends Base {
 
         if ($register != true) return null;
 
-        $this->components_by_key[$key] = $this->post("component/register", array("components_by_key" => $key), array("class" => '\Tr8n\Component', "attributes" => array("application" => $this)));
+        $this->components_by_key[$key] = $this->apiClient()->post("component/register",
+            array("components_by_key" => $key),
+            array("class" => '\Tr8n\Component', "attributes" => array("application" => $this))
+        );
+
         return $this->components_by_key[$key];
     }
 
@@ -324,8 +339,7 @@ class Application extends Base {
      * @return null|TranslationKey
      */
     public function translationKey($key) {
-        if (!array_key_exists($key, $this->translation_keys))
-            return null;
+        if (!isset($this->translation_keys[$key])) return null;
         return $this->translation_keys[$key];
     }
 
@@ -353,41 +367,60 @@ class Application extends Base {
      * @param TranslationKey $translation_key
      * @param Source $source
      */
-    public function registerMissingKey($translation_key, $source) {
+    public function registerMissingKey($translation_key, $source_key = 'undefined') {
+        if (Cache::isReadOnly() && !(Config::instance()->current_translator && Config::instance()->current_translator->isInlineModeEnabled()))
+            return;
+
         if ($this->missing_keys_by_sources === null) {
             $this->missing_keys_by_sources = array();
         }
 
-        if (!isset($this->missing_keys_by_sources[$source->source])) {
-            $this->missing_keys_by_sources[$source->source] = array();
+        if (!isset($this->missing_keys_by_sources[$source_key])) {
+            $this->missing_keys_by_sources[$source_key] = array();
         }
 
-        if (!isset($this->missing_keys_by_sources[$source->source][$translation_key->key])) {
-            $this->missing_keys_by_sources[$source->source][$translation_key->key] = $translation_key;
+        if (!isset($this->missing_keys_by_sources[$source_key][$translation_key->key])) {
+            $this->missing_keys_by_sources[$source_key][$translation_key->key] = $translation_key;
         }
     }
 
     /**
-     *
+     * Submits missing keys to the service
      */
     public function submitMissingKeys() {
         if ($this->missing_keys_by_sources == null)
             return;
 
         $params = array();
+        $source_keys = array();
         foreach($this->missing_keys_by_sources as $source => $keys) {
+            array_push($source_keys, $source);
+
             $keys_data = array();
             foreach($keys as $key) {
                 /** @var $key TranslationKey */
-                $json = $key->toArray();
+                $json = array(
+                    "key"           => $key->key,
+                    "label"         => $key->label,
+                    "description"   => $key->description,
+                    "locale"        => $key->locale,
+                    "level"         => $key->level
+                );
                 array_push($keys_data, $json);
             }
             array_push($params, array("source" => $source, "keys" => $keys_data));
         }
 
         $params = \Tr8n\Utils\ArrayUtils::trim($params);
-        $this->post('source/register_keys', array("source_keys" => json_encode($params)));
+        $this->apiClient()->post('source/register_keys', array("source_keys" => json_encode($params)));
         $this->missing_keys_by_sources = null;
+
+        // All source caches must be reset for all languages, since the keys have changed
+        foreach ($this->languages_by_locale as $locale => $language) {
+            foreach ($source_keys as $source_key) {
+                Cache::delete(Source::cacheKey($source_key, $locale));
+            }
+        }
     }
 
     /**
@@ -404,42 +437,10 @@ class Application extends Base {
      * @return \Tr8n\EmailTemplate[]
      */
     public function emailTemplates() {
-        return $this->get("email/templates", array(), array("class" => '\Tr8n\EmailTemplate', "attributes" => array("application" => $this)));
-    }
-
-    /*
-     * @param string $path
-     * @param array $params
-     * @param array $options
-     * @return array
-     */
-    public function get($path, $params = array(), $options = array()) {
-        return $this->api($path, $params, $options);
-    }
-
-    /**
-     * @param string $path
-     * @param array $params
-     * @param array $options
-     * @return array
-     */
-    public function post($path, $params = array(), $options = array()) {
-        $options["method"] = 'POST';
-        return $this->api($path, $params, $options);
-    }
-
-    /**
-     * @param string $path
-     * @param array $params
-     * @param array $options
-     * @return array
-     */
-    public function api($path, $params = array(), $options = array()) {
-        $options["host"] = $this->host;
-        $params["client_id"] = $this->key;
-        $params["t"] = microtime(true);
-
-        return self::executeRequest($path, $params, $options);
+        return $this->apiClient()->get("email/templates",
+            array(),
+            array("class" => '\Tr8n\EmailTemplate', "attributes" => array("application" => $this))
+        );
     }
 
     /**
@@ -454,11 +455,19 @@ class Application extends Base {
      * @return array
      */
     public function toArray($keys=array()) {
-        $hash = parent::toArray(array("host", "name", "description"));
+        $hash = parent::toArray(array("key", "host", "name", "default_locale", "threshold", "translator_level", "features", "shortcuts", "css", "languages", "description"));
         $hash["languages"] = array();
         foreach($this->languages as $l) {
             array_push($hash["languages"], $l->toArray(array("locale", "name", "english_name", "native_name", "right_to_left", "flag_url")));
         }
         return $hash;
+    }
+
+
+    public function apiClient() {
+        if ($this->api_client == null) {
+            $this->api_client = new ApiClient($this);
+        }
+        return $this->api_client;
     }
 }

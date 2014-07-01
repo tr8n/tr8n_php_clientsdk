@@ -1,8 +1,16 @@
 <?php
 
 /**
- * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, TranslationExchange.com
  *
+ *  _______                  _       _   _             ______          _
+ * |__   __|                | |     | | (_)           |  ____|        | |
+ *    | |_ __ __ _ _ __  ___| | __ _| |_ _  ___  _ __ | |__  __  _____| |__   __ _ _ __   __ _  ___
+ *    | | '__/ _` | '_ \/ __| |/ _` | __| |/ _ \| '_ \|  __| \ \/ / __| '_ \ / _` | '_ \ / _` |/ _ \
+ *    | | | | (_| | | | \__ \ | (_| | |_| | (_) | | | | |____ >  < (__| | | | (_| | | | | (_| |  __/
+ *    |_|_|  \__,_|_| |_|___/_|\__,_|\__|_|\___/|_| |_|______/_/\_\___|_| |_|\__,_|_| |_|\__, |\___|
+ *                                                                                        __/ |
+ *                                                                                       |___/
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -35,10 +43,12 @@ class ApcAdapter extends Base {
 
     public function fetch($key, $default = null) {
         $success = false;
+
         $value = apc_fetch($this->versionedKey($key), $success);
+
         if ($success === TRUE) {
             $this->info("Cache hit " . $key);
-            return $this->deserializeObject($key, $value);
+            return $value;
         }
 
         $this->info("Cache miss " . $key);
@@ -52,7 +62,7 @@ class ApcAdapter extends Base {
             $value = $default;
         }
 
-        apc_store($this->versionedKey($key), $this->serializeObject($key, $value), Config::instance()->cacheTimeout());
+        $this->store($key, $value);
 
         return $value;
     }
@@ -60,7 +70,12 @@ class ApcAdapter extends Base {
 
     public function store($key, $value) {
         $this->info("Cache store " . $key);
-        return apc_store($this->versionedKey($key), $this->serializeObject($key, $value), Config::instance()->cacheTimeout());
+
+        return apc_store(
+            $this->versionedKey($key),
+            $value,
+            Config::instance()->configValue("cache.timeout", 3600)
+        );
     }
 
     public function delete($key) {
@@ -72,9 +87,4 @@ class ApcAdapter extends Base {
         $this->info("Cache exists " . $key);
         return apc_exists($this->versionedKey($key));
     }
-
-    public function isReadOnly() {
-        return false;
-    }
-
 }

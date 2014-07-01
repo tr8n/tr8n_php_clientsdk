@@ -1,8 +1,16 @@
 <?php
 
 /**
- * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, TranslationExchange.com
  *
+ *  _______                  _       _   _             ______          _
+ * |__   __|                | |     | | (_)           |  ____|        | |
+ *    | |_ __ __ _ _ __  ___| | __ _| |_ _  ___  _ __ | |__  __  _____| |__   __ _ _ __   __ _  ___
+ *    | | '__/ _` | '_ \/ __| |/ _` | __| |/ _ \| '_ \|  __| \ \/ / __| '_ \ / _` | '_ \ / _` |/ _ \
+ *    | | | | (_| | | | \__ \ | (_| | |_| | (_) | | | | |____ >  < (__| | | | (_| | | | | (_| |  __/
+ *    |_|_|  \__,_|_| |_|___/_|\__,_|\__|_|\___/|_| |_|______/_/\_\___|_| |_|\__,_|_| |_|\__, |\___|
+ *                                                                                        __/ |
+ *                                                                                       |___/
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -32,7 +40,14 @@ use Tr8n\Language;
 
 abstract class Base extends \Tr8n\Base {
 
-    protected $cache_path;
+    /**
+     * @var String
+     */
+    private $base_cache_path;
+
+    /**
+     * @var DateTime
+     */
     protected $started_at;
 
     public abstract function run();
@@ -44,43 +59,8 @@ abstract class Base extends \Tr8n\Base {
         print($date->format('Y:m:d H:i:s') . ": " . $msg . "\n");
     }
 
-    function generateSymlink() {
-        unlink($this->symlinkPath());
-        symlink($this->cache_path, $this->symlinkPath());
-    }
-
-    /**
-     * Caches application data
-     */
-    function cacheApplication() {
-        $this->log("Downloading application...");
-        $app = Config::instance()->application->get("application", array("definition" => "true"));
-        $key = Application::cacheKey($app["key"]);
-        $this->cache($key, json_encode($app));
-        $this->log("Application has been cached.");
-        return $app;
-    }
-
-    /**
-     * Caches application languages with full definition
-     */
-    function cacheLanguages() {
-        $this->log("Downloading languages...");
-        $count = 0;
-        $languages = Config::instance()->application->get("application/languages", array("definition" => "true"));
-        foreach ($languages as $lang) {
-            $key = Language::cacheKey($lang["locale"]);
-            $this->cache($key, json_encode($lang));
-            $count += 1;
-        }
-
-        $this->log("$count languages have been cached.");
-        return $languages;
-    }
-
-
     function finalize() {
-        $this->log("Cache has been created in: " . $this->cache_path);
+        $this->log("Cache has been created");
 
         $finished_at = new DateTime();
         $since_start = $this->started_at->diff($finished_at);
@@ -94,6 +74,45 @@ abstract class Base extends \Tr8n\Base {
             $this->log("Cache generation took " . $since_start->s . " seconds");
 
         $this->log("Done.");
+    }
+
+    function baseCachePath() {
+        if ($this->base_cache_path == null) {
+            $this->base_cache_path = Config::instance()->configValue("cache.path", Config::instance()->rootPath() . DIRECTORY_SEPARATOR . "cache");
+            if (!file_exists($this->base_cache_path)) mkdir($this->base_cache_path, 0777, true);
+            $this->log("Base cache path: " . $this->base_cache_path);
+        }
+        return $this->base_cache_path;
+    }
+
+    function datedFileName() {
+        return $this->started_at->format('YmdHi');
+    }
+
+    /**
+     * Caches application data
+     */
+    function cacheApplication() {
+        $this->log("Downloading application...");
+        $app = Config::instance()->application->apiClient()->get("application", array("definition" => "true"));
+        $this->cache(Application::cacheKey(), json_encode($app));
+        $this->log("Application has been cached.");
+        return $app;
+    }
+
+    /**
+     * Caches application languages with full definition
+     */
+    function cacheLanguages() {
+        $this->log("Downloading languages...");
+        $count = 0;
+        $languages = Config::instance()->application->apiClient()->get("application/languages", array("definition" => "true"));
+        foreach ($languages as $lang) {
+            $this->cache(Language::cacheKey($lang["locale"]), json_encode($lang));
+            $count += 1;
+        }
+        $this->log("$count languages have been cached.");
+        return $languages;
     }
 
 }

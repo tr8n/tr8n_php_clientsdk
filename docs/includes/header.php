@@ -52,7 +52,7 @@
                                 <li role="presentation" class="divider"></li>
                                 <li role="presentation"><?php tr8n_link_to('shortcuts_popup', null , array("role" => "menuitem", "tabindex" => "-1")) ?></li>
                                 <?php if (\Tr8n\Config::instance()->isCacheEnabled() && !\Tr8n\Cache::isReadOnly()) { ?>
-                                    <li role="presentation"><?php link_to("Reset Cache (v" . \Tr8n\Config::instance()->cacheVersion() . ")", "docs/reset_cache.php") ?></li>
+                                    <li role="presentation"><?php link_to("Reset Cache (v" . \Tr8n\Cache::version() . ")", "docs/reset_cache.php") ?></li>
                                 <?php } ?>
                                 <li role="presentation" class="divider"></li>
                                 <li role="presentation"><?php tr8n_link_to('logout', null , array("role" => "menuitem", "tabindex" => "-1")) ?></li>

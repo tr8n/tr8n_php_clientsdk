@@ -21,10 +21,9 @@
         "severity": "debug"
     },
 	"cache": {
-		"enabled": false,
-		"adapter": "apc",
-		"version": 1,
-		"timeout": 3600
+		"enabled": true,
+		"adapter": "memcache",
+        "pretty": "true"
 	},
 	"html_translator": {
 		"debug": false,

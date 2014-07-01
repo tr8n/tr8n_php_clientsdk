@@ -1,8 +1,16 @@
 <?php
 
 /**
- * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, TranslationExchange.com
  *
+ *  _______                  _       _   _             ______          _
+ * |__   __|                | |     | | (_)           |  ____|        | |
+ *    | |_ __ __ _ _ __  ___| | __ _| |_ _  ___  _ __ | |__  __  _____| |__   __ _ _ __   __ _  ___
+ *    | | '__/ _` | '_ \/ __| |/ _` | __| |/ _ \| '_ \|  __| \ \/ / __| '_ \ / _` | '_ \ / _` |/ _ \
+ *    | | | | (_| | | | \__ \ | (_| | |_| | (_) | | | | |____ >  < (__| | | | (_| | | | | (_| |  __/
+ *    |_|_|  \__,_|_| |_|___/_|\__,_|\__|_|\___/|_| |_|______/_/\_\___|_| |_|\__,_|_| |_|\__, |\___|
+ *                                                                                        __/ |
+ *                                                                                       |___/
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -25,6 +33,7 @@
 
 namespace Tr8n\Cache\Generators;
 
+use Tr8n\ApiClient;
 use Tr8n\Application;
 use Tr8n\Cache\ChdbAdapter;
 use Tr8n\Config;
@@ -63,7 +72,7 @@ class ChdbGenerator extends Base {
      */
     public function run() {
         $this->started_at = new \DateTime();
-        $this->cache_path = Config::instance()->cachePath() . '/chdb/';
+        $this->chdb_path = $this->baseCachePath() . DIRECTORY_SEPARATOR . $this->datedFileName() . ".chdb";
 
         $this->cache = array();
         $this->cacheApplication();
@@ -71,8 +80,6 @@ class ChdbGenerator extends Base {
         $this->cacheTranslations();
 
         $this->generateChdb();
-
-        $this->cache_path = $this->chdb_path;
 
         $this->generateSymlink();
         $this->finalize();
@@ -100,7 +107,10 @@ class ChdbGenerator extends Base {
         $fp = fopen("chdb://ChdbInMemory", "r+");
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, Config::instance()->application->host . Application::API_PATH . "application/translations?stream=true&client_id=" . Config::instance()->application->key);
+        $url = Config::instance()->application->host . ApiClient::API_PATH . "application/translations?stream=true&client_id=" . Config::instance()->application->key;
+        $this->log("GET: " . $url);
+
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_BUFFERSIZE, 256);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -115,7 +125,6 @@ class ChdbGenerator extends Base {
      * Generates chdb database
      */
     public function generateChdb() {
-        $this->chdb_path = $this->cache_path . 'tr8n_' . Config::instance()->application->key . '_' . count($this->translations) . '_@_' . $this->started_at->format('Y_m_d_H_i_s') . '.chdb';
         $this->extracted_at = new \DateTime();
 
         $this->log("Writing chdb file...");
@@ -133,7 +142,13 @@ class ChdbGenerator extends Base {
      * @return string
      */
     function symlinkPath() {
-        return ChdbAdapter::chdbPath();
+        return $this->baseCachePath() . DIRECTORY_SEPARATOR . "current.chdb";
+    }
+
+    function generateSymlink() {
+        if (file_exists($this->symlinkPath()))
+            unlink($this->symlinkPath());
+        symlink($this->chdb_path, $this->symlinkPath());
     }
 
 }

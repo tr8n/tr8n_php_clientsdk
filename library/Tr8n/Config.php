@@ -1,7 +1,16 @@
 <?php
+
 /**
- * Copyright (c) 2014 Michael Berkovich, http://tr8nhub.com
+ * Copyright (c) 2014 Michael Berkovich, TranslationExchange.com
  *
+ *  _______                  _       _   _             ______          _
+ * |__   __|                | |     | | (_)           |  ____|        | |
+ *    | |_ __ __ _ _ __  ___| | __ _| |_ _  ___  _ __ | |__  __  _____| |__   __ _ _ __   __ _  ___
+ *    | | '__/ _` | '_ \/ __| |/ _` | __| |/ _ \| '_ \|  __| \ \/ / __| '_ \ / _` | '_ \ / _` |/ _ \
+ *    | | | | (_| | | | \__ \ | (_| | |_| | (_) | | | | |____ >  < (__| | | | (_| | | | | (_| |  __/
+ *    |_|_|  \__,_|_| |_|___/_|\__,_|\__|_|\___/|_| |_|______/_/\_\___|_| |_|\__,_|_| |_|\__, |\___|
+ *                                                                                        __/ |
+ *                                                                                       |___/
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -147,9 +156,9 @@ class Config {
     }
 
     /**
-     *
+     * Dumps config back to the config file
      */
-    public function updateConfig() {
+    public function dump() {
         file_put_contents($this->configFilePath('config.json'), StringUtils::prettyPrint(json_encode($this->config)));
     }
 
@@ -261,33 +270,8 @@ class Config {
     /**
      * @return string
      */
-    public function cachePath() {
-        return __DIR__."/../../cache/";
-    }
-
-    /**
-     * @return int|mixed|null|string|\string[]
-     */
-    public function cacheVersion() {
-        $version = $this->configValue("cache.version");
-        return ($version == null ? 0 : $version);
-    }
-
-    /**
-     * @return int|mixed|null|string|\string[]
-     */
-    public function cacheTimeout() {
-        $timeout = $this->configValue("cache.timeout");
-        return ($timeout == null ? 3600 : $timeout);
-    }
-
-    /**
-     *
-     */
-    public function incrementCache() {
-        $version = $this->cacheVersion();
-        $this->config["cache"]["version"] =  $version + 1;
-        $this->updateConfig();
+    public function rootPath() {
+        return realpath(__DIR__."/../..");
     }
 
     /**
@@ -325,25 +309,6 @@ class Config {
             return false;
 
         return true;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function cacheAdapterClass() {
-        if (!isset($this->config["cache"]["adapter"]))
-            $adapter = 'chdb';
-        else
-            $adapter = $this->config["cache"]["adapter"];
-
-        switch($adapter) {
-            case "chdb": return '\Tr8n\Cache\ChdbAdapter';
-            case "file": return '\Tr8n\Cache\FileAdapter';
-            case "apc": return '\Tr8n\Cache\ApcAdapter';
-            case "memcache": return '\Tr8n\Cache\MemcacheAdapter';
-        }
-
-        return null;
     }
 
     /**
@@ -441,7 +406,7 @@ class Config {
             ),
             "gender" => array(
                 "variables" => array(
-                    "@gender" => "gender",                // string means attribute of an object
+                    "@gender" => "gender",                  // string means attribute of an object
 //                    "@gender" => function($obj) {
 //                        return $obj->gender;
 //                    }
@@ -511,7 +476,6 @@ class Config {
      * @throws Tr8nException
      */
     public function decodeAndVerifyParams($signed_request, $secret) {
-//        \Tr8n\Logger::instance()->info($signed_request);
         $signed_request = urldecode($signed_request);
         $signed_request = base64_decode($signed_request);
 
@@ -526,12 +490,8 @@ class Config {
             throw new Tr8nException("Invalid signature provided.");
         }
 
-//        \Tr8n\Logger::instance()->info("Signature1", $payload_encoded_sig);
-//        \Tr8n\Logger::instance()->info("Signature2", $verification_sig);
-
         $payload_json = base64_decode($payload_json_encoded);
         $data = json_decode($payload_json, true);
-//        \Tr8n\Logger::instance()->info("Data", $data);
         return $data;
     }
 }
