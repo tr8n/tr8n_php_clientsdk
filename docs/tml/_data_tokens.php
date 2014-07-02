@@ -1,6 +1,6 @@
 <h2><?php tre("Data Tokens") ?></h2>
 <p>
-    In many cases your tokens would be string objects that get substituted directly into the translated sentence.
+    <?php tre("In many cases your tokens would be string objects that get substituted directly into the translated sentence.") ?>
 </p>
 <div class="example">
     <div class="title"><?php tre("example") ?></div>

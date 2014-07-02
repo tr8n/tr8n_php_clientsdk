@@ -35,7 +35,7 @@
 
 <div class="example">
     <div class="title"><?php tre('example') ?></div>
-    <pre class="code"><code class="language-ruby">tre("Hello World")</code></pre>
+    <pre class="code"><code class="language-php">tre("Hello World")</code></pre>
 
     <div class="content">
         <?php tre("Hello World") ?>
@@ -55,7 +55,7 @@
 
 <div class="example">
     <div class="title"><?php tre('example') ?></div>
-    <pre class="code"><code class="language-ruby">tre("Invite", "Link to invite your friends to join the site")
+    <pre class="code"><code class="language-php">tre("Invite", "Link to invite your friends to join the site")
 tre("Invite", "An invitation you received from your friend")</code></pre>
 
     <div class="content">
