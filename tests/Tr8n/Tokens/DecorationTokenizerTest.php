@@ -134,9 +134,13 @@ class DecorationTokenizerTest extends \BaseTest {
         $dt = new \Tr8n\Tokens\DecorationTokenizer("[link]you have [bold: [italic: {count}] {count||message}][/link]", array("link" => '<a href="http://mail.google.com">{$0}</a>'));
         $this->assertEquals('<a href="http://mail.google.com">you have <strong><i>{count}</i> {count||message}</strong></a>', $dt->substitute());
 
-
         $dt = new \Tr8n\Tokens\DecorationTokenizer("[p] This document will provide you with some examples of how to use TML for internationalizing your application. The same document is present with every Tr8n Client SDK to ensure that all samples work the same. [/p]", array("p" => '<p>{$0}</p>'));
         $this->assertEquals('<p> This document will provide you with some examples of how to use TML for internationalizing your application. The same document is present with every Tr8n Client SDK to ensure that all samples work the same. </p>', $dt->substitute());
+
+
+        \Tr8n\Config::instance()->setDefaultToken("super", '<super>{$0}</super>', 'decoration');
+        $dt = new \Tr8n\Tokens\DecorationTokenizer("[super: Hello World]");
+        $this->assertEquals("<super>Hello World</super>", $dt->substitute());
 
     }
 

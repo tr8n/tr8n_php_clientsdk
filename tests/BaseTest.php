@@ -47,6 +47,9 @@ class User {
     function fullName() {
         return $this->name;
     }
+    function gender() {
+        return $this->gender;
+    }
 }
 
 class Number {

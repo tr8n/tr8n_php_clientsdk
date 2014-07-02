@@ -76,6 +76,8 @@ class DataTokenTest extends \BaseTest {
         $this->assertEquals("count", $token->short_name);
         $this->assertEquals(array("number"), $token->context_keys);
         $this->assertEquals(array("ordinal", "ord"), $token->case_keys);
+
+        $this->assertEquals("{count:number::ordinal::ord}", $token->__toString());
     }
 
     public function testNameWithOptions() {
@@ -114,7 +116,7 @@ class DataTokenTest extends \BaseTest {
         $token = DataToken::tokenWithName("{user}");
         $user = new \User("Michael", "male");
 
-        $this->assertEquals("{user: missing value}", $token->tokenValue(array(), $language));
+        $this->assertEquals("{user}", $token->tokenValue(array(), $language));
 
         $this->assertEquals("test", $token->tokenValue(array("user" => "test"), $language));
 
@@ -128,33 +130,29 @@ class DataTokenTest extends \BaseTest {
 
         $this->assertEquals("Michael", $token->tokenValue(array("user" => array($user, "@name")), $language));
 
-        $this->assertEquals("{user: property name1 does not exist}", $token->tokenValue(array("user" => array($user, "@name1")), $language));
+        $this->assertEquals("{user}", $token->tokenValue(array("user" => array($user, "@name1")), $language));
 
         $this->assertEquals("Michael", $token->tokenValue(array("user" => array($user, "@@fullName")), $language));
 
-        $this->assertEquals("{user: method fullName1 does not exist}", $token->tokenValue(array("user" => array($user, "@@fullName1")), $language));
+        $this->assertEquals("{user}", $token->tokenValue(array("user" => array($user, "@@fullName1")), $language));
 
-        $this->assertEquals("Michael", $token->tokenValue(array("user" => array($user, function($obj) { return $obj->name; } )), $language));
-
-        $this->assertEquals("{user: object attribute is missing in the hash value}", $token->tokenValue(array("user" => array()), $language));
-
-        $this->assertEquals("Michael", $token->tokenValue(array("user" => array("object" => $user)), $language));
+        $this->assertEquals("{user}", $token->tokenValue(array("user" => array()), $language));
 
         $this->assertEquals("Tom", $token->tokenValue(array("user" => array("object" => $user, "value" => "Tom")), $language));
 
         $this->assertEquals("Michael", $token->tokenValue(array("user" => array("object" => $user, "attribute" => "name")), $language));
 
-        $this->assertEquals("{user: property name1 does not exist}", $token->tokenValue(array("user" => array("object" => $user, "attribute" => "name1")), $language));
+        $this->assertEquals("{user}", $token->tokenValue(array("user" => array("object" => $user, "attribute" => "name1")), $language));
 
         $this->assertEquals("Michael", $token->tokenValue(array("user" => array("object" => $user, "method" => "fullName")), $language));
 
-        $this->assertEquals("{user: method fullName1 does not exist}", $token->tokenValue(array("user" => array("object" => $user, "method" => "fullName1")), $language));
+        $this->assertEquals("{user}", $token->tokenValue(array("user" => array("object" => $user, "method" => "fullName1")), $language));
 
         $this->assertEquals("Peter", $token->tokenValue(array("user" => array("object" => array("name" => "Peter"), "attribute" => "name")), $language));
 
-        $this->assertEquals("{user: property name1 does not exist}", $token->tokenValue(array("user" => array("object" => array("name" => "Peter"), "attribute" => "name1")), $language));
+        $this->assertEquals("{user}", $token->tokenValue(array("user" => array("object" => array("name" => "Peter"), "attribute" => "name1")), $language));
 
-        $this->assertEquals("{user: invalid method properties for hash value}", $token->tokenValue(array("user" => array("object" => array("name" => "Peter"), "method" => "name")), $language));
+        $this->assertEquals("{user}", $token->tokenValue(array("user" => array("object" => array("name" => "Peter"), "method" => "name")), $language));
     }
 
     public function testSanitize() {
@@ -171,10 +169,6 @@ class DataTokenTest extends \BaseTest {
         $this->assertEquals("&lt;b&gt;Michael&lt;/b&gt;", $token->tokenValue(array("user" => array($user, "@name")), $language));
 
         $this->assertEquals("&lt;b&gt;Michael&lt;/b&gt;", $token->tokenValue(array("user" => array($user, "@@fullName")), $language));
-
-        $this->assertEquals("<b>Michael</b>", $token->tokenValue(array("user" => array($user, function($obj) { return $obj->name; } )), $language));
-
-        $this->assertEquals("&lt;b&gt;Michael&lt;/b&gt;", $token->tokenValue(array("user" => array("object" => $user)), $language));
 
         $this->assertEquals("<b>Tom</b>", $token->tokenValue(array("user" => array("object" => $user, "value" => "<b>Tom</b>")), $language));
 
@@ -237,7 +231,7 @@ class DataTokenTest extends \BaseTest {
         $token = DataToken::tokenWithName("{user}");
         $user = new \User("Michael", "male");
 
-        $this->assertEquals("Hello {user: missing value}", $token->substitute("Hello {user}", array(), $language));
+        $this->assertEquals("Hello {user}", $token->substitute("Hello {user}", array(), $language));
 
         $this->assertEquals("Hello test", $token->substitute("Hello {user}", array("user" => "test"), $language));
 
@@ -251,33 +245,151 @@ class DataTokenTest extends \BaseTest {
 
         $this->assertEquals("Hello Michael", $token->substitute("Hello {user}", array("user" => array($user, "@name")), $language));
 
-        $this->assertEquals("Hello {user: property name1 does not exist}", $token->substitute("Hello {user}", array("user" => array($user, "@name1")), $language));
+        $this->assertEquals("Hello {user}", $token->substitute("Hello {user}", array("user" => array($user, "@name1")), $language));
 
         $this->assertEquals("Hello Michael", $token->substitute("Hello {user}", array("user" => array($user, "@@fullName")), $language));
 
-        $this->assertEquals("Hello {user: method fullName1 does not exist}", $token->substitute("Hello {user}", array("user" => array($user, "@@fullName1")), $language));
+        $this->assertEquals("Hello {user}", $token->substitute("Hello {user}", array("user" => array($user, "@@fullName1")), $language));
 
-        $this->assertEquals("Hello Michael", $token->substitute("Hello {user}", array("user" => array($user, function($obj) { return $obj->name; } )), $language));
-
-        $this->assertEquals("Hello {user: object attribute is missing in the hash value}", $token->substitute("Hello {user}", array("user" => array()), $language));
-
-        $this->assertEquals("Hello Michael", $token->substitute("Hello {user}", array("user" => array("object" => $user)), $language));
+        $this->assertEquals("Hello {user}", $token->substitute("Hello {user}", array("user" => array()), $language));
 
         $this->assertEquals("Hello Tom", $token->substitute("Hello {user}", array("user" => array("object" => $user, "value" => "Tom")), $language));
 
         $this->assertEquals("Hello Michael", $token->substitute("Hello {user}", array("user" => array("object" => $user, "attribute" => "name")), $language));
 
-        $this->assertEquals("Hello {user: property name1 does not exist}", $token->substitute("Hello {user}", array("user" => array("object" => $user, "attribute" => "name1")), $language));
+        $this->assertEquals("Hello {user}", $token->substitute("Hello {user}", array("user" => array("object" => $user, "attribute" => "name1")), $language));
 
         $this->assertEquals("Hello Michael", $token->substitute("Hello {user}", array("user" => array("object" => $user, "method" => "fullName")), $language));
 
-        $this->assertEquals("Hello {user: method fullName1 does not exist}", $token->substitute("Hello {user}", array("user" => array("object" => $user, "method" => "fullName1")), $language));
+        $this->assertEquals("Hello {user}", $token->substitute("Hello {user}", array("user" => array("object" => $user, "method" => "fullName1")), $language));
 
         $this->assertEquals("Hello Peter", $token->substitute("Hello {user}", array("user" => array("object" => array("name" => "Peter"), "attribute" => "name")), $language));
 
-        $this->assertEquals("Hello {user: property name1 does not exist}", $token->substitute("Hello {user}", array("user" => array("object" => array("name" => "Peter"), "attribute" => "name1")), $language));
+        $this->assertEquals("Hello {user}", $token->substitute("Hello {user}", array("user" => array("object" => array("name" => "Peter"), "attribute" => "name1")), $language));
 
-        $this->assertEquals("Hello {user: invalid method properties for hash value}", $token->substitute("Hello {user}", array("user" => array("object" => array("name" => "Peter"), "method" => "name")), $language));
+        $this->assertEquals("Hello {user}", $token->substitute("Hello {user}", array("user" => array("object" => array("name" => "Peter"), "method" => "name")), $language));
     }
 
+    public function testTokenValueFromArrayParam() {
+        $app = new \Tr8n\Application(self::loadJSON('application.json'));
+        $language = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
+
+        /** @var DataToken $token */
+        $token = DataToken::tokenWithName("{user}");
+        $user = new \User("Michael", "male");
+
+        $this->assertEquals("{user}", $token->tokenValueFromArrayParam(array(), $language));
+        $this->assertEquals("Michael", $token->tokenValueFromArrayParam(array($user), $language));
+
+        $this->assertEquals("{user}", $token->tokenValueFromArrayParam(array(array("name" => "Mike"), "@@fullName"), $language));
+        $this->assertEquals("{user}", $token->tokenValueFromArrayParam(array($user, "@@fullName1"), $language));
+        $this->assertEquals("Michael", $token->tokenValueFromArrayParam(array($user, "@@fullName"), $language));
+
+        $this->assertEquals("{user}", $token->tokenValueFromArrayParam(array(array("name" => "Mike"), "@name1"), $language));
+        $this->assertEquals("Mike", $token->tokenValueFromArrayParam(array(array("name" => "Mike"), "@name"), $language));
+
+        $this->assertEquals("{user}", $token->tokenValueFromArrayParam(array($user, "@name1"), $language));
+        $this->assertEquals("Michael", $token->tokenValueFromArrayParam(array($user, "@name"), $language));
+
+        $this->assertEquals("Tom", $token->tokenValueFromArrayParam(array($user, "Tom"), $language));
+
+        $this->assertEquals("Michael", $token->tokenValueFromArrayParam(array($user, array()), $language));
+
+        $this->assertEquals("Michael and Michael", $token->tokenValueFromArrayParam(array(array($user, $user), "@name"), $language));
+    }
+
+    public function testTokenValueFromHashParam() {
+        $app = new \Tr8n\Application(self::loadJSON('application.json'));
+        $language = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
+
+        /** @var DataToken $token */
+        $token = DataToken::tokenWithName("{user}");
+        $user = new \User("Michael", "male");
+
+        $this->assertEquals("Tom", $token->tokenValueFromHashParam(array("value" => "Tom"), $language));
+
+        $this->assertEquals("{user}", $token->tokenValueFromHashParam(array("gender" => "male"), $language));
+
+        $this->assertEquals("{user}", $token->tokenValueFromHashParam(array("object" => array("name" => "Tom")), $language));
+
+        $this->assertEquals("Tom", $token->tokenValueFromHashParam(array("object" => array("name" => "Tom"), "attribute" => "name"), $language));
+        $this->assertEquals("Tom", $token->tokenValueFromHashParam(array("object" => array("name" => "Tom"), "property" => "name"), $language));
+
+        $this->assertEquals("Michael", $token->tokenValueFromHashParam(array("object" => $user, "property" => "name"), $language));
+        $this->assertEquals("Michael", $token->tokenValueFromHashParam(array("object" => $user, "attribute" => "name"), $language));
+
+        $this->assertEquals("Michael", $token->tokenValueFromHashParam(array("object" => $user, "method" => "fullName"), $language));
+        $this->assertEquals("{user}", $token->tokenValueFromHashParam(array("object" => $user, "method" => "fullName1"), $language));
+        $this->assertEquals("{user}", $token->tokenValueFromHashParam(array("object" => $user, "method1" => "fullName"), $language));
+    }
+
+
+    public function testTokenValuesFromArray() {
+        $app = new \Tr8n\Application(self::loadJSON('application.json'));
+        $language = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
+        $options = array();
+
+        /** @var DataToken $token */
+        $token = DataToken::tokenWithName("{users}");
+        $michael = new \User("Michael", "male");
+        $tom = new \User("Tom", "male");
+        $alex = new \User("Alex", "male");
+        $peter = new \User("Peter", "male");
+        $anna = new \User("Anna", "female");
+        $kate = new \User("Kate", "female");
+        $jenny = new \User("Jenny", "female");
+
+        $all = array($michael, $tom, $alex, $peter, $anna, $kate, $jenny);
+
+        $this->assertEquals("Michael", $token->tokenValuesFromArray(array(array($michael)), $language, $options));
+        $this->assertEquals("Michael", $token->tokenValuesFromArray(array(array($michael), "@name"), $language, $options));
+        $this->assertEquals("Michael and Anna", $token->tokenValuesFromArray(array(array($michael, $anna), "@name"), $language, $options));
+        $this->assertEquals("Michael, Anna and Tom", $token->tokenValuesFromArray(array(array($michael, $anna, $tom), "@name"), $language, $options));
+        $this->assertEquals("Michael and Anna", $token->tokenValuesFromArray(array(array($michael, $anna), "@@fullName"), $language, $options));
+
+        $this->assertEquals("Michael and Anna", $token->tokenValuesFromArray(array(array($michael, $anna), function($object) {
+            return $object->name;
+        }), $language, $options));
+
+        $this->assertEquals("<strong>Michael</strong> and <strong>Anna</strong>", $token->tokenValuesFromArray(array(array($michael, $anna), '<strong>{$0}</strong>'), $language, $options));
+
+        $this->assertEquals("Michael and Anna", $token->tokenValuesFromArray(array(array($michael, $anna), array(
+            "attribute" => "name"
+        )), $language, $options));
+
+        $this->assertEquals("Michael and Anna", $token->tokenValuesFromArray(array(array($michael, $anna), array(
+            "property" => "name"
+        )), $language, $options));
+
+        $this->assertEquals("<strong>Michael</strong> and <strong>Anna</strong>", $token->tokenValuesFromArray(array(array($michael, $anna), array(
+            "property" => "name", "value" => '<strong>{$0}</strong>'
+        )), $language, $options));
+
+        $m = array("name" => "Michael"); $a = array("name" => "Anna");
+        $this->assertEquals("Michael and Anna", $token->tokenValuesFromArray(array(array($m, $a), array(
+            "attribute" => "name"
+        )), $language, $options));
+
+        $this->assertEquals("{users}", $token->tokenValuesFromArray(array(array($m, $a), '<strong>{$0}</strong>'), $language, $options));
+
+
+        $this->assertEquals("Michael, Tom, Alex, Peter and 3 others", $token->tokenValuesFromArray(array($all, "@name", array("expandable" => false)), $language));
+        $this->assertEquals("Michael, Tom, Alex and 4 others", $token->tokenValuesFromArray(array($all, "@name", array("expandable" => false, "limit" => 3)), $language));
+        $this->assertEquals("Michael, Tom and 5 others", $token->tokenValuesFromArray(array($all, "@name", array("expandable" => false, "limit" => 2)), $language));
+        $this->assertEquals("Michael, Tom or 5 others", $token->tokenValuesFromArray(array($all, "@name", array("expandable" => false, "limit" => 2, "joiner" => "or")), $language));
+        $this->assertEquals("Michael; Tom; Alex; Peter and 3 others", $token->tokenValuesFromArray(array($all, "@name", array("expandable" => false, "separator" => "; ")), $language));
+
+        $result = "Michael, Tom, Alex, Peter<span id=\"tr8n_other_link_\"> and <a href=\"#\" class=\"tr8n_other_list_link\" onClick=\"document.getElementById('tr8n_other_link_').style.display='none'; document.getElementById('tr8n_other_elements_').style.display='inline'; return false;\">3 others</a></span><span id=\"tr8n_other_elements_\" style=\"display:none\">, Anna, Kate and Jenny <a href=\"#\" class=\"tr8n_other_less_link\" style=\"font-size:smaller;white-space:nowrap\" onClick=\"document.getElementById('tr8n_other_link_').style.display='inline'; document.getElementById('tr8n_other_elements_').style.display='none'; return false;\">&laquo; less</a></span>";
+        $this->assertEquals($result, $token->tokenValuesFromArray(array($all, "@name", array("expandable" => true, "key" => "")), $language));
+    }
+
+    public function testLanguageCases() {
+        $app = new \Tr8n\Application(self::loadJSON('application.json'));
+        $language = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
+        $options = array();
+
+        /** @var DataToken $token */
+        $token = DataToken::tokenWithName("{users::pos}");
+        $this->assertEquals("Tom's", $token->tokenValueFromHashParam(array("value" => "Tom"), $language));
+    }
 }

@@ -135,17 +135,22 @@
                 "@genders"
             ],
             "token_mapping":[
-                "unsupported",
                 {
                     "male":"{$0}",
                     "female":"{$0}",
-                    "unknown":"{$1}",
+                    "unknown":"{$0}",
+                    "other":"{$0}"
+                },
+                {
+                    "male":"{$0}",
+                    "female":"{$0}",
+                    "unknown":"{$0}",
                     "other":"{$1}"
                 },
                 {
                     "male":"{$0}",
                     "female":"{$1}",
-                    "unknown":"{$1}",
+                    "unknown":"{$0}/{$1}",
                     "other":"{$2}"
                 },
                 {

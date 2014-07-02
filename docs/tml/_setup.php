@@ -20,7 +20,7 @@ class User {
 
 $male = new User("Michael", "male");
 $female = new User("Anna", "female");
-                    </code></pre>
+</code></pre>
 
 
 <pre><code class="language-php">

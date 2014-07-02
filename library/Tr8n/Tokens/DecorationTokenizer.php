@@ -225,24 +225,6 @@ class DecorationTokenizer {
             return $default_decoration;
         }
 
-        // span: "<span style='{$1}' class='{$2}'>{$0}</span>"
-        // tr("[span: Hello world]", :span => array('font-weight:bold', 'tr8n_class'))
-        if (is_array($decoration_token_values)) {
-            $params = ArrayUtils::flatten(array($value, $decoration_token_values));
-            $index = 0;
-            foreach($params as $param) {
-                $default_decoration = str_replace('{$'.($index++).'}', $param, $default_decoration);
-            }
-
-            // clean up the rest of the params, if not all params were provided
-            // tr("[span: Hello world]", :span => array('font-weight:bold'))
-            while(strpos($default_decoration, '{$'.($index).'}') !== false) {
-                $default_decoration = str_replace('{$'.($index++).'}', '', $default_decoration);
-            }
-
-            return $default_decoration;
-        }
-
         return $value;
     }
 

@@ -180,7 +180,9 @@ class PipedTokenTest extends \BaseTest {
    }
 
     public function testSubstitute() {
-        $language = new \Tr8n\Language(self::loadJSON('languages/en-US.json'));
+        $app = new \Tr8n\Application(self::loadJSON('application.json'));
+        $language = $app->addLanguage(new \Tr8n\Language(self::loadJSON('languages/en-US.json')));
+
         $token = PipedToken::tokenWithName("{count|| one: message, other: messages}");
         $this->assertEquals("You have 1 message", $token->substitute("You have {count|| one: message, other: messages}", array("count" => 1), $language));
         $this->assertEquals("You have 2 messages", $token->substitute("You have {count|| one: message, other: messages}", array("count" => 2), $language));
@@ -190,6 +192,22 @@ class PipedTokenTest extends \BaseTest {
         $this->assertEquals("You have 2 messages", $token->substitute("You have {count|| message}", array("count" => 2), $language));
         $this->assertEquals("You have 20 messages", $token->substitute("You have {count|| message}", array("count" => 20), $language));
 
+        $token = PipedToken::tokenWithName("{count| a message, #count# messages}");
+        $this->assertEquals("You have a message", $token->substitute("You have {count| a message, #count# messages}", array("count" => 1), $language));
+        $this->assertEquals("You have 5 messages", $token->substitute("You have {count| a message, #count# messages}", array("count" => 5), $language));
+
+        $michael = new \User("Michael", "male");
+        $tom = new \User("Tom", "male");
+        $alex = new \User("Alex", "male");
+        $peter = new \User("Peter", "male");
+        $anna = new \User("Anna", "female");
+        $kate = new \User("Kate", "female");
+        $jenny = new \User("Jenny", "female");
+        $all = array($michael, $tom, $alex, $peter, $anna, $kate, $jenny);
+
+        $token = PipedToken::tokenWithName("{users || likes, like}");
+        $this->assertEquals("Michael and Tom like", $token->substitute("{users || likes, like}", array("users" => array(array($michael, $tom), "@name")), $language));
+        $this->assertEquals("Michael likes", $token->substitute("{users || likes, like}", array("users" => array(array($michael), "@name")), $language));
     }
 
 }

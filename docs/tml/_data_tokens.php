@@ -56,7 +56,47 @@
     </div>
 </div>
 
-<p>You can use hashes for the token values as well.</p>
+
+<p>
+   You can also call properties of an object by using @ sign:
+</p>
+
+<div class="example">
+    <div class="title"><?php tre("example") ?></div>
+    <pre><code class="language-php">tr("Hello {user}", array("user" => array($male, "@name")))</code></pre>
+    <div class="content">
+        <?php tre("Hello {user}", array("user" => array($male, "@name"))) ?>
+    </div>
+</div>
+
+<p>
+    And call object methods by using @@ sign:
+</p>
+
+
+<div class="example">
+    <div class="title"><?php tre("example") ?></div>
+    <pre><code class="language-php">tr("Hello {user}", array("user" => array($male, "@@fullName")))</code></pre>
+    <div class="content">
+        <?php tre("Hello {user}", array("user" => array($male, "@@fullName"))) ?>
+    </div>
+</div>
+
+<p>
+    The objects themselves can be hashes:
+</p>
+
+
+<div class="example">
+    <div class="title"><?php tre("example") ?></div>
+    <pre><code class="language-php">tr("Hello {user}", array("user" => array(array("name" => "Tom"), "@name")))</code></pre>
+    <div class="content">
+        <?php tre("Hello {user}", array("user" => array(array("name" => "Tom"), "@name"))) ?>
+    </div>
+</div>
+
+
+<p>You can use hashes for the token values as well:</p>
 
 <div class="example">
     <div class="title"><?php tre("example") ?></div>

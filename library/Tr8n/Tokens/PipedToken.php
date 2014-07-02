@@ -155,23 +155,27 @@ class PipedToken extends DataToken {
         $token_mapping = $context->token_mapping;
 
         if ($token_mapping == null) {
-            throw new Tr8nException("The token context ". $context->keyword . " does not support transformation for unnamed params: " . $this->full_name);
+            $this->error("The token context ". $context->keyword . " does not support transformation for unnamed params");
+            return null;
         }
 
         // "unsupported"
         if (is_string($token_mapping)) {
-            throw new Tr8nException("The token mapping $token_mapping does not support " . count($this->parameters) . " params: " . $this->full_name);
+            $this->error("The token mapping $token_mapping does not support " . count($this->parameters));
+            return null;
         }
 
         // ["unsupported", {}]
         if (is_array($token_mapping) && !\Tr8n\Utils\ArrayUtils::isHash($token_mapping)) {
             if (count($this->parameters) > count($token_mapping)) {
-                throw new Tr8nException("The token mapping $token_mapping does not support " . count($this->parameters) . " params: " . $this->full_name);
+                $this->error("The token mapping $token_mapping does not support " . count($this->parameters));
+                return null;
             }
 
             $token_mapping = $token_mapping[count($this->parameters)-1];
             if (is_string($token_mapping)) {
-                throw new Tr8nException("The token mapping $token_mapping does not support " . count($this->parameters) . " params: " . $this->full_name);
+                $this->error("The token mapping $token_mapping does not support " . count($this->parameters));
+                return null;
             }
         }
 
@@ -191,7 +195,8 @@ class PipedToken extends DataToken {
                 $index = preg_replace('/[$]/', '', $parts[0]);
 
                 if (count($this->parameters) < $index) {
-                    throw new Tr8nException("The index inside " . $token_mapping . " is out of bound: " . $this->full_name);
+                    $this->error("The index inside " . $token_mapping . " is out of bound: " . $this->full_name);
+                    return null;
                 }
 
                 $val = $this->parameters[$index];
@@ -200,7 +205,8 @@ class PipedToken extends DataToken {
                 foreach(array_slice($parts, 1) as $case_key) {
                     $lcase = $context->language->languageCase($case_key);
                     if ($lcase == null) {
-                        throw new Tr8nException("Language case " . $case_key . " for context " . $context->keyword . "  mapping " . $key . " is not defined: " . $this->full_name);
+                        $this->error("Language case " . $case_key . " for context " . $context->keyword . "  mapping " . $key . " is not defined");
+                        return null;
                     }
 
                     $val = $lcase->apply($val);
@@ -223,20 +229,26 @@ class PipedToken extends DataToken {
      */
     public function substitute($label, $token_values, $language, $options = array()) {
         if (!array_key_exists($this->name(), $token_values)) {
-            throw new Tr8nException("Missing value for token: " . $this->full_name);
+            $this->error("Missing value");
+            return $label;
         }
 
-        $object = $token_values[$this->name()];
+        $object = self::tokenObject($token_values, $this->name());
 
         if (count($this->parameters) == 0) {
-            throw new Tr8nException("Piped params may not be empty for token: " . $this->full_name);
+            $this->error("Piped params may not be empty");
+            return $label;
         }
 
         $context = $this->contextForLanguage($language);
 
         $piped_values = $this->generateValueMapForContext($context);
 
+        if ($piped_values == null)
+            return $label;
+
         $rule = $context->findMatchingRule($object);
+
         if ($rule == null) return $label;
 
         if (isset($piped_values[$rule->keyword])) {
@@ -254,6 +266,8 @@ class PipedToken extends DataToken {
         if ($this->isValueDisplayedInTranslation()) {
             array_push($token_value, $this->tokenValue($token_values, $language, $options));
             array_push($token_value, " ");
+        } else {
+            $value = str_replace("#" . $this->short_name . "#", $this->tokenValue($token_values, $language, $options), $value);
         }
 
         array_push($token_value, $value);

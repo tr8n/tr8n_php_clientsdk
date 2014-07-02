@@ -12,4 +12,4 @@
 <?php include('_implied_tokens.php'); ?>
 <?php include('_decoration_tokens.php'); ?>
 <?php include('_nested_tokens.php'); ?>
-<?php ////include('_array_tokens.php'); ?>
+<?php include('_array_tokens.php'); ?>

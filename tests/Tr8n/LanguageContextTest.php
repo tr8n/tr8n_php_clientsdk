@@ -135,6 +135,6 @@ class LanguageContextTest extends \BaseTest {
                 $context->findMatchingRule($token)->keyword
             );
         }
-
     }
+
 }

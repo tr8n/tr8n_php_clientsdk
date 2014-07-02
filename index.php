@@ -1,5 +1,6 @@
 <?php include('docs/includes/header.php'); ?>
-<?php tr8n_begin_block_with_options(array("source" => "/home")) ?>
+
+<?php tr8n_begin_block_with_options(array("source" => "welcome")) ?>
 
 <style>
     h3.hr {
@@ -18,7 +19,7 @@
     </p>
     <h2 class="text-center"><?php tre("Welcome to Tr8n For PHP") ?></h2>
     <p class="text-center">
-        <?php tre("Tr8n for PHP is a Client SDK library that allows PHP based applications to integrate with the Tr8n crowd-sourced translation platform.") ?>
+        <?php tre("Tr8n for PHP is a Client SDK library that allows PHP based applications to integrate with the TranslationExchange localization platform.") ?>
         <?php tre("This sample application demonstrates some of Tr8n's capabilities.") ?>
     </p>
     <br>

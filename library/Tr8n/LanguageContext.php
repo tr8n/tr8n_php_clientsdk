@@ -161,6 +161,7 @@ class LanguageContext extends Base {
             }
         }
 
+
         return $vars;
     }
 
@@ -170,6 +171,7 @@ class LanguageContext extends Base {
      */
     function findMatchingRule($obj) {
         $token_vars = $this->vars($obj);
+
         foreach($this->rules as $key => $rule) {
             if ($rule->isFallback()) {
                 continue;

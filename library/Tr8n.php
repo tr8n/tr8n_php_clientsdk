@@ -79,6 +79,7 @@ function tr8n_init_client_sdk($key = null, $secret = null, $host = null) {
     $translator = null;
 
     if (\Tr8n\Config::instance()->isEnabled()) {
+
         $cookie_name = "tr8n_" . \Tr8n\Config::instance()->application->key;
 
         if (isset($_COOKIE[$cookie_name])) {
@@ -93,6 +94,13 @@ function tr8n_init_client_sdk($key = null, $secret = null, $host = null) {
             }
         } else {
             \Tr8n\Logger::instance()->info("Cookie file $cookie_name not found!");
+
+            // start with the browser
+            $locale = tr8n_browser_default_locale();
+
+            // check the session
+            if (isset($_SESSION["locale"]))
+                $locale = $_SESSION["locale"];
         }
     } else {
         \Tr8n\Logger::instance()->error("Tr8n application failed to initialize. Please verify if you set the host, key and secret correctly.");
@@ -119,6 +127,31 @@ function tr8n_complete_request($options = array()) {
     global $tr8n_page_t0;
     $milliseconds = round(microtime(true) - $tr8n_page_t0,3)*1000;
     \Tr8n\Logger::instance()->info("Page loaded in " . $milliseconds . " milliseconds");
+}
+
+/**
+ * Finds the first available language based on browser and application combination
+ */
+function tr8n_browser_default_locale() {
+    $accepted = \Tr8n\Utils\BrowserUtils::parseLanguageList($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+//    var_dump($accepted);
+
+    $locales = array();
+    foreach (tr8n_application()->languages as $lang) array_push($locales, $lang->locale);
+
+    $available = \Tr8n\Utils\BrowserUtils::parseLanguageList(implode(', ', $locales));
+//    var_dump($available);
+
+    $matches = \Tr8n\Utils\BrowserUtils::findMatches($accepted, $available);
+//    var_dump($matches);
+
+    $keys = array_keys($matches);
+    if (count($keys) == 0)
+        $locale = \Tr8n\Config::instance()->default_locale;
+    else
+        $locale = $matches[$keys[0]][0];
+
+    return $locale;
 }
 
 /**

@@ -109,7 +109,7 @@ class MethodToken extends DataToken {
         else
             $token_value = $object->$method;
 
-        $token_value = $this->sanitize($token_value, $token_values, $language, array_merge($options, array("sanitize" => true)));
+        $token_value = $this->sanitize($token_value, $object, $language, array_merge($options, array("safe" => false)));
         return str_replace($this->full_name, $token_value, $label);
     }
 

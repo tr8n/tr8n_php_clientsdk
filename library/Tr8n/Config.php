@@ -420,12 +420,9 @@ class Config {
                     "@genders" => function($list){
                         $genders = array();
                         foreach($list as $obj) {
-                           array_push($genders, $obj->gender());
+                           array_push($genders, $obj->gender);
                         }
                         return $genders;
-                    },
-                    "@size" => function($list){
-                        return count($list);
                     }
                 )
             ),
