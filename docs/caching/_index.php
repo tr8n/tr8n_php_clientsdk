@@ -6,16 +6,7 @@
         For translators, who enable inline translation mode, the SDK will always request the Tr8n service to get the most recent translations.
     </p>
     <p>
-        Tr8n supports 4 types of Cache adapters:
-        <ul>
-            <li>File based</li>
-            <li>APC</li>
-            <li>Memcache</li>
-            <li>CHDB</li>
-        </ul>
-    </p>
-    <p>
-        To change cache settings, modify config/config.json file.
+        Tr8n supports a number of various Cache adapters. To change cache settings, modify config/config.json file.
     </p>
 ") ?>
 
