@@ -296,8 +296,10 @@ class TranslationKey extends Base {
      * @return string
      */
     public function translate($language, $token_values = array(), $options = array()) {
-        if (Config::instance()->isDisabled() || ($language->locale == $this->language->locale)) {
-            return $this->substituteTokens($this->label, $token_values, $this->language, $options);
+//        Logger::instance()->debug("Translating $this->label from $this->locale to $language->locale");
+
+        if (Config::instance()->isDisabled() || ($language->locale == $this->locale)) {
+            return $this->substituteTokens($this->label, $token_values, $language, $options);
         }
 
         $translation = $this->findFirstValidTranslation($language, $token_values);

@@ -561,8 +561,7 @@ class DataToken {
 
         if (isset($this->case_keys)) {
             foreach($this->case_keys as $case) {
-                Logger::instance()->debug("Applying $case in " . $language->locale);
-
+//                Logger::instance()->debug("Applying $case in " . $language->locale);
                 $value = $this->applyCase($case, $value, $object, $language, $options);
             }
         }
@@ -580,6 +579,7 @@ class DataToken {
      * @return mixed
      */
     public function substitute($label, $token_values, $language, $options = array()) {
+//        Logger::instance()->debug("Substituting $label in " . $language->locale);
         $token_value = $this->tokenValue($token_values, $language, $options);
         return str_replace($this->full_name, $token_value, $label);
     }
