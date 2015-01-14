@@ -239,7 +239,7 @@ class Logger {
      * @return string
      */
     private function formatMessage($msg, $severity) {
-//        date_default_timezone_set('America/Los_Angeles');
+        date_default_timezone_set('America/Los_Angeles');
         $time = date(self::$_dateFormat);
         return "$time: $msg";
     }

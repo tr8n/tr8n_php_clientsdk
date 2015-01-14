@@ -493,7 +493,7 @@ class DataToken {
      */
     public function tokenValue($token_values, $language, $options = array()) {
         if (isset($token_values[$this->short_name])) {
-            $object = $token_values[$this->name()];
+            $object = $token_values[$this->short_name];
         } else {
             $object = Config::instance()->defaultToken($this->short_name, 'data');
         }

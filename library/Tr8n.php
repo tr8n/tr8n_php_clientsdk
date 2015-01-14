@@ -45,8 +45,8 @@ $files = array(
     "Tr8n/Cache/Base.php",
     "Tr8n/Cache",
     "Tr8n/Cache/Generators/Base.php",
-    "Tr8n/Cache/Generators",
-    "Tr8n/Includes/Tags.php"
+    "Tr8n/Cache/Generators"
+//    "Tr8n/Includes/Tags.php"
 );
 
 foreach($files as $dir) {

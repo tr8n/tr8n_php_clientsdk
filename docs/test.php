@@ -1,40 +1,23 @@
-<?php include('docs/includes/head.php'); ?>
+<?php include('includes/head.php'); ?>
+
 <div class="container">
+
 <?php tr8n_begin_block_with_options(array("source" => "/test")) ?>
 
-<?php
+<br>
 
-class User {
-    public $name, $gender;
-    function __construct($name, $gender = "male") {
-        $this->name = $name;
-        $this->gender = $gender;
-    }
-    function __toString() {
-        return $this->name;
-    }
-    function fullName() {
-        return $this->name;
-    }
-}
+<?php tre("You have [bold: {count || message}]", array("count" => 1, "bold" => '<a href="http://www.google.com">{$0}</a>')) ?>
 
-class Number {
-    public $value;
-    function __construct($value) {
-        $this->value = $value;
-    }
-    function __toString() {
-        return "" . $this->value;
-    }
-}
+<br><br>
 
-$male = new User("Michael", "male");
-$female = new User("Anna", "female");
+<?php tre("You have {count || message}", array("count" => 2)) ?>
 
+<br><br>
 
-?>
+<?php tre("You have {count || message}", array("count" => 5)) ?>
 
 <?php tr8n_finish_block_with_options() ?>
+
 </div>
 
-<?php include('docs/includes/foot.php'); ?>
+<?php include('includes/foot.php'); ?>

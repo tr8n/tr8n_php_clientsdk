@@ -257,6 +257,11 @@ class Language extends Base {
                     return $temp_key->translate($this, $token_values, $options);
                 }
 
+                if ($this->application == null) {
+                    $temp_key = $this->createTranslationKey($label, $description, $options);
+                    return $temp_key->translate($this, $token_values, $options);
+                }
+
                 $source = $this->application->source($source_key, $this->locale);
 
                 if ($source != null) {

@@ -171,8 +171,10 @@ class Application extends Base {
 
         $app = new Application();
         $app->name = "Disconnected Application";
+        $default_language = \Tr8n\Config::instance()->defaultLanguage();
+        $default_language->application = $app;
         $app->languages_by_locale = array(
-            \Tr8n\Config::instance()->default_locale => \Tr8n\Config::instance()->defaultLanguage()
+            \Tr8n\Config::instance()->default_locale => $default_language
         );
         return $app;
     }

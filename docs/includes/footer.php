@@ -24,14 +24,14 @@
                 <!-- li><a href="/extensions" class="quiet"><span class='tr8n_translatable tr8n_not_translated' data-translation_key_id='22'>Extensions</span></a></li -->
             </ul>
 
-            &copy; <a href="https://translationexchange.com" class="quiet">TranslationExchange.com</a> 2014
+            &copy; 2015 <a href="https://translationexchange.com" class="quiet">TranslationExchange.com</a>
         </div>
     </footer>
 
     <div style="padding-top:40px; color: #ccc; text-align:center; width:100%">
-        Powered by <a href="http://wiki.tr8n.io" style="color:#ccc;">Tr8n</a>
+        Translated by <a href="http://wiki.tr8n.io" style="color:#ccc;">TranslationExchange.com</a>
         <div style="padding-top:5px;">
-            <a href="http://wiki.tr8nhub.com"><?php image_tag('tr8n_logo.png', array("style" => "width:50px;")) ?></a>
+            <a href="http://translationexchange.com"><?php image_tag('tr8n_logo.png', array("style" => "width:50px;")) ?></a>
         </div>
     </div>
 
