@@ -101,6 +101,4 @@ if (\Tr8n\Config::instance()->isEnabled()) { ?>
         })();
     </script>
 
-    <?php include(__DIR__ . '/Tags.php') ?>
-
 <?php } ?>
