@@ -1,4 +1,4 @@
-<?php require_once(__DIR__ . '/../../library/Tr8n.php'); ?>
+<?php require_once(__DIR__ . '/../../library/tr8n.php'); ?>
 
 <?php tr8n_init_client_sdk(); ?>
 
